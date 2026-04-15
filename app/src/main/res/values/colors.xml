@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="softbar_primary">#1F2A30</color>
+    <color name="softbar_primary_dark">#161D22</color>
+    <color name="softbar_primary_text">#D7E0D6</color>
+    <color name="softbar_accent">#D7A86E</color>
+    <color name="softbar_background">#F4F1EA</color>
+    <color name="softbar_surface">#FFFDF9</color>
+    <color name="softbar_border">#E1D9CD</color>
+    <color name="softbar_text_primary">#221F1C</color>
+    <color name="softbar_text_secondary">#6A625B</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SOFTBAR</string>
+    <string name="dashboard_badge">Base inicial del TPV</string>
+    <string name="dashboard_title">SOFTBAR</string>
+    <string name="dashboard_subtitle">TPV para bar y cafeteria con enfoque en sala, barra, caja y sincronizacion con Supabase.</string>
+    <string name="status_title">Estado del proyecto</string>
+    <string name="status_body">El proyecto ya tiene una pantalla base para arrancar el TPV. El siguiente paso natural es conectar autenticacion, catalogo, mesas y pedidos contra Supabase.</string>
+    <string name="modules_title">Bloques base del sistema</string>
+    <string name="module_service_title">Sala, barra y comandas</string>
+    <string name="module_service_body">Gestion de mesas, pedidos rapidos, lineas de comanda, notas y flujo de servicio para el dia a dia.</string>
+    <string name="module_catalog_title">Catalogo y cobros</string>
+    <string name="module_catalog_body">Productos, categorias, modificadores, precios, impuestos y distintos metodos de cobro.</string>
+    <string name="module_management_title">Caja, stock y gestion</string>
+    <string name="module_management_body">Cierres de turno, control basico de caja, stock, usuarios y configuracion general del negocio.</string>
+</resources>
