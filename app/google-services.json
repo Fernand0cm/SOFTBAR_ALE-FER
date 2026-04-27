@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1055715617069",
+    "project_id": "tfg-softba",
+    "storage_bucket": "tfg-softba.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055715617069:android:21536c174ac807d5634ba4",
+        "android_client_info": {
+          "package_name": "com.SOFTBAR_F_A"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTk9Ie7BfSkZmSkEEvM_-7_PcTCR5tBUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
