@@ -23,7 +23,10 @@
 
     <string name="turno_title">Apertura de turno</string>
     <string name="mesas_title">Sala y mesas</string>
-    <string name="mesas_abrir">Abrir mesa</string>
+    <string name="mesa_estado_libre">Libre</string>
+    <string name="mesa_estado_ocupada">Ocupada</string>
+    <string name="mesa_estado_cobro">Cobro</string>
+    <string name="mesa_estado_cerrada">Cerrada</string>
     <string name="comanda_title">Comanda</string>
     <string name="comanda_extras">Anadir extras</string>
     <string name="comanda_cobrar">Cobrar</string>
