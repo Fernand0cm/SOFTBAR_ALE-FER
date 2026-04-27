@@ -36,6 +36,13 @@
     <string name="barra_cobrar">Cobrar</string>
     <string name="modificadores_title">Modificadores</string>
     <string name="cobro_title">Cobro</string>
+    <string name="cobro_total_label">Total a cobrar</string>
+    <string name="cobro_metodo">Metodo de pago</string>
+    <string name="cobro_efectivo">Efectivo</string>
+    <string name="cobro_tarjeta">Tarjeta</string>
+    <string name="cobro_mixto">Mixto</string>
+    <string name="cobro_recibido">Recibido</string>
+    <string name="cobro_cambio">Cambio</string>
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_cerrar">Cerrar</string>
