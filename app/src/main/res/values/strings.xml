@@ -10,4 +10,32 @@
 
     <string name="home_welcome">Bienvenido</string>
     <string name="home_logout">Cerrar sesion</string>
+    <string name="home_btn_turno">Apertura de turno</string>
+    <string name="home_btn_mesas">Sala y mesas</string>
+    <string name="home_btn_barra">Barra rapida</string>
+    <string name="home_btn_caja">Caja</string>
+    <string name="home_btn_informes">Informes</string>
+    <string name="home_btn_stock">Stock</string>
+    <string name="home_btn_config">Configuracion</string>
+
+    <string name="pantalla_pendiente">Pantalla pendiente de implementar.</string>
+    <string name="volver">Volver</string>
+
+    <string name="turno_title">Apertura de turno</string>
+    <string name="mesas_title">Sala y mesas</string>
+    <string name="mesas_abrir">Abrir mesa</string>
+    <string name="comanda_title">Comanda</string>
+    <string name="comanda_extras">Anadir extras</string>
+    <string name="comanda_cobrar">Cobrar</string>
+    <string name="barra_title">Barra rapida</string>
+    <string name="barra_cobrar">Cobrar</string>
+    <string name="modificadores_title">Modificadores</string>
+    <string name="cobro_title">Cobro</string>
+    <string name="cobro_confirmar">Confirmar pago</string>
+    <string name="ticket_title">Ticket</string>
+    <string name="ticket_cerrar">Cerrar</string>
+    <string name="caja_title">Caja del turno</string>
+    <string name="informes_title">Informes</string>
+    <string name="stock_title">Stock</string>
+    <string name="config_title">Configuracion</string>
 </resources>
