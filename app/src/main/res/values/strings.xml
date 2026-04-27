@@ -28,6 +28,8 @@
     <string name="mesa_estado_cobro">Cobro</string>
     <string name="mesa_estado_cerrada">Cerrada</string>
     <string name="comanda_title">Comanda</string>
+    <string name="comanda_mesa_ejemplo">Mesa 3</string>
+    <string name="comanda_total">Total</string>
     <string name="comanda_extras">Anadir extras</string>
     <string name="comanda_cobrar">Cobrar</string>
     <string name="barra_title">Barra rapida</string>
