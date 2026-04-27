@@ -1,13 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.TFG_SOFTBAR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/softbar_primary</item>
-        <item name="colorPrimaryVariant">@color/softbar_primary_dark</item>
+        <item name="colorPrimary">@color/brand_500</item>
+        <item name="colorPrimaryVariant">@color/brand_700</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/softbar_accent</item>
-        <item name="colorSecondaryVariant">@color/softbar_accent</item>
-        <item name="colorOnSecondary">@color/softbar_text_primary</item>
-        <item name="colorSurface">@color/softbar_surface</item>
-        <item name="android:windowBackground">@color/softbar_background</item>
+        <item name="colorSecondary">@color/brand_500</item>
+        <item name="colorSurface">@color/surface_0</item>
+        <item name="android:windowBackground">@color/surface_50</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 </resources>
