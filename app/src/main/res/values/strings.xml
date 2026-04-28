@@ -45,6 +45,16 @@
     <string name="cobro_cambio">Cambio</string>
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="ticket_title">Ticket</string>
+    <string name="ticket_ok">Cobro completado</string>
+    <string name="ticket_subtitulo">Ticket simplificado</string>
+    <string name="ticket_numero">Numero</string>
+    <string name="ticket_mesa">Mesa</string>
+    <string name="ticket_total">Total</string>
+    <string name="ticket_pago">Forma de pago</string>
+    <string name="ticket_gracias">Gracias por su visita</string>
+    <string name="ticket_imprimir">Imprimir</string>
+    <string name="ticket_email">Enviar por email</string>
+    <string name="ticket_pendiente">Pendiente de implementar</string>
     <string name="ticket_cerrar">Cerrar</string>
     <string name="caja_title">Caja del turno</string>
     <string name="informes_title">Informes</string>
