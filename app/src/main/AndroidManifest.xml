@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TFG_SOFTBAR">
 
+        <!-- Descarga el modulo del lector de codigos cuando hay WiFi -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode_ui" />
+
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true">
