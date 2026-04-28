@@ -9,6 +9,8 @@
     <string name="login_error_generic">No se ha podido iniciar sesion</string>
 
     <string name="home_welcome">Bienvenido</string>
+    <string name="conexion_online">Online</string>
+    <string name="conexion_offline">Sin conexion</string>
     <string name="home_logout">Cerrar sesion</string>
     <string name="home_btn_turno">Apertura de turno</string>
     <string name="home_btn_mesas">Sala y mesas</string>
