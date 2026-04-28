@@ -1,11 +1,18 @@
 package com.SOFTBAR_F_A.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.ui.barra.BarraActivity;
@@ -21,6 +28,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private View dotConexion;
+    private TextView txtConexion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +42,9 @@ public class HomeActivity extends AppCompatActivity {
         if (user != null && user.getEmail() != null) {
             txtEmail.setText(user.getEmail());
         }
+
+        dotConexion = findViewById(R.id.dot_conexion);
+        txtConexion = findViewById(R.id.txt_conexion);
 
         findViewById(R.id.btn_turno).setOnClickListener(v ->
                 startActivity(new Intent(this, TurnoActivity.class)));
@@ -53,5 +67,63 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
+
+        registrarObservadorRed();
+    }
+
+    private void registrarObservadorRed() {
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return;
+
+        // Estado inicial
+        actualizarEstadoConexion(hayInternet(cm));
+
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                runOnUiThread(() -> actualizarEstadoConexion(true));
+            }
+
+            @Override
+            public void onLost(Network network) {
+                runOnUiThread(() -> actualizarEstadoConexion(false));
+            }
+        };
+        cm.registerNetworkCallback(request, networkCallback);
+    }
+
+    private boolean hayInternet(ConnectivityManager cm) {
+        Network red = cm.getActiveNetwork();
+        if (red == null) return false;
+        NetworkCapabilities caps = cm.getNetworkCapabilities(red);
+        return caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+    }
+
+    private void actualizarEstadoConexion(boolean online) {
+        if (dotConexion == null || txtConexion == null) return;
+        int color = online ? R.color.mesa_libre : R.color.mesa_cerrada;
+        int texto = online ? R.string.conexion_online : R.string.conexion_offline;
+        dotConexion.setBackgroundColor(ContextCompat.getColor(this, color));
+        txtConexion.setText(texto);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (networkCallback != null) {
+            ConnectivityManager cm = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                try {
+                    cm.unregisterNetworkCallback(networkCallback);
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+        }
     }
 }
