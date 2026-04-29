@@ -13,4 +13,14 @@
 
     <color name="text_primary">#0F172A</color>
     <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
+
+    <color name="danger">#DC2626</color>
+    <color name="success">#16A34A</color>
+    <color name="warning">#D97706</color>
+
+    <color name="mesa_libre">#22C55E</color>
+    <color name="mesa_ocupada">#3B82F6</color>
+    <color name="mesa_cobro">#F59E0B</color>
+    <color name="mesa_cerrada">#94A3B8</color>
 </resources>
