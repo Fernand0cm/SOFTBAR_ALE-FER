@@ -25,6 +25,7 @@
     <string name="home_btn_config">Configuracion</string>
 
     <string name="pantalla_pendiente">Pantalla pendiente de implementar.</string>
+    <string name="placeholder_explicacion">Esta seccion se desarrollara en proximos sprints.</string>
     <string name="volver">Volver</string>
 
     <string name="turno_title">Apertura de turno</string>
@@ -93,6 +94,7 @@
     <string name="stock_title">Stock</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>
+    <string name="config_catalogo_eyebrow">Catalogo</string>
     <string name="config_escanear">Escanear codigo de barras</string>
     <string name="config_lista_vacia">Aun no hay productos. Escanea uno para empezar.</string>
     <string name="config_guardado">Producto guardado</string>
