@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Producto;
+import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
@@ -37,14 +38,13 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
+        Header.aplica(this, getString(R.string.config_title), getString(R.string.config_productos_subtitulo));
+
         listaProductos = findViewById(R.id.lista_productos);
         txtListaVacia = findViewById(R.id.txt_lista_vacia);
 
         Button btnEscanear = findViewById(R.id.btn_escanear);
         btnEscanear.setOnClickListener(v -> escanear());
-
-        Button btnVolver = findViewById(R.id.btn_volver);
-        btnVolver.setOnClickListener(v -> finish());
 
         suscribirseAProductos();
     }

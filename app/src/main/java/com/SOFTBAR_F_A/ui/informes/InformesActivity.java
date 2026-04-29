@@ -3,7 +3,6 @@ package com.SOFTBAR_F_A.ui.informes;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.IndicadoresVentas;
 import com.SOFTBAR_F_A.data.Venta;
+import com.SOFTBAR_F_A.ui.common.Header;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -41,6 +41,8 @@ public class InformesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informes);
 
+        Header.aplica(this, getString(R.string.informes_title), getString(R.string.informes_subtitulo));
+
         kpiVentas = findViewById(R.id.kpi_ventas);
         kpiTickets = findViewById(R.id.kpi_tickets);
         kpiMedio = findViewById(R.id.kpi_medio);
@@ -48,10 +50,6 @@ public class InformesActivity extends AppCompatActivity {
         grafica = findViewById(R.id.grafica_horas);
 
         configurarGrafica();
-
-        Button btnVolver = findViewById(R.id.btn_volver);
-        btnVolver.setOnClickListener(v -> finish());
-
         cargarVentasDelDia();
     }
 
