@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">SOFTBAR</string>
+    <string name="splash_tagline">TPV para hosteleria</string>
 
     <string name="login_title">Acceso</string>
+    <string name="login_subtitulo">Identificate para abrir la sesion</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Contrasena</string>
     <string name="login_button">Entrar</string>
@@ -9,6 +11,8 @@
     <string name="login_error_generic">No se ha podido iniciar sesion</string>
 
     <string name="home_welcome">Bienvenido</string>
+    <string name="home_eyebrow">Sesion activa</string>
+    <string name="home_modulos">Modulos</string>
     <string name="conexion_online">Online</string>
     <string name="conexion_offline">Sin conexion</string>
     <string name="home_logout">Cerrar sesion</string>
@@ -25,13 +29,16 @@
 
     <string name="turno_title">Apertura de turno</string>
     <string name="mesas_title">Sala y mesas</string>
+    <string name="mesas_subtitulo">Selecciona una mesa para abrir comanda</string>
     <string name="mesa_estado_libre">Libre</string>
     <string name="mesa_estado_ocupada">Ocupada</string>
     <string name="mesa_estado_cobro">Cobro</string>
     <string name="mesa_estado_cerrada">Cerrada</string>
     <string name="comanda_title">Comanda</string>
     <string name="comanda_mesa_ejemplo">Mesa 3</string>
+    <string name="comanda_mesa_numero">Mesa %1$d</string>
     <string name="comanda_total">Total</string>
+    <string name="comanda_lineas_eyebrow">Lineas del pedido</string>
     <string name="comanda_extras">Anadir extras</string>
     <string name="comanda_cobrar">Cobrar</string>
     <string name="barra_title">Barra rapida</string>
@@ -57,6 +64,9 @@
     <string name="ticket_imprimir">Imprimir</string>
     <string name="ticket_email">Enviar por email</string>
     <string name="ticket_pendiente">Pendiente de implementar</string>
+    <string name="verifactu_titulo">QR Verifactu</string>
+    <string name="verifactu_factura">Factura %1$s</string>
+    <string name="verifactu_hash">Hash %1$s</string>
     <string name="ticket_cerrar">Cerrar</string>
     <string name="caja_title">Caja del turno</string>
     <string name="caja_turno_ejemplo">Turno actual</string>
@@ -74,6 +84,12 @@
     <string name="caja_cierre_turno">Cerrar turno</string>
     <string name="caja_pendiente">Pendiente de implementar</string>
     <string name="informes_title">Informes</string>
+    <string name="informes_subtitulo">Resumen del dia</string>
+    <string name="informes_kpi_ventas">Ventas</string>
+    <string name="informes_kpi_tickets">Tickets</string>
+    <string name="informes_kpi_medio">Ticket medio</string>
+    <string name="informes_grafica">Ventas por hora</string>
+    <string name="informes_sin_datos">No hay ventas registradas hoy todavia.</string>
     <string name="stock_title">Stock</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>
