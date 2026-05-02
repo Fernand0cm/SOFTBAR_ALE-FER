@@ -123,9 +123,18 @@ Construccion de la URL del QR Verifactu de la AEAT.
 
 (El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
 
+Validacion reciente:
+
+- `testDebugUnitTest` ejecutado correctamente.
+- Las pruebas unitarias actuales pasan.
+- La primera ejecucion puede requerir acceso a la cache local de Gradle del usuario si el wrapper necesita bloquear o descargar la distribucion.
+
 ## Pendiente / fuera de alcance
 
 - Pruebas instrumentadas de navegacion entre Activities (Espresso).
 - Pruebas de integracion contra el emulador de Firestore.
 - Pruebas de UI del dashboard (verificar que pinta la grafica correctamente).
 - Generacion de bitmap del QR (requiere Android, no se prueba en JUnit puro).
+- Pruebas del flujo completo de TPV: login, mesa, comanda, cobro, ticket e informes.
+- Pruebas de concurrencia para la numeracion de facturas.
+- Pruebas de errores de red y comportamiento offline.
