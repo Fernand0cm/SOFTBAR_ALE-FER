@@ -1,173 +1,368 @@
 # SOFTBAR
 
-SOFTBAR es la base de una aplicacion Android para un TPV de bar conectado con Supabase. La idea del proyecto es cubrir la operativa real de un negocio de hosteleria: barra, sala, comandas, cocina, cobros, caja, stock y administracion basica.
+SOFTBAR es una aplicacion Android nativa para un TPV de hosteleria. El objetivo del TFG es cubrir la operativa real de un bar o cafeteria: acceso de empleados, sala y mesas, comandas, cobro, ticket/factura, caja, catalogo, informes, stock y configuracion del negocio.
 
-Este README nace como documento vivo. La app esta en una fase muy inicial, asi que aqui queda descrito tanto lo que ya existe como la direccion funcional y tecnica que debe seguir.
+El proyecto empezo como una base de TPV y actualmente ya ha evolucionado hacia una app conectada con Firebase. La rama `Fernando` ya esta integrada en `origin/main`, por lo que el avance descrito aqui corresponde al estado actual del repositorio.
 
 ## Estado actual
 
 - Proyecto Android nativo con modulo `app`.
-- Base visual inicial del TPV para arrancar la aplicacion.
-- Sin integracion real con Supabase todavia.
-- Sin flujo de login, persistencia, sincronizacion ni modulos de negocio implementados.
+- Java 11, `minSdk 28`, `targetSdk 36` y `compileSdk 36`.
+- Interfaz basada en AppCompat y Material Components.
+- Firebase Auth para acceso con email y contrasena.
+- Cloud Firestore como base de datos principal.
+- Persistencia offline de Firestore activada al arrancar la app.
+- Indicador de conexion online/offline en la pantalla principal.
+- Lector de codigos de barras con ML Kit / Google Code Scanner.
+- Generacion de QR con ZXing para la parte Verifactu.
+- Graficas de informes con MPAndroidChart.
+- Pruebas unitarias de modelos, calculos e utilidades Verifactu.
 
-## Vision del producto
+## Avances realizados
 
-El objetivo es construir un software de gestion para bar o cafeteria que permita trabajar desde una tablet o dispositivo Android con una experiencia rapida, clara y orientada a operacion real.
+### Autenticacion y arranque
 
-Casos de uso principales:
+- Pantalla de splash que decide si abrir login o home segun la sesion activa de Firebase.
+- Pantalla de login con validacion basica de email y contrasena.
+- Cierre de sesion desde home.
+- Visualizacion del email del usuario autenticado.
 
-- Abrir mesa o pedido rapido en barra.
-- Anadir productos y modificadores a la comanda.
-- Enviar pedidos a cocina o preparacion.
-- Cobrar con efectivo, tarjeta u otros metodos.
-- Gestionar caja y cierres.
-- Consultar ventas, stock y productos.
-- Mantener sincronizacion con Supabase como backend central.
+### Navegacion principal
 
-## Modulos base del TPV
+- Home con acceso a los modulos principales:
+  - Apertura de turno.
+  - Sala y mesas.
+  - Barra rapida.
+  - Caja.
+  - Informes.
+  - Stock.
+  - Configuracion.
+- Cabecera reutilizable con titulo, subtitulo opcional y boton de volver.
+- Redisenio visual con paleta, estilos, iconos y pantallas mas consistentes.
 
-### 1. Operacion de sala y barra
+### Sala y mesas
 
-- Apertura y gestion de mesas.
-- Pedido rapido para barra o takeaway.
-- Cambio de mesa, union de mesas y division de cuenta.
-- Estado visual de mesas: libre, ocupada, pendiente de cobro, cerrada.
+- Coleccion Firestore `mesas`.
+- Siembra inicial de 8 mesas cuando la coleccion esta vacia.
+- Escucha en tiempo real de las mesas ordenadas por numero.
+- Estados base de mesa:
+  - `libre`
+  - `ocupada`
+  - `cobro`
+  - `cerrada`
+- Mapeo de estados a colores mediante `EstadoMesaColor`.
+- Al pulsar una mesa libre se marca como ocupada y se abre la comanda.
 
-### 2. Catalogo y productos
+### Comanda
 
-- Categorias de productos.
-- Productos activos e inactivos.
-- Extras, suplementos y observaciones.
-- Precios, impuestos y control de disponibilidad.
+- Pantalla de comanda asociada a mesa mediante extras de `Intent`.
+- Visualizacion del numero de mesa.
+- Navegacion hacia modificadores/extras.
+- Navegacion hacia cobro.
+- La UI ya contiene estructura de lineas y total, pero todavia no esta conectada a productos reales.
 
-### 3. Comandas
+### Cobro y venta
 
-- Alta de pedido.
-- Lineas de pedido con cantidad, notas y extras.
-- Envio a cocina o cola de preparacion.
-- Historial y reimpresion futura.
+- Pantalla de cobro con seleccion de metodo:
+  - Efectivo.
+  - Tarjeta.
+  - Mixto.
+- Registro basico de una venta en la coleccion Firestore `ventas`.
+- Generacion de una factura simplificada en la coleccion `facturas`.
+- Encadenado de hash SHA-256 con la factura anterior.
+- Calculo basico de cuota de IVA al 10%.
+- Generacion de URL de validacion Verifactu en entorno de pruebas de AEAT.
 
-### 4. Cobros y caja
+### Ticket y Verifactu
 
-- Pago mixto o completo.
-- Control de caja por turno.
-- Apertura y cierre de caja.
-- Registro de movimientos manuales.
+- Pantalla de ticket posterior al cobro.
+- Carga de la ultima factura guardada.
+- Visualizacion de:
+  - Numero de factura.
+  - Hash parcial.
+  - QR Verifactu generado como bitmap.
+- Botones de imprimir y email presentes, actualmente pendientes de implementacion real.
 
-### 5. Gestion del negocio
+### Caja
 
-- Usuarios y roles.
-- Resumen de ventas.
-- Productos mas vendidos.
-- Stock basico y movimientos.
+- Pantalla visual de caja del turno.
+- Resumen y movimientos representados en UI.
+- Botones de anadir movimiento y cierre de turno presentes, actualmente con aviso de pendiente.
 
-## Supabase como backend
+### Informes
 
-Supabase sera la pieza central para:
+- Coleccion Firestore `ventas` como fuente.
+- KPIs diarios:
+  - Total vendido.
+  - Numero de tickets.
+  - Ticket medio.
+- Grafica de ventas por hora para el rango 08:00-23:00.
+- Calculos aislados en `IndicadoresVentas` para poder probarlos con JUnit.
 
-- Autenticacion de usuarios.
-- Base de datos principal del negocio.
-- Sincronizacion de pedidos y mesas.
-- Reglas de acceso por rol.
-- Almacenamiento de configuraciones y, mas adelante, documentos o tickets si hace falta.
+### Catalogo y configuracion
 
-### Modelo de datos inicial propuesto
+- Pantalla de configuracion centrada en catalogo de productos.
+- Escaneo de codigo de barras.
+- Dialogo para introducir nombre y precio.
+- Guardado de productos en Firestore usando el codigo de barras como identificador.
+- Listado en tiempo real de productos ordenados por nombre.
 
-Tablas candidatas para la primera iteracion:
+### Pantallas placeholder
 
-- `profiles`
-- `business_settings`
-- `product_categories`
-- `products`
-- `product_modifiers`
-- `room_tables`
-- `orders`
-- `order_items`
-- `payments`
-- `cash_shifts`
-- `stock_movements`
+Existen pantallas ya navegables pero pendientes de desarrollo funcional:
 
-## Arquitectura prevista
-
-Base tecnica actual:
-
-- Android nativo.
-- Java 11.
-- Material Components.
-- `minSdk 28`.
-
-Direccion recomendada para la siguiente fase:
-
-- Capa `ui` para pantallas y estado visual.
-- Capa `data` para acceso a Supabase y almacenamiento local.
-- Capa `domain` para reglas de negocio del TPV.
-- Configuracion segura de credenciales fuera del codigo.
-- Posible soporte offline con sincronizacion diferida.
-
-## Roadmap inicial
-
-### Fase 1. Arranque del proyecto
-
-- Base Android operativa.
-- Pantalla inicial del TPV.
-- README funcional y tecnico.
-
-### Fase 2. Conexion con backend
-
-- Integracion con Supabase.
-- Login de empleados.
-- Carga de catalogo y mesas.
-
-### Fase 3. Flujo real de venta
-
-- Creacion de comandas.
-- Gestion de lineas de pedido.
-- Cambio de estado de pedidos.
-- Cobro y cierre de pedido.
-
-### Fase 4. Gestion y control
-
-- Caja por turno.
-- Informes basicos.
+- Apertura de turno.
+- Barra rapida.
+- Modificadores.
 - Stock.
-- Roles y permisos.
 
-## Estructura actual del proyecto
+## Modelo de datos actual
 
-```text
-TFG_SOFTBAR/
-|- app/
-|- gradle/
-|- build.gradle.kts
-|- settings.gradle.kts
-|- README.md
+Clases principales en `app/src/main/java/com/SOFTBAR_F_A/data`:
+
+- `Mesa`: numero, estado y `comandaActivaId`.
+- `Producto`: codigo de barras, nombre y precio.
+- `Venta`: fecha, total y metodo de pago.
+- `IndicadoresVentas`: calculos de total, numero de tickets, ticket medio y distribucion por hora.
+- `EstadoMesaColor`: mapeo de estados de mesa a colores.
+
+Clases Verifactu en `data/verifactu`:
+
+- `Factura`: numero, fecha, NIF emisor, total, cuota IVA, hash anterior, hash actual y URL de validacion.
+- `HashVerifactu`: hash SHA-256 encadenado.
+- `GeneradorQrVerifactu`: URL de validacion y bitmap QR.
+
+## Colecciones Firestore usadas
+
+- `mesas`: estado visual y operativo de la sala.
+- `productos`: catalogo basico escaneado por codigo de barras.
+- `ventas`: ventas registradas al confirmar cobro.
+- `facturas`: facturas simplificadas con hash y QR Verifactu.
+
+## Pruebas
+
+La documentacion detallada de pruebas esta en `docs/tests.md`.
+
+Comando principal:
+
+```bash
+./gradlew testDebugUnitTest
 ```
+
+Estado validado:
+
+- Las pruebas unitarias pasan correctamente.
+- Hay cobertura sobre modelos de datos, colores de mesa, indicadores de ventas, hash Verifactu y URL de QR Verifactu.
+- Quedan fuera de estas pruebas las Activities, UI, integracion real con Firestore y flujos de navegacion.
+
+## Pendiente prioritario
+
+### Documentacion y coherencia del proyecto
+
+- [ ] Mantener este README actualizado conforme avance el TFG.
+- [ ] Documentar la arquitectura real por capas: `ui`, `data`, futuras capas `domain`/`repository`.
+- [ ] Documentar configuracion de Firebase para poder levantar el proyecto en otro equipo.
+- [ ] Documentar estructura de colecciones Firestore y campos esperados.
+- [ ] Documentar reglas de seguridad de Firestore cuando existan.
+- [ ] Crear un guion de demo del TFG: login, mesas, comanda, cobro, ticket QR, informes y catalogo.
+- [ ] Decidir si el backend definitivo sera Firebase o Supabase. El codigo actual usa Firebase; cualquier referencia antigua a Supabase debe considerarse obsoleta salvo decision contraria.
+
+### Seguridad y configuracion
+
+- [ ] Revisar si `app/google-services.json` debe permanecer versionado o gestionarse por entorno.
+- [ ] Crear reglas de seguridad Firestore por usuario, negocio y rol.
+- [ ] Evitar que usuarios no autenticados lean o escriban datos de negocio.
+- [ ] Incorporar roles: administrador, camarero, caja y cocina.
+- [ ] Mover datos fiscales y configuracion del negocio fuera del codigo.
+- [ ] Sustituir el NIF emisor hardcodeado por configuracion editable.
+- [ ] Validar datos de entrada de forma consistente en todas las pantallas.
+
+### Arquitectura y mantenibilidad
+
+- [ ] Separar acceso a Firestore en repositorios.
+- [ ] Evitar consultas y escrituras directas desde Activities cuando el flujo crezca.
+- [ ] Introducir una capa de dominio para reglas de negocio: cobro, cierre de mesa, caja, stock y facturacion.
+- [ ] Centralizar nombres de colecciones y campos Firestore.
+- [ ] Definir modelos para comanda, linea de comanda, pago, turno, movimiento de caja y stock.
+- [ ] Mejorar gestion de errores: ahora algunos listeners ignoran `error`.
+- [ ] Anadir estados de carga, vacio y error en pantallas con datos remotos.
+
+### Sala, mesas y comandas
+
+- [ ] Crear comandas reales en Firestore.
+- [ ] Enlazar `Mesa.comandaActivaId` con la comanda abierta.
+- [ ] Cargar productos reales en la comanda.
+- [ ] Permitir anadir, quitar y modificar cantidades de productos.
+- [ ] Permitir notas por linea.
+- [ ] Permitir extras/modificadores por producto.
+- [ ] Calcular subtotal, impuestos y total desde las lineas reales.
+- [ ] Persistir lineas de comanda.
+- [ ] Recuperar una comanda abierta al volver a entrar en una mesa ocupada.
+- [ ] Gestionar estados de mesa durante todo el flujo: libre, ocupada, pendiente de cobro y cerrada.
+- [ ] Liberar mesa al cerrar ticket o finalizar comanda.
+- [ ] Implementar cambio de mesa.
+- [ ] Implementar union de mesas.
+- [ ] Implementar division de cuenta.
+- [ ] Implementar anulacion/cancelacion de comanda con permisos.
+
+### Barra rapida
+
+- [ ] Implementar flujo de venta sin mesa.
+- [ ] Reutilizar catalogo y lineas de comanda.
+- [ ] Permitir cobro directo.
+- [ ] Registrar venta como barra/takeaway para informes.
+- [ ] Diferenciar pedidos de barra y sala en el modelo.
+
+### Cobro, ticket y facturacion
+
+- [ ] Sustituir el total mock por el total real de la comanda.
+- [ ] Pasar `ventaId` y `facturaId` al ticket; ahora se carga la ultima factura global.
+- [ ] Esperar a que venta y factura se guarden correctamente antes de abrir ticket.
+- [ ] Controlar errores durante el cobro y evitar dobles cobros por doble pulsacion.
+- [ ] Implementar pagos parciales y mixtos reales.
+- [ ] Calcular cambio para efectivo.
+- [ ] Guardar desglose de pagos por metodo.
+- [ ] Guardar lineas reales en el ticket/factura.
+- [ ] Implementar impresion real.
+- [ ] Implementar envio por email o compartir ticket.
+- [ ] Generar PDF o imagen del ticket si se necesita para entrega o uso real.
+- [ ] Revisar Verifactu contra especificacion oficial completa.
+- [ ] Usar transacciones para numeracion de facturas y evitar duplicados.
+- [ ] Gestionar series de factura por anio o configuracion del negocio.
+- [ ] Preparar entorno de pruebas y produccion para QR/validacion.
+
+### Caja y turnos
+
+- [ ] Implementar apertura de turno con importe inicial.
+- [ ] Asociar ventas al turno activo.
+- [ ] Registrar movimientos manuales: entradas, salidas, retiradas y ajustes.
+- [ ] Calcular ventas por metodo de pago dentro del turno.
+- [ ] Implementar cierre de turno y arqueo.
+- [ ] Registrar diferencia de caja.
+- [ ] Bloquear cobros si no hay turno abierto, si esta regla aplica al negocio.
+- [ ] Permitir consulta de cierres historicos.
+- [ ] Exportar o imprimir resumen de cierre.
+
+### Informes
+
+- [ ] Anadir filtros por fecha.
+- [ ] Anadir filtros por turno.
+- [ ] Anadir filtros por usuario/camarero.
+- [ ] Anadir filtros por metodo de pago.
+- [ ] Anadir ventas por producto y categoria.
+- [ ] Anadir productos mas vendidos.
+- [ ] Anadir comparativa por dias.
+- [ ] Mostrar impuestos y bases imponibles.
+- [ ] Gestionar zonas horarias y limites de dia de forma explicita.
+- [ ] Anadir estados de error si Firestore falla.
+
+### Catalogo, productos y modificadores
+
+- [ ] Permitir crear producto manualmente sin escaner.
+- [ ] Permitir editar producto existente.
+- [ ] Permitir activar/desactivar productos.
+- [ ] Permitir borrar productos con confirmacion.
+- [ ] Validar codigos duplicados y nombres vacios.
+- [ ] Validar precios negativos o con formato incorrecto.
+- [ ] Anadir categorias de producto.
+- [ ] Anadir IVA por producto o categoria.
+- [ ] Anadir disponibilidad.
+- [ ] Implementar modificadores/extras con precio opcional.
+- [ ] Asociar modificadores a productos o categorias.
+- [ ] Preparar catalogo para uso rapido en comanda/barra.
+
+### Stock
+
+- [ ] Definir modelo de stock.
+- [ ] Registrar entradas y salidas manuales.
+- [ ] Descontar stock por ventas si aplica.
+- [ ] Establecer stock minimo y alertas.
+- [ ] Mostrar inventario actual.
+- [ ] Relacionar productos de venta con articulos de stock cuando no sean equivalentes.
+
+### Offline y sincronizacion
+
+- [ ] Mostrar no solo conexion, sino estado de sincronizacion pendiente.
+- [ ] Gestionar conflictos entre dispositivos.
+- [ ] Evitar numeracion duplicada de facturas offline.
+- [ ] Definir que acciones se permiten sin conexion.
+- [ ] Mostrar errores de sincronizacion al usuario.
+- [ ] Probar escenarios offline reales en dispositivo/emulador.
+
+### UI y experiencia de uso
+
+- [ ] Revisar pantallas en tablet horizontal, tablet vertical y movil.
+- [ ] Asegurar que los botones principales son comodos para uso en barra.
+- [ ] Mejorar feedback de seleccion de metodo de pago.
+- [ ] Evitar textos cortados en pantallas pequenas.
+- [ ] Anadir confirmaciones para acciones destructivas.
+- [ ] Mejorar accesibilidad basica: contraste, tamanos y labels.
+- [ ] Sustituir placeholders por pantallas funcionales o mensajes de avance para la entrega.
+
+### Pruebas y calidad
+
+- [ ] Anadir pruebas unitarias para nuevos modelos de comanda, pagos, caja y stock.
+- [ ] Anadir pruebas de numeracion de factura con casos concurrentes.
+- [ ] Anadir pruebas instrumentadas de navegacion entre Activities.
+- [ ] Anadir pruebas de integracion con Firebase Emulator Suite.
+- [ ] Probar flujo completo: login -> mesa -> comanda -> cobro -> ticket -> informes.
+- [ ] Anadir GitHub Actions para ejecutar tests en cada pull request.
+- [ ] Revisar warnings de lint y accesibilidad.
+- [ ] Preparar una bateria de pruebas manuales para la defensa del TFG.
+
+## Roadmap recomendado
+
+### Fase 1. Cerrar flujo minimo real
+
+- Comanda persistida.
+- Productos reales en comanda.
+- Total real.
+- Cobro de comanda.
+- Ticket asociado a la venta exacta.
+- Mesa liberada al finalizar.
+
+### Fase 2. Caja y turnos
+
+- Apertura de turno.
+- Ventas asociadas al turno.
+- Movimientos de caja.
+- Cierre y arqueo.
+
+### Fase 3. Catalogo completo e informes
+
+- Categorias, edicion de productos y modificadores.
+- Informes por fecha, turno y producto.
+- Exportacion o vista historica.
+
+### Fase 4. Robustez para entrega
+
+- Reglas Firestore.
+- Pruebas instrumentadas.
+- Documentacion tecnica.
+- Guion de demo.
+- Revision Verifactu y facturacion.
 
 ## Como ejecutar la app
 
 1. Abrir el proyecto en Android Studio.
 2. Sincronizar Gradle.
-3. Ejecutar el modulo `app` en un emulador o dispositivo Android.
+3. Configurar Firebase si se usa otro proyecto.
+4. Ejecutar el modulo `app` en un emulador o dispositivo Android.
 
-## Pendiente de mejora
+## Estructura del proyecto
 
-- Definir el flujo de login y sesiones.
-- Integrar Supabase de forma real.
-- Separar capas de la app conforme crezca el proyecto.
-- Disenar impresiones, cocina y tickets.
-- Anadir pruebas de negocio y navegacion.
-- Mejorar soporte offline.
-- Definir configuracion por negocio o local.
-
-## Enfoque de trabajo
-
-La idea es que este README vaya creciendo junto al desarrollo. Cada vez que se cierre una parte importante del TPV, conviene actualizar:
-
-- Estado actual.
-- Modulos ya implementados.
-- Dependencias clave.
-- Decisiones tecnicas.
-- Pendientes reales.
-
-Asi el repositorio seguira siendo util tanto para desarrollo como para presentacion del proyecto.
+```text
+TFG_SOFTBAR/
+|- app/
+|  |- src/main/java/com/SOFTBAR_F_A/
+|  |  |- data/
+|  |  |- data/verifactu/
+|  |  |- ui/
+|  |- src/main/res/
+|  |- src/test/
+|- docs/
+|- gradle/
+|- build.gradle.kts
+|- settings.gradle.kts
+|- README.md
+```
