@@ -16,11 +16,12 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.CalculoTotalComanda;
 import com.SOFTBAR_F_A.data.Comanda;
 import com.SOFTBAR_F_A.data.LineaComanda;
+import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Producto;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -34,9 +35,6 @@ public class ComandaActivity extends AppCompatActivity {
 
     public static final String EXTRA_COMANDA_ID = "comandaId";
     public static final String EXTRA_TOTAL = "total";
-
-    private static final String COL_COMANDAS = "comandas";
-    private static final String COL_PRODUCTOS = "productos";
 
     private String mesaId;
     private int mesaNumero;
@@ -82,9 +80,9 @@ public class ComandaActivity extends AppCompatActivity {
         if (mesaId == null) return;
 
         FirebaseFirestore.getInstance()
-                .collection(COL_COMANDAS)
-                .whereEqualTo("mesaId", mesaId)
-                .whereEqualTo("estado", Comanda.ABIERTA)
+                .collection(FirestoreSchema.Collections.COMANDAS)
+                .whereEqualTo(FirestoreSchema.Fields.MESA_ID, mesaId)
+                .whereEqualTo(FirestoreSchema.Fields.ESTADO, Comanda.ABIERTA)
                 .limit(1)
                 .get()
                 .addOnSuccessListener(snap -> {
@@ -100,18 +98,29 @@ public class ComandaActivity extends AppCompatActivity {
     private void crearComandaNueva() {
         Comanda nueva = new Comanda(mesaId, mesaNumero);
         FirebaseFirestore.getInstance()
-                .collection(COL_COMANDAS)
+                .collection(FirestoreSchema.Collections.COMANDAS)
                 .add(nueva)
                 .addOnSuccessListener(ref -> {
                     comandaId = ref.getId();
+                    enlazarMesaConComanda();
                     suscribirseAComanda();
                 });
+    }
+
+    private void enlazarMesaConComanda() {
+        if (mesaId == null || comandaId == null) return;
+        FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.MESAS)
+                .document(mesaId)
+                .update(
+                        FirestoreSchema.Fields.ESTADO, Mesa.OCUPADA,
+                        FirestoreSchema.Fields.COMANDA_ACTIVA_ID, comandaId);
     }
 
     private void suscribirseAComanda() {
         if (comandaId == null) return;
         suscripcionComanda = FirebaseFirestore.getInstance()
-                .collection(COL_COMANDAS)
+                .collection(FirestoreSchema.Collections.COMANDAS)
                 .document(comandaId)
                 .addSnapshotListener((doc, error) -> {
                     if (error != null || doc == null || !doc.exists()) return;
@@ -124,8 +133,8 @@ public class ComandaActivity extends AppCompatActivity {
 
     private void suscribirseAProductos() {
         suscripcionProductos = FirebaseFirestore.getInstance()
-                .collection(COL_PRODUCTOS)
-                .orderBy("nombre", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.PRODUCTOS)
+                .orderBy(FirestoreSchema.Fields.NOMBRE, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     List<Producto> productos = new ArrayList<>();
@@ -201,9 +210,9 @@ public class ComandaActivity extends AppCompatActivity {
     private void guardarLineas() {
         if (comandaId == null) return;
         FirebaseFirestore.getInstance()
-                .collection(COL_COMANDAS)
+                .collection(FirestoreSchema.Collections.COMANDAS)
                 .document(comandaId)
-                .update("lineas", lineas);
+                .update(FirestoreSchema.Fields.LINEAS, lineas);
     }
 
     private void pintarLineas() {

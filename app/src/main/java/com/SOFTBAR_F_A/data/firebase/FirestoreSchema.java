@@ -1,0 +1,43 @@
+package com.SOFTBAR_F_A.data.firebase;
+
+public final class FirestoreSchema {
+
+    private FirestoreSchema() { }
+
+    public static final class Collections {
+        public static final String COMANDAS = "comandas";
+        public static final String CONTADORES = "contadores";
+        public static final String FACTURAS = "facturas";
+        public static final String MESAS = "mesas";
+        public static final String MOVIMIENTOS_CAJA = "movimientos_caja";
+        public static final String PRODUCTOS = "productos";
+        public static final String SPLASH_BACKGROUNDS = "splash_backgrounds";
+        public static final String VENTAS = "ventas";
+
+        private Collections() { }
+    }
+
+    public static final class Documents {
+        public static final String CONTADOR_FACTURAS = "facturas";
+
+        private Documents() { }
+    }
+
+    public static final class Fields {
+        public static final String COMANDA_ACTIVA_ID = "comandaActivaId";
+        public static final String ESTADO = "estado";
+        public static final String FACTURA_ID = "facturaId";
+        public static final String FECHA = "fecha";
+        public static final String HASH_ULTIMO = "hashUltimo";
+        public static final String LINEAS = "lineas";
+        public static final String MESA_ID = "mesaId";
+        public static final String MESA_NUMERO = "mesaNumero";
+        public static final String NOMBRE = "nombre";
+        public static final String NUMERO = "numero";
+        public static final String SPLASH_ACTIVE = "active";
+        public static final String SPLASH_IMAGE_URL = "imageUrl";
+        public static final String ULTIMO = "ultimo";
+
+        private Fields() { }
+    }
+}

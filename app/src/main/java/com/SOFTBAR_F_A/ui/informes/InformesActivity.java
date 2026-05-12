@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.IndicadoresVentas;
 import com.SOFTBAR_F_A.data.Venta;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -82,9 +83,9 @@ public class InformesActivity extends AppCompatActivity {
         inicio.set(Calendar.MILLISECOND, 0);
 
         suscripcion = FirebaseFirestore.getInstance()
-                .collection("ventas")
-                .whereGreaterThanOrEqualTo("fecha", new Timestamp(inicio.getTime()))
-                .orderBy("fecha", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.VENTAS)
+                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, new Timestamp(inicio.getTime()))
+                .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     List<Venta> ventas = snap.toObjects(Venta.class);

@@ -12,6 +12,7 @@ El proyecto empezo como una base de TPV y actualmente ya ha evolucionado hacia u
 - Firebase Auth para acceso con email y contrasena.
 - Cloud Firestore como base de datos principal.
 - Persistencia offline de Firestore activada al arrancar la app.
+- Reglas Firestore versionadas en el repositorio.
 - Indicador de conexion online/offline en la pantalla principal.
 - Lector de codigos de barras con ML Kit / Google Code Scanner.
 - Generacion de QR con ZXing para la parte Verifactu.
@@ -138,6 +139,9 @@ Clases Verifactu en `data/verifactu`:
 - `productos`: catalogo basico escaneado por codigo de barras.
 - `ventas`: ventas registradas al confirmar cobro.
 - `facturas`: facturas simplificadas con hash y QR Verifactu.
+- `contadores`: numeracion e hash de la ultima factura emitida.
+- `movimientos_caja`: entradas, retiradas y aperturas manuales de caja.
+- `splash_backgrounds`: imagenes opcionales para el splash.
 
 ## Pruebas
 
@@ -161,9 +165,9 @@ Estado validado:
 
 - [ ] Mantener este README actualizado conforme avance el TFG.
 - [ ] Documentar la arquitectura real por capas: `ui`, `data`, futuras capas `domain`/`repository`.
-- [ ] Documentar configuracion de Firebase para poder levantar el proyecto en otro equipo.
-- [ ] Documentar estructura de colecciones Firestore y campos esperados.
-- [ ] Documentar reglas de seguridad de Firestore cuando existan.
+- [x] Documentar configuracion de Firebase para poder levantar el proyecto en otro equipo.
+- [x] Documentar estructura de colecciones Firestore y campos esperados.
+- [x] Documentar reglas de seguridad de Firestore cuando existan.
 - [ ] Crear un guion de demo del TFG: login, mesas, comanda, cobro, ticket QR, informes y catalogo.
 - [ ] Decidir si el backend definitivo sera Firebase o Supabase. El codigo actual usa Firebase; cualquier referencia antigua a Supabase debe considerarse obsoleta salvo decision contraria.
 
@@ -171,7 +175,7 @@ Estado validado:
 
 - [ ] Revisar si `app/google-services.json` debe permanecer versionado o gestionarse por entorno.
 - [ ] Crear reglas de seguridad Firestore por usuario, negocio y rol.
-- [ ] Evitar que usuarios no autenticados lean o escriban datos de negocio.
+- [x] Evitar que usuarios no autenticados lean o escriban datos de negocio.
 - [ ] Incorporar roles: administrador, camarero, caja y cocina.
 - [ ] Mover datos fiscales y configuracion del negocio fuera del codigo.
 - [ ] Sustituir el NIF emisor hardcodeado por configuracion editable.
@@ -182,15 +186,15 @@ Estado validado:
 - [ ] Separar acceso a Firestore en repositorios.
 - [ ] Evitar consultas y escrituras directas desde Activities cuando el flujo crezca.
 - [ ] Introducir una capa de dominio para reglas de negocio: cobro, cierre de mesa, caja, stock y facturacion.
-- [ ] Centralizar nombres de colecciones y campos Firestore.
+- [x] Centralizar nombres de colecciones y campos Firestore.
 - [ ] Definir modelos para comanda, linea de comanda, pago, turno, movimiento de caja y stock.
 - [ ] Mejorar gestion de errores: ahora algunos listeners ignoran `error`.
 - [ ] Anadir estados de carga, vacio y error en pantallas con datos remotos.
 
 ### Sala, mesas y comandas
 
-- [ ] Crear comandas reales en Firestore.
-- [ ] Enlazar `Mesa.comandaActivaId` con la comanda abierta.
+- [x] Crear comandas reales en Firestore.
+- [x] Enlazar `Mesa.comandaActivaId` con la comanda abierta.
 - [ ] Cargar productos reales en la comanda.
 - [ ] Permitir anadir, quitar y modificar cantidades de productos.
 - [ ] Permitir notas por linea.
@@ -216,9 +220,9 @@ Estado validado:
 ### Cobro, ticket y facturacion
 
 - [ ] Sustituir el total mock por el total real de la comanda.
-- [ ] Pasar `ventaId` y `facturaId` al ticket; ahora se carga la ultima factura global.
-- [ ] Esperar a que venta y factura se guarden correctamente antes de abrir ticket.
-- [ ] Controlar errores durante el cobro y evitar dobles cobros por doble pulsacion.
+- [ ] Pasar `ventaId` y `facturaId` al ticket; ahora se pasa `facturaId`.
+- [x] Esperar a que venta y factura se guarden correctamente antes de abrir ticket.
+- [x] Controlar errores durante el cobro y evitar dobles cobros por doble pulsacion.
 - [ ] Implementar pagos parciales y mixtos reales.
 - [ ] Calcular cambio para efectivo.
 - [ ] Guardar desglose de pagos por metodo.
@@ -227,7 +231,7 @@ Estado validado:
 - [ ] Implementar envio por email o compartir ticket.
 - [ ] Generar PDF o imagen del ticket si se necesita para entrega o uso real.
 - [ ] Revisar Verifactu contra especificacion oficial completa.
-- [ ] Usar transacciones para numeracion de facturas y evitar duplicados.
+- [x] Usar transacciones para numeracion de facturas y evitar duplicados.
 - [ ] Gestionar series de factura por anio o configuracion del negocio.
 - [ ] Preparar entorno de pruebas y produccion para QR/validacion.
 
@@ -311,6 +315,8 @@ Estado validado:
 - [ ] Preparar una bateria de pruebas manuales para la defensa del TFG.
 
 ## Roadmap recomendado
+
+El planning funcional completo esta en `docs/planning_funcional.md`.
 
 ### Fase 1. Cerrar flujo minimo real
 

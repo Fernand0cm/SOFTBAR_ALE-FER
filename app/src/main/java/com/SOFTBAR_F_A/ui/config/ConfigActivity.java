@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Producto;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
@@ -26,8 +27,6 @@ import com.google.firebase.firestore.Query;
 import java.util.Locale;
 
 public class ConfigActivity extends AppCompatActivity {
-
-    private static final String COLECCION = "productos";
 
     private LinearLayout listaProductos;
     private TextView txtListaVacia;
@@ -104,7 +103,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     private void guardarProducto(Producto producto) {
         FirebaseFirestore.getInstance()
-                .collection(COLECCION)
+                .collection(FirestoreSchema.Collections.PRODUCTOS)
                 .document(producto.getCodigoBarras())
                 .set(producto)
                 .addOnSuccessListener(unused ->
@@ -117,8 +116,8 @@ public class ConfigActivity extends AppCompatActivity {
 
     private void suscribirseAProductos() {
         suscripcion = FirebaseFirestore.getInstance()
-                .collection(COLECCION)
-                .orderBy("nombre", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.PRODUCTOS)
+                .orderBy(FirestoreSchema.Fields.NOMBRE, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
 
