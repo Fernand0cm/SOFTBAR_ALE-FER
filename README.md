@@ -88,7 +88,8 @@ El proyecto empezo como una base de TPV y actualmente ya ha evolucionado hacia u
 
 - Pantalla visual de caja del turno.
 - Resumen y movimientos representados en UI.
-- Botones de anadir movimiento y cierre de turno presentes, actualmente con aviso de pendiente.
+- Movimientos manuales de entrada y retirada asociados al turno.
+- Cierre de turno con efectivo contado, efectivo esperado y diferencia de caja.
 
 ### Informes
 
@@ -240,10 +241,10 @@ Estado validado:
 
 - [x] Implementar apertura de turno con importe inicial.
 - [x] Asociar ventas al turno activo.
-- [ ] Registrar movimientos manuales: entradas, salidas, retiradas y ajustes.
-- [ ] Calcular ventas por metodo de pago dentro del turno.
-- [ ] Implementar cierre de turno y arqueo.
-- [ ] Registrar diferencia de caja.
+- [x] Registrar movimientos manuales: entradas, salidas, retiradas y ajustes.
+- [x] Calcular ventas por metodo de pago dentro del turno.
+- [x] Implementar cierre de turno y arqueo.
+- [x] Registrar diferencia de caja.
 - [x] Bloquear cobros si no hay turno abierto, si esta regla aplica al negocio.
 - [ ] Permitir consulta de cierres historicos.
 - [ ] Exportar o imprimir resumen de cierre.

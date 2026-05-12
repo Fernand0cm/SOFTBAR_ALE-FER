@@ -29,8 +29,16 @@ public class ResumenCaja {
     public double getOtrosIngresos() { return otrosIngresos; }
     public double getRetiradas() { return retiradas; }
 
+    public double efectivoEsperado() {
+        return apertura + ventasEfectivo + otrosIngresos - retiradas;
+    }
+
     public double totalEsperado() {
-        return apertura + ventasEfectivo + ventasTarjeta + otrosIngresos - retiradas;
+        return efectivoEsperado();
+    }
+
+    public double diferencia(double efectivoContado) {
+        return efectivoContado - efectivoEsperado();
     }
 
     public static ResumenCaja calcular(List<Venta> ventasDelTurno,

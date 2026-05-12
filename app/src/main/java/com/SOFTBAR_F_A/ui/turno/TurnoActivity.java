@@ -1,5 +1,6 @@
 package com.SOFTBAR_F_A.ui.turno;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.MovimientoCaja;
 import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
+import com.SOFTBAR_F_A.ui.caja.CajaActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +50,8 @@ public class TurnoActivity extends AppCompatActivity {
         btnCerrar = findViewById(R.id.btn_cerrar_turno);
 
         btnAbrir.setOnClickListener(v -> abrirTurno());
-        btnCerrar.setOnClickListener(v -> cerrarTurno());
+        btnCerrar.setOnClickListener(v ->
+                startActivity(new Intent(this, CajaActivity.class)));
 
         cargarTurnoActivo();
     }
@@ -121,27 +124,6 @@ public class TurnoActivity extends AppCompatActivity {
                     turnoActivoId = turnoRef.getId();
                     pintarTurno(turno);
                     Toast.makeText(this, R.string.turno_abierto_ok, Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show());
-    }
-
-    private void cerrarTurno() {
-        if (turnoActivoId == null) {
-            Toast.makeText(this, R.string.turno_error_sin_turno, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseFirestore.getInstance()
-                .collection(FirestoreSchema.Collections.TURNOS)
-                .document(turnoActivoId)
-                .update(
-                        FirestoreSchema.Fields.ESTADO, Turno.CERRADO,
-                        FirestoreSchema.Fields.FECHA_CIERRE, Timestamp.now())
-                .addOnSuccessListener(unused -> {
-                    turnoActivoId = null;
-                    pintarSinTurno();
-                    Toast.makeText(this, R.string.turno_cerrado_ok, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show());

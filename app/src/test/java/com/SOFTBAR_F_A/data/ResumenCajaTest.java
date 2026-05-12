@@ -13,10 +13,16 @@ import java.util.List;
 public class ResumenCajaTest {
 
     @Test
-    public void totalEsperado_aperturaMasVentasMenosRetiradas() {
+    public void totalEsperado_noIncluyeVentasTarjeta() {
         ResumenCaja r = new ResumenCaja(100, 200, 150, 10, 30);
-        // 100 + 200 + 150 + 10 - 30 = 430
-        assertEquals(430.0, r.totalEsperado(), 0.0001);
+        assertEquals(280.0, r.totalEsperado(), 0.0001);
+        assertEquals(280.0, r.efectivoEsperado(), 0.0001);
+    }
+
+    @Test
+    public void diferencia_restaEsperadoAlContado() {
+        ResumenCaja r = new ResumenCaja(100, 200, 150, 10, 30);
+        assertEquals(20.0, r.diferencia(300), 0.0001);
     }
 
     @Test

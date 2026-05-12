@@ -132,7 +132,9 @@ Campos:
 - `fechaCierre`: timestamp opcional.
 - `estado`: `abierto` o `cerrado`.
 - `importeInicial`: efectivo inicial del turno.
-- `efectivoContado`: efectivo contado al cierre, pendiente de uso completo.
+- `efectivoContado`: efectivo contado al cierre.
+- `efectivoEsperado`: efectivo esperado segun apertura, ventas en efectivo, entradas y retiradas.
+- `diferenciaCaja`: diferencia entre efectivo contado y esperado.
 - `usuarioUid`: usuario que abre el turno.
 - `usuarioEmail`: email del usuario.
 
