@@ -19,6 +19,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.MovimientoCaja;
 import com.SOFTBAR_F_A.data.ResumenCaja;
 import com.SOFTBAR_F_A.data.Venta;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,9 +35,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class CajaActivity extends AppCompatActivity {
-
-    private static final String COL_VENTAS = "ventas";
-    private static final String COL_MOVIMIENTOS = "movimientos_caja";
 
     private TextView txtApertura, txtEfectivo, txtTarjeta, txtRetiradas, txtTotalEsperado;
     private LinearLayout listaMovimientos;
@@ -86,9 +84,9 @@ public class CajaActivity extends AppCompatActivity {
 
     private void suscribirseAVentas() {
         suscripcionVentas = FirebaseFirestore.getInstance()
-                .collection(COL_VENTAS)
-                .whereGreaterThanOrEqualTo("fecha", inicioDelDia())
-                .orderBy("fecha", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.VENTAS)
+                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, inicioDelDia())
+                .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     ventasDelDia.clear();
@@ -101,9 +99,9 @@ public class CajaActivity extends AppCompatActivity {
 
     private void suscribirseAMovimientos() {
         suscripcionMovimientos = FirebaseFirestore.getInstance()
-                .collection(COL_MOVIMIENTOS)
-                .whereGreaterThanOrEqualTo("fecha", inicioDelDia())
-                .orderBy("fecha", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.MOVIMIENTOS_CAJA)
+                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, inicioDelDia())
+                .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     movimientosDelDia.clear();
@@ -232,7 +230,7 @@ public class CajaActivity extends AppCompatActivity {
     private void guardarMovimiento(String tipo, double importe, String descripcion) {
         MovimientoCaja m = new MovimientoCaja(
                 new Timestamp(new Date()), tipo, importe, descripcion);
-        FirebaseFirestore.getInstance().collection(COL_MOVIMIENTOS).add(m);
+        FirebaseFirestore.getInstance().collection(FirestoreSchema.Collections.MOVIMIENTOS_CAJA).add(m);
     }
 
     @Override

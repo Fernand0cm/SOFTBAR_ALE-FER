@@ -1,0 +1,141 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function nonEmptyString(value) {
+      return value is string && value.size() > 0;
+    }
+
+    function nullableString(value) {
+      return value == null || value is string;
+    }
+
+    function validMesa() {
+      return request.resource.data.keys().hasOnly([
+          'numero', 'estado', 'comandaActivaId'
+        ])
+        && request.resource.data.numero is int
+        && request.resource.data.estado in ['libre', 'ocupada', 'cobro', 'cerrada']
+        && (!request.resource.data.keys().hasAny(['comandaActivaId'])
+          || nullableString(request.resource.data.comandaActivaId));
+    }
+
+    function validProducto() {
+      return request.resource.data.keys().hasOnly([
+          'codigoBarras', 'nombre', 'precio'
+        ])
+        && nonEmptyString(request.resource.data.codigoBarras)
+        && nonEmptyString(request.resource.data.nombre)
+        && request.resource.data.precio is number
+        && request.resource.data.precio >= 0;
+    }
+
+    function validVenta() {
+      return request.resource.data.keys().hasOnly([
+          'fecha', 'total', 'metodo', 'facturaId', 'comandaId', 'mesaId'
+        ])
+        && request.resource.data.fecha is timestamp
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && nonEmptyString(request.resource.data.metodo)
+        && (!request.resource.data.keys().hasAny(['facturaId'])
+          || nullableString(request.resource.data.facturaId))
+        && (!request.resource.data.keys().hasAny(['comandaId'])
+          || nullableString(request.resource.data.comandaId))
+        && (!request.resource.data.keys().hasAny(['mesaId'])
+          || nullableString(request.resource.data.mesaId));
+    }
+
+    function validMovimientoCaja() {
+      return request.resource.data.keys().hasOnly([
+          'fecha', 'tipo', 'importe', 'descripcion'
+        ])
+        && request.resource.data.fecha is timestamp
+        && request.resource.data.tipo in ['apertura', 'entrada', 'retirada']
+        && request.resource.data.importe is number
+        && (!request.resource.data.keys().hasAny(['descripcion'])
+          || nullableString(request.resource.data.descripcion));
+    }
+
+    function validFactura() {
+      return request.resource.data.keys().hasOnly([
+          'numero', 'fecha', 'nifEmisor', 'total', 'cuotaIva',
+          'hashAnterior', 'hashActual', 'urlValidacion'
+        ])
+        && nonEmptyString(request.resource.data.numero)
+        && request.resource.data.fecha is timestamp
+        && nonEmptyString(request.resource.data.nifEmisor)
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.cuotaIva is number
+        && request.resource.data.cuotaIva >= 0
+        && request.resource.data.hashAnterior is string
+        && nonEmptyString(request.resource.data.hashActual)
+        && nonEmptyString(request.resource.data.urlValidacion);
+    }
+
+    function validComanda() {
+      return request.resource.data.keys().hasOnly([
+          'mesaId', 'mesaNumero', 'estado', 'fechaApertura', 'lineas'
+        ])
+        && nullableString(request.resource.data.mesaId)
+        && request.resource.data.mesaNumero is int
+        && request.resource.data.estado in ['abierta', 'pagada']
+        && request.resource.data.fechaApertura is timestamp
+        && request.resource.data.lineas is list;
+    }
+
+    match /splash_backgrounds/{id} {
+      allow read: if true;
+      allow write: if signedIn();
+    }
+
+    match /mesas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validMesa();
+      allow delete: if false;
+    }
+
+    match /productos/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validProducto();
+      allow delete: if signedIn();
+    }
+
+    match /comandas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validComanda();
+      allow delete: if false;
+    }
+
+    match /ventas/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && validVenta();
+      allow update, delete: if false;
+    }
+
+    match /facturas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validFactura();
+      allow delete: if false;
+    }
+
+    match /movimientos_caja/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validMovimientoCaja();
+      allow delete: if false;
+    }
+
+    match /contadores/{id} {
+      allow read, write: if signedIn();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

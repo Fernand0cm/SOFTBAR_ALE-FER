@@ -61,6 +61,7 @@
     <string name="cobro_recibido">Recibido</string>
     <string name="cobro_cambio">Cambio</string>
     <string name="cobro_confirmar">Confirmar pago</string>
+    <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
     <string name="ticket_subtitulo">Ticket simplificado</string>

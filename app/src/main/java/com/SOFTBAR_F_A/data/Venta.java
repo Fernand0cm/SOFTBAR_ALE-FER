@@ -7,6 +7,9 @@ public class Venta {
     private Timestamp fecha;
     private double total;
     private String metodo;
+    private String facturaId;
+    private String comandaId;
+    private String mesaId;
 
     public Venta() {
         // Necesario para Firestore
@@ -26,4 +29,13 @@ public class Venta {
 
     public String getMetodo() { return metodo; }
     public void setMetodo(String metodo) { this.metodo = metodo; }
+
+    public String getFacturaId() { return facturaId; }
+    public void setFacturaId(String facturaId) { this.facturaId = facturaId; }
+
+    public String getComandaId() { return comandaId; }
+    public void setComandaId(String comandaId) { this.comandaId = comandaId; }
+
+    public String getMesaId() { return mesaId; }
+    public void setMesaId(String mesaId) { this.mesaId = mesaId; }
 }
