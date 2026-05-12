@@ -2,6 +2,9 @@ package com.SOFTBAR_F_A.data;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Venta {
 
     private Timestamp fecha;
@@ -10,6 +13,8 @@ public class Venta {
     private String facturaId;
     private String comandaId;
     private String mesaId;
+    private int mesaNumero;
+    private List<LineaComanda> lineas = new ArrayList<>();
 
     public Venta() {
         // Necesario para Firestore
@@ -38,4 +43,12 @@ public class Venta {
 
     public String getMesaId() { return mesaId; }
     public void setMesaId(String mesaId) { this.mesaId = mesaId; }
+
+    public int getMesaNumero() { return mesaNumero; }
+    public void setMesaNumero(int mesaNumero) { this.mesaNumero = mesaNumero; }
+
+    public List<LineaComanda> getLineas() { return lineas; }
+    public void setLineas(List<LineaComanda> lineas) {
+        this.lineas = lineas != null ? lineas : new ArrayList<>();
+    }
 }

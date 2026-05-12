@@ -40,13 +40,13 @@ Prioridad alta.
 
 Tareas:
 
-- Guardar lineas reales dentro de `ventas`.
-- Guardar lineas reales dentro de `facturas`.
-- Pasar `ventaId` y `facturaId` al ticket.
-- Mostrar en ticket la venta exacta, no datos de ejemplo.
+- [x] Guardar lineas reales dentro de `ventas`.
+- [x] Guardar lineas reales dentro de `facturas`.
+- [x] Pasar `ventaId` y `facturaId` al ticket.
+- [x] Mostrar en ticket la venta exacta, no datos de ejemplo.
 - Confirmar que mesa, comanda, venta y factura quedan sincronizadas.
-- Evitar dobles cobros con boton deshabilitado y control de estado.
-- Mostrar error claro si falla Firestore durante el cobro.
+- [x] Evitar dobles cobros con boton deshabilitado y control de estado.
+- [x] Mostrar error claro si falla Firestore durante el cobro.
 
 Resultado esperado:
 

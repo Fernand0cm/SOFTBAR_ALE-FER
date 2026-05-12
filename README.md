@@ -220,13 +220,13 @@ Estado validado:
 ### Cobro, ticket y facturacion
 
 - [ ] Sustituir el total mock por el total real de la comanda.
-- [ ] Pasar `ventaId` y `facturaId` al ticket; ahora se pasa `facturaId`.
+- [x] Pasar `ventaId` y `facturaId` al ticket.
 - [x] Esperar a que venta y factura se guarden correctamente antes de abrir ticket.
 - [x] Controlar errores durante el cobro y evitar dobles cobros por doble pulsacion.
 - [ ] Implementar pagos parciales y mixtos reales.
 - [ ] Calcular cambio para efectivo.
 - [ ] Guardar desglose de pagos por metodo.
-- [ ] Guardar lineas reales en el ticket/factura.
+- [x] Guardar lineas reales en el ticket/factura.
 - [ ] Implementar impresion real.
 - [ ] Implementar envio por email o compartir ticket.
 - [ ] Generar PDF o imagen del ticket si se necesita para entrega o uso real.
