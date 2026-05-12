@@ -49,14 +49,17 @@ public class ResumenCaja {
         double tarjeta = 0;
         if (ventasDelTurno != null) {
             for (Venta v : ventasDelTurno) {
+                if (v.getPagoEfectivo() > 0 || v.getPagoTarjeta() > 0) {
+                    efectivo += v.getPagoEfectivo();
+                    tarjeta += v.getPagoTarjeta();
+                    continue;
+                }
                 if (v.getMetodo() == null) continue;
                 if (v.getMetodo().equalsIgnoreCase(etiquetaEfectivo)) {
                     efectivo += v.getTotal();
                 } else if (v.getMetodo().equalsIgnoreCase(etiquetaTarjeta)) {
                     tarjeta += v.getTotal();
                 } else {
-                    // El cobro mixto u otros metodos cuentan como ventas en efectivo
-                    // para la caja, por simplicidad.
                     efectivo += v.getTotal();
                 }
             }

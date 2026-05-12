@@ -59,6 +59,21 @@ public class ResumenCajaTest {
     }
 
     @Test
+    public void calcular_usaDesgloseDePagoSiExiste() {
+        Timestamp t = Timestamp.now();
+        Venta venta = new Venta(t, 20.0, "Mixto");
+        venta.setPagoEfectivo(8.0);
+        venta.setPagoTarjeta(12.0);
+
+        ResumenCaja r = ResumenCaja.calcular(Collections.singletonList(venta),
+                Collections.emptyList(), "Efectivo", "Tarjeta");
+
+        assertEquals(8.0, r.getVentasEfectivo(), 0.0001);
+        assertEquals(12.0, r.getVentasTarjeta(), 0.0001);
+        assertEquals(8.0, r.efectivoEsperado(), 0.0001);
+    }
+
+    @Test
     public void calcular_sumaMovimientosPorTipo() {
         Timestamp t = Timestamp.now();
         List<MovimientoCaja> movs = Arrays.asList(

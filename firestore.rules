@@ -34,11 +34,20 @@ service cloud.firestore {
         && request.resource.data.precio >= 0;
     }
 
+    function validConfigFiscal() {
+      return request.resource.data.keys().hasOnly([
+          'nifEmisor', 'serie'
+        ])
+        && nonEmptyString(request.resource.data.nifEmisor)
+        && nonEmptyString(request.resource.data.serie);
+    }
+
     function validVenta() {
       return request.resource.data.keys().hasOnly([
           'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
           'mesaId', 'mesaNumero', 'lineas', 'turnoId',
-          'usuarioUid', 'usuarioEmail'
+          'usuarioUid', 'usuarioEmail', 'pagoEfectivo', 'pagoTarjeta',
+          'importeRecibido', 'cambio'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.total is number
@@ -59,7 +68,15 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['usuarioUid'])
           || nonEmptyString(request.resource.data.usuarioUid))
         && (!request.resource.data.keys().hasAny(['usuarioEmail'])
-          || request.resource.data.usuarioEmail is string);
+          || request.resource.data.usuarioEmail is string)
+        && (!request.resource.data.keys().hasAny(['pagoEfectivo'])
+          || request.resource.data.pagoEfectivo is number)
+        && (!request.resource.data.keys().hasAny(['pagoTarjeta'])
+          || request.resource.data.pagoTarjeta is number)
+        && (!request.resource.data.keys().hasAny(['importeRecibido'])
+          || request.resource.data.importeRecibido is number)
+        && (!request.resource.data.keys().hasAny(['cambio'])
+          || request.resource.data.cambio is number);
     }
 
     function validMovimientoCaja() {
@@ -107,7 +124,8 @@ service cloud.firestore {
       return request.resource.data.keys().hasOnly([
           'numero', 'fecha', 'nifEmisor', 'total', 'cuotaIva',
           'hashAnterior', 'hashActual', 'urlValidacion',
-          'metodo', 'mesaId', 'mesaNumero', 'lineas'
+          'metodo', 'mesaId', 'mesaNumero', 'lineas',
+          'pagoEfectivo', 'pagoTarjeta', 'importeRecibido', 'cambio'
         ])
         && nonEmptyString(request.resource.data.numero)
         && request.resource.data.fecha is timestamp
@@ -126,7 +144,15 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['mesaNumero'])
           || request.resource.data.mesaNumero is int)
         && (!request.resource.data.keys().hasAny(['lineas'])
-          || request.resource.data.lineas is list);
+          || request.resource.data.lineas is list)
+        && (!request.resource.data.keys().hasAny(['pagoEfectivo'])
+          || request.resource.data.pagoEfectivo is number)
+        && (!request.resource.data.keys().hasAny(['pagoTarjeta'])
+          || request.resource.data.pagoTarjeta is number)
+        && (!request.resource.data.keys().hasAny(['importeRecibido'])
+          || request.resource.data.importeRecibido is number)
+        && (!request.resource.data.keys().hasAny(['cambio'])
+          || request.resource.data.cambio is number);
     }
 
     function validComanda() {
@@ -143,6 +169,12 @@ service cloud.firestore {
     match /splash_backgrounds/{id} {
       allow read: if true;
       allow write: if signedIn();
+    }
+
+    match /configuracion/fiscal {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validConfigFiscal();
+      allow delete: if false;
     }
 
     match /mesas/{id} {

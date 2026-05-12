@@ -73,10 +73,14 @@
     <string name="cobro_tarjeta">Tarjeta</string>
     <string name="cobro_mixto">Mixto</string>
     <string name="cobro_recibido">Recibido</string>
+    <string name="cobro_pago_efectivo">Efectivo</string>
+    <string name="cobro_pago_tarjeta">Tarjeta</string>
+    <string name="cobro_importe_hint">Importe (EUR)</string>
     <string name="cobro_cambio">Cambio</string>
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
     <string name="cobro_error_sin_turno">Abre un turno antes de cobrar</string>
+    <string name="cobro_error_importe">El pago no cubre el total</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
     <string name="ticket_subtitulo">Ticket simplificado</string>
@@ -84,6 +88,9 @@
     <string name="ticket_mesa">Mesa</string>
     <string name="ticket_total">Total</string>
     <string name="ticket_pago">Forma de pago</string>
+    <string name="ticket_pago_efectivo">Efectivo</string>
+    <string name="ticket_pago_tarjeta">Tarjeta</string>
+    <string name="ticket_cambio">Cambio</string>
     <string name="ticket_gracias">Gracias por su visita</string>
     <string name="ticket_imprimir">Imprimir</string>
     <string name="ticket_email">Enviar por email</string>

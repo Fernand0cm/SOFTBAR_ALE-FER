@@ -17,6 +17,10 @@ public class Venta {
     private String turnoId;
     private String usuarioUid;
     private String usuarioEmail;
+    private double pagoEfectivo;
+    private double pagoTarjeta;
+    private double importeRecibido;
+    private double cambio;
     private List<LineaComanda> lineas = new ArrayList<>();
 
     public Venta() {
@@ -58,6 +62,18 @@ public class Venta {
 
     public String getUsuarioEmail() { return usuarioEmail; }
     public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
+
+    public double getPagoEfectivo() { return pagoEfectivo; }
+    public void setPagoEfectivo(double pagoEfectivo) { this.pagoEfectivo = pagoEfectivo; }
+
+    public double getPagoTarjeta() { return pagoTarjeta; }
+    public void setPagoTarjeta(double pagoTarjeta) { this.pagoTarjeta = pagoTarjeta; }
+
+    public double getImporteRecibido() { return importeRecibido; }
+    public void setImporteRecibido(double importeRecibido) { this.importeRecibido = importeRecibido; }
+
+    public double getCambio() { return cambio; }
+    public void setCambio(double cambio) { this.cambio = cambio; }
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

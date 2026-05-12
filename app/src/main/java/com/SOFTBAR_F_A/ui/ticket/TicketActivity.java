@@ -32,6 +32,9 @@ public class TicketActivity extends AppCompatActivity {
     private LinearLayout listaTicketLineas;
     private TextView txtTicketTotal;
     private TextView txtTicketPago;
+    private TextView txtTicketPagoEfectivo;
+    private TextView txtTicketPagoTarjeta;
+    private TextView txtTicketCambio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,9 @@ public class TicketActivity extends AppCompatActivity {
         listaTicketLineas = findViewById(R.id.lista_ticket_lineas);
         txtTicketTotal = findViewById(R.id.txt_ticket_total);
         txtTicketPago = findViewById(R.id.txt_ticket_pago);
+        txtTicketPagoEfectivo = findViewById(R.id.txt_ticket_pago_efectivo);
+        txtTicketPagoTarjeta = findViewById(R.id.txt_ticket_pago_tarjeta);
+        txtTicketCambio = findViewById(R.id.txt_ticket_cambio);
 
         cargarTicket();
     }
@@ -119,7 +125,10 @@ public class TicketActivity extends AppCompatActivity {
                 venta.getMesaNumero(),
                 venta.getLineas(),
                 venta.getTotal(),
-                venta.getMetodo());
+                venta.getMetodo(),
+                venta.getPagoEfectivo(),
+                venta.getPagoTarjeta(),
+                venta.getCambio());
     }
 
     private void pintarFactura(Factura factura) {
@@ -128,12 +137,17 @@ public class TicketActivity extends AppCompatActivity {
                 factura.getMesaNumero(),
                 factura.getLineas(),
                 factura.getTotal(),
-                factura.getMetodo());
+                factura.getMetodo(),
+                factura.getPagoEfectivo(),
+                factura.getPagoTarjeta(),
+                factura.getCambio());
     }
 
     private void pintarDatosTicket(String numero, int mesaNumero,
                                    List<LineaComanda> lineas,
-                                   double total, String metodo) {
+                                   double total, String metodo,
+                                   double pagoEfectivo, double pagoTarjeta,
+                                   double cambio) {
         if (txtTicketNumero != null) {
             txtTicketNumero.setText(numero != null ? numero : "");
         }
@@ -149,7 +163,20 @@ public class TicketActivity extends AppCompatActivity {
         if (txtTicketPago != null) {
             txtTicketPago.setText(metodo != null ? metodo : "");
         }
+        if (txtTicketPagoEfectivo != null) {
+            txtTicketPagoEfectivo.setText(formatoImporte(pagoEfectivo));
+        }
+        if (txtTicketPagoTarjeta != null) {
+            txtTicketPagoTarjeta.setText(formatoImporte(pagoTarjeta));
+        }
+        if (txtTicketCambio != null) {
+            txtTicketCambio.setText(formatoImporte(cambio));
+        }
         pintarLineas(lineas);
+    }
+
+    private String formatoImporte(double importe) {
+        return String.format(Locale.getDefault(), "%.2f EUR", importe);
     }
 
     private void pintarLineas(List<LineaComanda> lineas) {

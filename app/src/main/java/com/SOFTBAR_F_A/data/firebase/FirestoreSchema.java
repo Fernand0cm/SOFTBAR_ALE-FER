@@ -6,6 +6,7 @@ public final class FirestoreSchema {
 
     public static final class Collections {
         public static final String COMANDAS = "comandas";
+        public static final String CONFIGURACION = "configuracion";
         public static final String CONTADORES = "contadores";
         public static final String FACTURAS = "facturas";
         public static final String MESAS = "mesas";
@@ -20,6 +21,7 @@ public final class FirestoreSchema {
 
     public static final class Documents {
         public static final String CONTADOR_FACTURAS = "facturas";
+        public static final String CONFIG_FISCAL = "fiscal";
 
         private Documents() { }
     }
@@ -42,8 +44,14 @@ public final class FirestoreSchema {
         public static final String MESA_NUMERO = "mesaNumero";
         public static final String NOMBRE = "nombre";
         public static final String NUMERO = "numero";
+        public static final String PAGO_EFECTIVO = "pagoEfectivo";
+        public static final String PAGO_TARJETA = "pagoTarjeta";
+        public static final String IMPORTE_RECIBIDO = "importeRecibido";
+        public static final String CAMBIO = "cambio";
         public static final String SPLASH_ACTIVE = "active";
         public static final String SPLASH_IMAGE_URL = "imageUrl";
+        public static final String NIF_EMISOR = "nifEmisor";
+        public static final String SERIE = "serie";
         public static final String TURNO_ID = "turnoId";
         public static final String ULTIMO = "ultimo";
         public static final String USUARIO_EMAIL = "usuarioEmail";

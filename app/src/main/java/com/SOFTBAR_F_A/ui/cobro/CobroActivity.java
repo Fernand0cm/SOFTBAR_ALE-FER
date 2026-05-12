@@ -2,7 +2,10 @@ package com.SOFTBAR_F_A.ui.cobro;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
+import com.SOFTBAR_F_A.data.verifactu.ConfiguracionFiscal;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
 import com.SOFTBAR_F_A.data.verifactu.HashVerifactu;
@@ -42,14 +46,20 @@ public class CobroActivity extends AppCompatActivity {
     public static final String EXTRA_LINEAS = "lineas";
 
     private static final double TIPO_IVA = 0.10;
-    private static final String NIF_EMISOR = "B12345678";
 
     private double total;
     private String comandaId;
     private String mesaId;
     private List<LineaComanda> lineasBarra;
+    private EditText inputPagoEfectivo;
+    private EditText inputPagoTarjeta;
+    private TextView txtCambio;
     private Button btnConfirmar;
     private boolean cobroEnCurso;
+    private double pagoEfectivo;
+    private double pagoTarjeta;
+    private double importeRecibido;
+    private double cambio;
 
     private String metodoSeleccionado = "Efectivo";
 
@@ -78,19 +88,39 @@ public class CobroActivity extends AppCompatActivity {
             txtTotal.setText(String.format(Locale.getDefault(), "%.2f EUR", total));
         }
 
-        findViewById(R.id.btn_efectivo).setOnClickListener(v ->
-                metodoSeleccionado = getString(R.string.cobro_efectivo));
-        findViewById(R.id.btn_tarjeta).setOnClickListener(v ->
-                metodoSeleccionado = getString(R.string.cobro_tarjeta));
-        findViewById(R.id.btn_mixto).setOnClickListener(v ->
-                metodoSeleccionado = getString(R.string.cobro_mixto));
+        inputPagoEfectivo = findViewById(R.id.input_pago_efectivo);
+        inputPagoTarjeta = findViewById(R.id.input_pago_tarjeta);
+        txtCambio = findViewById(R.id.txt_cambio_cobro);
+
+        TextWatcher watcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                refrescarCambio();
+            }
+            @Override public void afterTextChanged(Editable s) { }
+        };
+        inputPagoEfectivo.addTextChangedListener(watcher);
+        inputPagoTarjeta.addTextChangedListener(watcher);
+
+        findViewById(R.id.btn_efectivo).setOnClickListener(v -> seleccionarMetodo(
+                getString(R.string.cobro_efectivo)));
+        findViewById(R.id.btn_tarjeta).setOnClickListener(v -> seleccionarMetodo(
+                getString(R.string.cobro_tarjeta)));
+        findViewById(R.id.btn_mixto).setOnClickListener(v -> seleccionarMetodo(
+                getString(R.string.cobro_mixto)));
 
         btnConfirmar = findViewById(R.id.btn_confirmar);
         btnConfirmar.setOnClickListener(v -> confirmarVenta());
+
+        seleccionarMetodo(getString(R.string.cobro_efectivo));
     }
 
     private void confirmarVenta() {
         if (cobroEnCurso) return;
+        if (!validarPago()) {
+            Toast.makeText(this, R.string.cobro_error_importe, Toast.LENGTH_SHORT).show();
+            return;
+        }
         cobroEnCurso = true;
         btnConfirmar.setEnabled(false);
 
@@ -126,8 +156,12 @@ public class CobroActivity extends AppCompatActivity {
 
     private void guardarCobro(Timestamp ts, Date ahora, String turnoId, FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SimpleDateFormat anyoFmt = new SimpleDateFormat("yyyy", Locale.ROOT);
+        String anyo = anyoFmt.format(ahora);
         DocumentReference contadorRef = db.collection(FirestoreSchema.Collections.CONTADORES)
-                .document(FirestoreSchema.Documents.CONTADOR_FACTURAS);
+                .document(FirestoreSchema.Documents.CONTADOR_FACTURAS + "_" + anyo);
+        DocumentReference configRef = db.collection(FirestoreSchema.Collections.CONFIGURACION)
+                .document(FirestoreSchema.Documents.CONFIG_FISCAL);
         DocumentReference ventaRef = db.collection(FirestoreSchema.Collections.VENTAS).document();
         DocumentReference comandaRef = comandaId != null
                 ? db.collection(FirestoreSchema.Collections.COMANDAS).document(comandaId)
@@ -142,6 +176,12 @@ public class CobroActivity extends AppCompatActivity {
                         }
                     }
 
+                    DocumentSnapshot configDoc = transaction.get(configRef);
+                    ConfiguracionFiscal config = configDoc.exists()
+                            ? configDoc.toObject(ConfiguracionFiscal.class)
+                            : new ConfiguracionFiscal();
+                    if (config == null) config = new ConfiguracionFiscal();
+
                     DocumentSnapshot contador = transaction.get(contadorRef);
                     long ultimo = contador.exists() && contador.getLong(FirestoreSchema.Fields.ULTIMO) != null
                             ? contador.getLong(FirestoreSchema.Fields.ULTIMO)
@@ -154,11 +194,16 @@ public class CobroActivity extends AppCompatActivity {
                     List<LineaComanda> lineas = comanda != null ? comanda.getLineas() : lineasBarra;
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
-                    Factura factura = construirFactura(ts, ahora, siguiente, hashAnterior);
+                    Factura factura = construirFactura(
+                            ts, ahora, siguiente, hashAnterior, config);
                     factura.setMetodo(metodoSeleccionado);
                     factura.setMesaId(mesaId);
                     factura.setMesaNumero(mesaNumero);
                     factura.setLineas(lineas);
+                    factura.setPagoEfectivo(pagoEfectivo);
+                    factura.setPagoTarjeta(pagoTarjeta);
+                    factura.setImporteRecibido(importeRecibido);
+                    factura.setCambio(cambio);
                     String facturaId = factura.getNumero().replace("/", "-");
                     DocumentReference facturaRef = db.collection(FirestoreSchema.Collections.FACTURAS)
                             .document(facturaId);
@@ -172,6 +217,10 @@ public class CobroActivity extends AppCompatActivity {
                     venta.setTurnoId(turnoId);
                     venta.setUsuarioUid(user.getUid());
                     venta.setUsuarioEmail(user.getEmail());
+                    venta.setPagoEfectivo(pagoEfectivo);
+                    venta.setPagoTarjeta(pagoTarjeta);
+                    venta.setImporteRecibido(importeRecibido);
+                    venta.setCambio(cambio);
 
                     Map<String, Object> contadorData = new HashMap<>();
                     contadorData.put(FirestoreSchema.Fields.ULTIMO, siguiente);
@@ -212,23 +261,81 @@ public class CobroActivity extends AppCompatActivity {
         btnConfirmar.setEnabled(true);
     }
 
-    private Factura construirFactura(Timestamp ts, Date ahora, int siguiente, String hashAnterior) {
+    private void seleccionarMetodo(String metodo) {
+        metodoSeleccionado = metodo;
+        if (metodo.equals(getString(R.string.cobro_efectivo))) {
+            inputPagoEfectivo.setEnabled(true);
+            inputPagoTarjeta.setEnabled(false);
+            inputPagoEfectivo.setText(formatoNumero(total));
+            inputPagoTarjeta.setText(formatoNumero(0));
+        } else if (metodo.equals(getString(R.string.cobro_tarjeta))) {
+            inputPagoEfectivo.setEnabled(false);
+            inputPagoTarjeta.setEnabled(false);
+            inputPagoEfectivo.setText(formatoNumero(0));
+            inputPagoTarjeta.setText(formatoNumero(total));
+        } else {
+            inputPagoEfectivo.setEnabled(true);
+            inputPagoTarjeta.setEnabled(true);
+            inputPagoEfectivo.setText("");
+            inputPagoTarjeta.setText(formatoNumero(total));
+        }
+        refrescarCambio();
+    }
+
+    private boolean validarPago() {
+        double efectivo = leerImporte(inputPagoEfectivo);
+        double tarjeta = leerImporte(inputPagoTarjeta);
+        if (efectivo < 0 || tarjeta < 0) return false;
+        if (tarjeta > total + 0.0001) return false;
+        double pagado = efectivo + tarjeta;
+        if (pagado + 0.0001 < total) return false;
+
+        pagoEfectivo = Math.max(0, efectivo - Math.max(0, pagado - total));
+        pagoTarjeta = tarjeta;
+        importeRecibido = pagado;
+        cambio = Math.max(0, pagado - total);
+        return true;
+    }
+
+    private void refrescarCambio() {
+        double pagado = leerImporte(inputPagoEfectivo) + leerImporte(inputPagoTarjeta);
+        double cambioActual = Math.max(0, pagado - total);
+        txtCambio.setText(String.format(Locale.getDefault(), "%.2f EUR", cambioActual));
+    }
+
+    private double leerImporte(EditText input) {
+        if (input == null || input.getText() == null) return 0;
+        String txt = input.getText().toString().trim();
+        if (txt.isEmpty()) return 0;
+        try {
+            return Double.parseDouble(txt.replace(',', '.'));
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private String formatoNumero(double importe) {
+        return String.format(Locale.ROOT, "%.2f", importe);
+    }
+
+    private Factura construirFactura(Timestamp ts, Date ahora, int siguiente,
+                                     String hashAnterior, ConfiguracionFiscal config) {
         SimpleDateFormat anyoFmt = new SimpleDateFormat("yyyy", Locale.ROOT);
         SimpleDateFormat fechaIso = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
         SimpleDateFormat fechaQr = new SimpleDateFormat("dd-MM-yyyy", Locale.ROOT);
 
-        String numero = String.format(Locale.ROOT, "%04d/%s",
-                siguiente, anyoFmt.format(ahora));
+        String numero = String.format(Locale.ROOT, "%s-%04d/%s",
+                config.getSerie(), siguiente, anyoFmt.format(ahora));
         double cuotaIva = total - (total / (1 + TIPO_IVA));
 
         String hashActual = HashVerifactu.calcular(
-                numero, fechaIso.format(ahora), NIF_EMISOR,
+                numero, fechaIso.format(ahora), config.getNifEmisor(),
                 total, cuotaIva, hashAnterior);
 
         String urlValidacion = GeneradorQrVerifactu.construirUrl(
-                NIF_EMISOR, numero, fechaQr.format(ahora), total);
+                config.getNifEmisor(), numero, fechaQr.format(ahora), total);
 
-        return new Factura(numero, ts, NIF_EMISOR,
+        return new Factura(numero, ts, config.getNifEmisor(),
                 total, cuotaIva, hashAnterior, hashActual, urlValidacion);
     }
 
