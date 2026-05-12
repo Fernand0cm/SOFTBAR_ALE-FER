@@ -36,7 +36,8 @@ service cloud.firestore {
 
     function validVenta() {
       return request.resource.data.keys().hasOnly([
-          'fecha', 'total', 'metodo', 'facturaId', 'comandaId', 'mesaId'
+          'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
+          'mesaId', 'mesaNumero', 'lineas'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.total is number
@@ -47,7 +48,11 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['comandaId'])
           || nullableString(request.resource.data.comandaId))
         && (!request.resource.data.keys().hasAny(['mesaId'])
-          || nullableString(request.resource.data.mesaId));
+          || nullableString(request.resource.data.mesaId))
+        && (!request.resource.data.keys().hasAny(['mesaNumero'])
+          || request.resource.data.mesaNumero is int)
+        && (!request.resource.data.keys().hasAny(['lineas'])
+          || request.resource.data.lineas is list);
     }
 
     function validMovimientoCaja() {
@@ -64,7 +69,8 @@ service cloud.firestore {
     function validFactura() {
       return request.resource.data.keys().hasOnly([
           'numero', 'fecha', 'nifEmisor', 'total', 'cuotaIva',
-          'hashAnterior', 'hashActual', 'urlValidacion'
+          'hashAnterior', 'hashActual', 'urlValidacion',
+          'metodo', 'mesaId', 'mesaNumero', 'lineas'
         ])
         && nonEmptyString(request.resource.data.numero)
         && request.resource.data.fecha is timestamp
@@ -75,7 +81,15 @@ service cloud.firestore {
         && request.resource.data.cuotaIva >= 0
         && request.resource.data.hashAnterior is string
         && nonEmptyString(request.resource.data.hashActual)
-        && nonEmptyString(request.resource.data.urlValidacion);
+        && nonEmptyString(request.resource.data.urlValidacion)
+        && (!request.resource.data.keys().hasAny(['metodo'])
+          || request.resource.data.metodo is string)
+        && (!request.resource.data.keys().hasAny(['mesaId'])
+          || nullableString(request.resource.data.mesaId))
+        && (!request.resource.data.keys().hasAny(['mesaNumero'])
+          || request.resource.data.mesaNumero is int)
+        && (!request.resource.data.keys().hasAny(['lineas'])
+          || request.resource.data.lineas is list);
     }
 
     function validComanda() {

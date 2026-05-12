@@ -30,6 +30,7 @@ public final class FirestoreSchema {
         public static final String FECHA = "fecha";
         public static final String HASH_ULTIMO = "hashUltimo";
         public static final String LINEAS = "lineas";
+        public static final String METODO = "metodo";
         public static final String MESA_ID = "mesaId";
         public static final String MESA_NUMERO = "mesaNumero";
         public static final String NOMBRE = "nombre";

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Comanda;
+import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -85,8 +87,19 @@ public class CobroActivity extends AppCompatActivity {
         DocumentReference contadorRef = db.collection(FirestoreSchema.Collections.CONTADORES)
                 .document(FirestoreSchema.Documents.CONTADOR_FACTURAS);
         DocumentReference ventaRef = db.collection(FirestoreSchema.Collections.VENTAS).document();
+        DocumentReference comandaRef = comandaId != null
+                ? db.collection(FirestoreSchema.Collections.COMANDAS).document(comandaId)
+                : null;
 
         db.runTransaction(transaction -> {
+                    Comanda comanda = null;
+                    if (comandaRef != null) {
+                        DocumentSnapshot comandaDoc = transaction.get(comandaRef);
+                        if (comandaDoc.exists()) {
+                            comanda = comandaDoc.toObject(Comanda.class);
+                        }
+                    }
+
                     DocumentSnapshot contador = transaction.get(contadorRef);
                     long ultimo = contador.exists() && contador.getLong(FirestoreSchema.Fields.ULTIMO) != null
                             ? contador.getLong(FirestoreSchema.Fields.ULTIMO)
@@ -96,8 +109,14 @@ public class CobroActivity extends AppCompatActivity {
                             : "";
                     if (hashAnterior == null) hashAnterior = "";
                     int siguiente = (int) ultimo + 1;
+                    List<LineaComanda> lineas = comanda != null ? comanda.getLineas() : null;
+                    int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
                     Factura factura = construirFactura(ts, ahora, siguiente, hashAnterior);
+                    factura.setMetodo(metodoSeleccionado);
+                    factura.setMesaId(mesaId);
+                    factura.setMesaNumero(mesaNumero);
+                    factura.setLineas(lineas);
                     String facturaId = factura.getNumero().replace("/", "-");
                     DocumentReference facturaRef = db.collection(FirestoreSchema.Collections.FACTURAS)
                             .document(facturaId);
@@ -106,6 +125,8 @@ public class CobroActivity extends AppCompatActivity {
                     venta.setFacturaId(facturaId);
                     venta.setComandaId(comandaId);
                     venta.setMesaId(mesaId);
+                    venta.setMesaNumero(mesaNumero);
+                    venta.setLineas(lineas);
 
                     Map<String, Object> contadorData = new HashMap<>();
                     contadorData.put(FirestoreSchema.Fields.ULTIMO, siguiente);
@@ -117,7 +138,7 @@ public class CobroActivity extends AppCompatActivity {
 
                     if (comandaId != null) {
                         transaction.update(
-                                db.collection(FirestoreSchema.Collections.COMANDAS).document(comandaId),
+                                comandaRef,
                                 FirestoreSchema.Fields.ESTADO, Comanda.PAGADA);
                     }
                     if (mesaId != null) {
@@ -127,9 +148,10 @@ public class CobroActivity extends AppCompatActivity {
                                 FirestoreSchema.Fields.COMANDA_ACTIVA_ID, null);
                     }
 
-                    return facturaId;
+                    return new ResultadoCobro(ventaRef.getId(), facturaId);
                 })
-                .addOnSuccessListener(this::irAlTicket)
+                .addOnSuccessListener(resultado ->
+                        irAlTicket(resultado.ventaId, resultado.facturaId))
                 .addOnFailureListener(e -> {
                     cobroEnCurso = false;
                     btnConfirmar.setEnabled(true);
@@ -161,10 +183,21 @@ public class CobroActivity extends AppCompatActivity {
                 total, cuotaIva, hashAnterior, hashActual, urlValidacion);
     }
 
-    private void irAlTicket(String facturaId) {
+    private void irAlTicket(String ventaId, String facturaId) {
         Intent intent = new Intent(this, TicketActivity.class);
+        intent.putExtra(TicketActivity.EXTRA_VENTA_ID, ventaId);
         intent.putExtra(TicketActivity.EXTRA_FACTURA_ID, facturaId);
         startActivity(intent);
         finish();
+    }
+
+    private static class ResultadoCobro {
+        final String ventaId;
+        final String facturaId;
+
+        ResultadoCobro(String ventaId, String facturaId) {
+            this.ventaId = ventaId;
+            this.facturaId = facturaId;
+        }
     }
 }
