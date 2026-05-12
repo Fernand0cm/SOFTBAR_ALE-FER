@@ -12,6 +12,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Comanda;
 import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Mesa;
+import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
@@ -22,6 +23,8 @@ import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
 import com.SOFTBAR_F_A.ui.ticket.TicketActivity;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class CobroActivity extends AppCompatActivity {
 
     public static final String EXTRA_TOTAL = "total";
+    public static final String EXTRA_LINEAS = "lineas";
 
     private static final double TIPO_IVA = 0.10;
     private static final String NIF_EMISOR = "B12345678";
@@ -43,6 +47,7 @@ public class CobroActivity extends AppCompatActivity {
     private double total;
     private String comandaId;
     private String mesaId;
+    private List<LineaComanda> lineasBarra;
     private Button btnConfirmar;
     private boolean cobroEnCurso;
 
@@ -56,6 +61,15 @@ public class CobroActivity extends AppCompatActivity {
         total = getIntent().getDoubleExtra(EXTRA_TOTAL, 0.0);
         comandaId = getIntent().getStringExtra(ComandaActivity.EXTRA_COMANDA_ID);
         mesaId = getIntent().getStringExtra(MesasActivity.EXTRA_MESA_ID);
+        Object extraLineas = getIntent().getSerializableExtra(EXTRA_LINEAS);
+        if (extraLineas instanceof List<?>) {
+            lineasBarra = new java.util.ArrayList<>();
+            for (Object item : (List<?>) extraLineas) {
+                if (item instanceof LineaComanda) {
+                    lineasBarra.add((LineaComanda) item);
+                }
+            }
+        }
 
         Header.aplica(this, getString(R.string.cobro_title));
 
@@ -83,6 +97,34 @@ public class CobroActivity extends AppCompatActivity {
         Date ahora = new Date();
         Timestamp ts = new Timestamp(ahora);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            restaurarBotonCobro();
+            return;
+        }
+
+        FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.TURNOS)
+                .whereEqualTo(FirestoreSchema.Fields.ESTADO, Turno.ABIERTO)
+                .whereEqualTo(FirestoreSchema.Fields.USUARIO_UID, user.getUid())
+                .limit(1)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    if (snap == null || snap.isEmpty()) {
+                        restaurarBotonCobro();
+                        Toast.makeText(this, R.string.cobro_error_sin_turno,
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    guardarCobro(ts, ahora, snap.getDocuments().get(0).getId(), user);
+                })
+                .addOnFailureListener(e -> {
+                    restaurarBotonCobro();
+                    Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private void guardarCobro(Timestamp ts, Date ahora, String turnoId, FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference contadorRef = db.collection(FirestoreSchema.Collections.CONTADORES)
                 .document(FirestoreSchema.Documents.CONTADOR_FACTURAS);
@@ -109,7 +151,7 @@ public class CobroActivity extends AppCompatActivity {
                             : "";
                     if (hashAnterior == null) hashAnterior = "";
                     int siguiente = (int) ultimo + 1;
-                    List<LineaComanda> lineas = comanda != null ? comanda.getLineas() : null;
+                    List<LineaComanda> lineas = comanda != null ? comanda.getLineas() : lineasBarra;
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
                     Factura factura = construirFactura(ts, ahora, siguiente, hashAnterior);
@@ -127,6 +169,9 @@ public class CobroActivity extends AppCompatActivity {
                     venta.setMesaId(mesaId);
                     venta.setMesaNumero(mesaNumero);
                     venta.setLineas(lineas);
+                    venta.setTurnoId(turnoId);
+                    venta.setUsuarioUid(user.getUid());
+                    venta.setUsuarioEmail(user.getEmail());
 
                     Map<String, Object> contadorData = new HashMap<>();
                     contadorData.put(FirestoreSchema.Fields.ULTIMO, siguiente);
@@ -153,14 +198,18 @@ public class CobroActivity extends AppCompatActivity {
                 .addOnSuccessListener(resultado ->
                         irAlTicket(resultado.ventaId, resultado.facturaId))
                 .addOnFailureListener(e -> {
-                    cobroEnCurso = false;
-                    btnConfirmar.setEnabled(true);
+                    restaurarBotonCobro();
                     Toast.makeText(this,
                             e.getLocalizedMessage() != null
                                     ? e.getLocalizedMessage()
                                     : getString(R.string.cobro_error_guardar),
                             Toast.LENGTH_LONG).show();
                 });
+    }
+
+    private void restaurarBotonCobro() {
+        cobroEnCurso = false;
+        btnConfirmar.setEnabled(true);
     }
 
     private Factura construirFactura(Timestamp ts, Date ahora, int siguiente, String hashAnterior) {

@@ -165,6 +165,7 @@ public class BarraActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(this, CobroActivity.class);
         intent.putExtra(CobroActivity.EXTRA_TOTAL, CalculoTotalComanda.total(lineas));
+        intent.putExtra(CobroActivity.EXTRA_LINEAS, new ArrayList<>(lineas));
         startActivity(intent);
         lineas.clear();
         pintarLineas();

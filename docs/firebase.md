@@ -78,6 +78,11 @@ Campos:
 - `facturaId`: id de la factura generada.
 - `comandaId`: id de comanda cuando la venta viene de sala.
 - `mesaId`: id de mesa cuando aplica.
+- `mesaNumero`: numero visible de mesa cuando aplica.
+- `turnoId`: id del turno activo.
+- `usuarioUid`: usuario que registra la venta.
+- `usuarioEmail`: email del usuario.
+- `lineas`: productos vendidos.
 
 ### `facturas`
 
@@ -93,6 +98,10 @@ Campos:
 - `hashAnterior`: hash de la factura anterior.
 - `hashActual`: hash de la factura actual.
 - `urlValidacion`: URL usada para generar el QR Verifactu.
+- `metodo`: metodo de pago.
+- `mesaId`: id de mesa cuando aplica.
+- `mesaNumero`: numero visible de mesa cuando aplica.
+- `lineas`: productos facturados.
 
 ### `contadores`
 
@@ -111,6 +120,21 @@ Campos:
 - `tipo`: `apertura`, `entrada` o `retirada`.
 - `importe`: numero.
 - `descripcion`: texto opcional.
+- `turnoId`: id del turno asociado.
+- `usuarioUid`: usuario que registra el movimiento.
+- `usuarioEmail`: email del usuario.
+
+### `turnos`
+
+Campos:
+
+- `fechaApertura`: timestamp.
+- `fechaCierre`: timestamp opcional.
+- `estado`: `abierto` o `cerrado`.
+- `importeInicial`: efectivo inicial del turno.
+- `efectivoContado`: efectivo contado al cierre, pendiente de uso completo.
+- `usuarioUid`: usuario que abre el turno.
+- `usuarioEmail`: email del usuario.
 
 ### `splash_backgrounds`
 
@@ -123,12 +147,13 @@ Campos:
 
 Al confirmar un cobro, la app ejecuta una transaccion Firestore que:
 
-1. Lee `contadores/facturas`.
-2. Calcula el siguiente numero de factura.
-3. Genera factura, hash y QR Verifactu.
-4. Guarda la venta con `facturaId`.
-5. Guarda la factura exacta.
-6. Marca la comanda como `pagada`, si existe.
-7. Libera la mesa y limpia `comandaActivaId`, si aplica.
+1. Comprueba que existe un turno abierto para el usuario.
+2. Lee `contadores/facturas`.
+3. Calcula el siguiente numero de factura.
+4. Genera factura, hash y QR Verifactu.
+5. Guarda la venta con `facturaId`, `turnoId` y lineas reales.
+6. Guarda la factura exacta con lineas reales.
+7. Marca la comanda como `pagada`, si existe.
+8. Libera la mesa y limpia `comandaActivaId`, si aplica.
 
-Despues abre el ticket pasando el `facturaId`, evitando cargar "la ultima factura global".
+Despues abre el ticket pasando `ventaId` y `facturaId`, evitando cargar "la ultima factura global".
