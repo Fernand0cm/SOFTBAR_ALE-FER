@@ -3,15 +3,19 @@ package com.SOFTBAR_F_A.ui.cobro;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
+import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
 import com.SOFTBAR_F_A.data.verifactu.HashVerifactu;
+import com.SOFTBAR_F_A.ui.comanda.ComandaActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
+import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
 import com.SOFTBAR_F_A.ui.ticket.TicketActivity;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,10 +27,14 @@ import java.util.Locale;
 
 public class CobroActivity extends AppCompatActivity {
 
-    // Mock: total y NIF se rellenarian desde la comanda real / configuracion del negocio
-    private static final double TOTAL_MOCK = 14.50;
+    public static final String EXTRA_TOTAL = "total";
+
     private static final double TIPO_IVA = 0.10;
     private static final String NIF_EMISOR = "B12345678";
+
+    private double total;
+    private String comandaId;
+    private String mesaId;
 
     private String metodoSeleccionado = "Efectivo";
 
@@ -35,7 +43,16 @@ public class CobroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cobro);
 
+        total = getIntent().getDoubleExtra(EXTRA_TOTAL, 0.0);
+        comandaId = getIntent().getStringExtra(ComandaActivity.EXTRA_COMANDA_ID);
+        mesaId = getIntent().getStringExtra(MesasActivity.EXTRA_MESA_ID);
+
         Header.aplica(this, getString(R.string.cobro_title));
+
+        TextView txtTotal = findViewById(R.id.txt_total_cobro);
+        if (txtTotal != null) {
+            txtTotal.setText(String.format(Locale.getDefault(), "%.2f EUR", total));
+        }
 
         findViewById(R.id.btn_efectivo).setOnClickListener(v ->
                 metodoSeleccionado = getString(R.string.cobro_efectivo));
@@ -52,11 +69,9 @@ public class CobroActivity extends AppCompatActivity {
         Date ahora = new Date();
         Timestamp ts = new Timestamp(ahora);
 
-        // 1. Guardar la venta basica
-        Venta venta = new Venta(ts, TOTAL_MOCK, metodoSeleccionado);
+        Venta venta = new Venta(ts, total, metodoSeleccionado);
         FirebaseFirestore.getInstance().collection("ventas").add(venta);
 
-        // 2. Generar la factura Verifactu encadenada con la anterior
         FirebaseFirestore.getInstance()
                 .collection("facturas")
                 .orderBy("fecha", Query.Direction.DESCENDING)
@@ -78,6 +93,7 @@ public class CobroActivity extends AppCompatActivity {
                         }
                     }
                     guardarFactura(ts, ahora, hashAnterior, siguiente);
+                    cerrarComandaYLiberarMesa();
                     irAlTicket();
                 });
     }
@@ -89,21 +105,36 @@ public class CobroActivity extends AppCompatActivity {
 
         String numero = String.format(Locale.ROOT, "%04d/%s",
                 siguiente, anyoFmt.format(ahora));
-        double cuotaIva = TOTAL_MOCK - (TOTAL_MOCK / (1 + TIPO_IVA));
+        double cuotaIva = total - (total / (1 + TIPO_IVA));
 
         String hashActual = HashVerifactu.calcular(
                 numero, fechaIso.format(ahora), NIF_EMISOR,
-                TOTAL_MOCK, cuotaIva, hashAnterior);
+                total, cuotaIva, hashAnterior);
 
         String urlValidacion = GeneradorQrVerifactu.construirUrl(
-                NIF_EMISOR, numero, fechaQr.format(ahora), TOTAL_MOCK);
+                NIF_EMISOR, numero, fechaQr.format(ahora), total);
 
         Factura factura = new Factura(numero, ts, NIF_EMISOR,
-                TOTAL_MOCK, cuotaIva, hashAnterior, hashActual, urlValidacion);
+                total, cuotaIva, hashAnterior, hashActual, urlValidacion);
 
         FirebaseFirestore.getInstance().collection("facturas")
                 .document(numero.replace("/", "-"))
                 .set(factura);
+    }
+
+    private void cerrarComandaYLiberarMesa() {
+        if (comandaId != null) {
+            FirebaseFirestore.getInstance()
+                    .collection("comandas")
+                    .document(comandaId)
+                    .update("estado", "pagada");
+        }
+        if (mesaId != null) {
+            FirebaseFirestore.getInstance()
+                    .collection("mesas")
+                    .document(mesaId)
+                    .update("estado", Mesa.LIBRE);
+        }
     }
 
     private void irAlTicket() {

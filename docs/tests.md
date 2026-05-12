@@ -73,6 +73,40 @@ Mapeo del estado textual de una mesa al recurso de color de la paleta.
 | `cerrada_devuelveColorCerrada` | "cerrada" -> R.color.mesa_cerrada. |
 | `estadoNuloODesconocido_caeAColorCerrada` | null o estado raro -> color cerrada (fallback seguro). |
 
+### `data/LineaComandaTest`
+
+POJO de cada linea individual dentro de una comanda.
+
+| Prueba | Que verifica |
+|---|---|
+| `constructorVacio_dejaCamposPorDefecto` | Constructor sin argumentos deja campos a null y numericos a 0. |
+| `constructorConDatos_asignaTodo` | Constructor completo asigna codigo, nombre, precio y cantidad. |
+| `subtotal_multiplicaPrecioPorCantidad` | El subtotal es precio x cantidad. |
+| `subtotal_conCantidadCero_devuelveCero` | Cantidad 0 da subtotal 0 sin lanzar excepcion. |
+
+### `data/ComandaTest`
+
+POJO de la comanda asociada a una mesa.
+
+| Prueba | Que verifica |
+|---|---|
+| `constructorVacio_dejaCamposPorDefecto` | Constructor por defecto deja lista de lineas vacia y campos a null. |
+| `constructorConMesa_creaComandaAbierta` | Constructor (mesaId, numero) crea comanda en estado ABIERTA con fecha. |
+| `setLineas_nulo_dejaListaVaciaEnVezDeNull` | Pasar null a setLineas mantiene una lista vacia (defensa contra NPE). |
+| `constantesEstado_sonValoresEsperados` | Las constantes ABIERTA y PAGADA tienen los valores esperados. |
+
+### `data/CalculoTotalComandaTest`
+
+Calculos puros sobre las lineas de una comanda.
+
+| Prueba | Que verifica |
+|---|---|
+| `total_listaVacia_devuelveCero` | El total sobre lista vacia es 0. |
+| `total_listaNula_devuelveCero` | El total sobre null es 0 (no lanza). |
+| `total_sumaSubtotalesCorrectamente` | Suma exacta de varios subtotales con cantidades distintas. |
+| `numeroArticulos_sumaCantidades` | El conteo de articulos suma las cantidades de cada linea. |
+| `numeroArticulos_listaNula_devuelveCero` | Conteo sobre null devuelve 0. |
+
 ### `data/IndicadoresVentasTest`
 
 Calculos del dashboard de informes (suma, ticket medio, distribucion horaria).
@@ -116,10 +150,13 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | VentaTest | 2 | OK |
 | MesaTest | 4 | OK |
 | EstadoMesaColorTest | 5 | OK |
+| LineaComandaTest | 4 | OK |
+| ComandaTest | 4 | OK |
+| CalculoTotalComandaTest | 5 | OK |
 | IndicadoresVentasTest | 7 | OK |
 | HashVerifactuTest | 5 | OK |
 | GeneradorQrVerifactuTest | 2 | OK |
-| **Total** | **28** | **OK** |
+| **Total** | **41** | **OK** |
 
 (El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
 

@@ -40,6 +40,12 @@
     <string name="comanda_mesa_numero">Mesa %1$d</string>
     <string name="comanda_total">Total</string>
     <string name="comanda_lineas_eyebrow">Lineas del pedido</string>
+    <string name="comanda_catalogo_eyebrow">Catalogo</string>
+    <string name="comanda_catalogo_vacio">Sin productos en el catalogo. Anadelos desde Configuracion.</string>
+    <string name="comanda_lineas_vacias">Toca un producto del catalogo para anadirlo.</string>
+    <string name="comanda_quitar">Quitar uno</string>
+    <string name="comanda_no_lista">La comanda aun no esta lista, espera un instante</string>
+    <string name="comanda_sin_lineas">Anade al menos un producto antes de cobrar</string>
     <string name="comanda_extras">Anadir extras</string>
     <string name="comanda_cobrar">Cobrar</string>
     <string name="barra_title">Barra rapida</string>
