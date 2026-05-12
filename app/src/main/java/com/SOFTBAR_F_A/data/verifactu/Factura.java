@@ -25,6 +25,10 @@ public class Factura {
     private String metodo;
     private String mesaId;
     private int mesaNumero;
+    private double pagoEfectivo;
+    private double pagoTarjeta;
+    private double importeRecibido;
+    private double cambio;
     private List<LineaComanda> lineas = new ArrayList<>();
 
     public Factura() {
@@ -76,6 +80,18 @@ public class Factura {
 
     public int getMesaNumero() { return mesaNumero; }
     public void setMesaNumero(int mesaNumero) { this.mesaNumero = mesaNumero; }
+
+    public double getPagoEfectivo() { return pagoEfectivo; }
+    public void setPagoEfectivo(double pagoEfectivo) { this.pagoEfectivo = pagoEfectivo; }
+
+    public double getPagoTarjeta() { return pagoTarjeta; }
+    public void setPagoTarjeta(double pagoTarjeta) { this.pagoTarjeta = pagoTarjeta; }
+
+    public double getImporteRecibido() { return importeRecibido; }
+    public void setImporteRecibido(double importeRecibido) { this.importeRecibido = importeRecibido; }
+
+    public double getCambio() { return cambio; }
+    public void setCambio(double cambio) { this.cambio = cambio; }
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

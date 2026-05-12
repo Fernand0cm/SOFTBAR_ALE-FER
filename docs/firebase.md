@@ -38,6 +38,15 @@ Limitaciones pendientes:
 
 ## Colecciones
 
+### `configuracion`
+
+Documento `fiscal`:
+
+- `nifEmisor`: NIF/CIF del emisor.
+- `serie`: serie de facturacion visible.
+
+Si no existe, la app usa valores por defecto para mantener la demo operativa.
+
 ### `mesas`
 
 Documento recomendado: id numerico como `1`, `2`, `3`.
@@ -82,6 +91,10 @@ Campos:
 - `turnoId`: id del turno activo.
 - `usuarioUid`: usuario que registra la venta.
 - `usuarioEmail`: email del usuario.
+- `pagoEfectivo`: parte cobrada en efectivo, descontando cambio.
+- `pagoTarjeta`: parte cobrada con tarjeta.
+- `importeRecibido`: suma introducida en cobro antes de cambio.
+- `cambio`: cambio entregado al cliente.
 - `lineas`: productos vendidos.
 
 ### `facturas`
@@ -101,6 +114,10 @@ Campos:
 - `metodo`: metodo de pago.
 - `mesaId`: id de mesa cuando aplica.
 - `mesaNumero`: numero visible de mesa cuando aplica.
+- `pagoEfectivo`: parte cobrada en efectivo.
+- `pagoTarjeta`: parte cobrada con tarjeta.
+- `importeRecibido`: importe recibido antes de cambio.
+- `cambio`: cambio entregado.
 - `lineas`: productos facturados.
 
 ### `contadores`

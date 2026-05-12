@@ -79,14 +79,14 @@ Prioridad alta.
 
 Tareas:
 
-- Introducir importe recibido en efectivo.
-- Calcular cambio real.
-- Implementar pago mixto con desglose:
+- [x] Introducir importe recibido en efectivo.
+- [x] Calcular cambio real.
+- [x] Implementar pago mixto con desglose:
   - efectivo
   - tarjeta
-- Validar que el importe pagado cubre el total.
-- Guardar desglose de pagos en la venta.
-- Mostrar metodo y desglose en ticket.
+- [x] Validar que el importe pagado cubre el total.
+- [x] Guardar desglose de pagos en la venta.
+- [x] Mostrar metodo y desglose en ticket.
 
 Resultado esperado:
 
@@ -183,12 +183,12 @@ Prioridad alta para defensa tecnica, con alcance controlado.
 
 Tareas:
 
-- Separar configuracion fiscal del codigo.
-- Guardar datos fiscales del negocio en Firestore.
-- Gestionar series por anio.
+- [x] Separar configuracion fiscal del codigo.
+- [x] Guardar datos fiscales del negocio en Firestore.
+- [x] Gestionar series por anio.
 - Preparar anulacion o rectificacion.
 - Revisar formato de QR y hash contra especificacion oficial.
-- Documentar limitaciones del prototipo.
+- [x] Documentar limitaciones del prototipo.
 
 Resultado esperado:
 

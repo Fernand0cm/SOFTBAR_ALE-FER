@@ -68,18 +68,22 @@ El proyecto empezo como una base de TPV y actualmente ya ha evolucionado hacia u
   - Efectivo.
   - Tarjeta.
   - Mixto.
-- Registro basico de una venta en la coleccion Firestore `ventas`.
+- Entrada real de efectivo y tarjeta, con cambio calculado.
+- Registro de venta con desglose de pago en la coleccion Firestore `ventas`.
 - Generacion de una factura simplificada en la coleccion `facturas`.
 - Encadenado de hash SHA-256 con la factura anterior.
 - Calculo basico de cuota de IVA al 10%.
 - Generacion de URL de validacion Verifactu en entorno de pruebas de AEAT.
+- Configuracion fiscal leida desde Firestore cuando existe.
 
 ### Ticket y Verifactu
 
 - Pantalla de ticket posterior al cobro.
-- Carga de la ultima factura guardada.
+- Carga de la venta y factura exactas del cobro.
 - Visualizacion de:
   - Numero de factura.
+  - Lineas vendidas.
+  - Total, metodo y desglose de pago.
   - Hash parcial.
   - QR Verifactu generado como bitmap.
 - Botones de imprimir y email presentes, actualmente pendientes de implementacion real.
@@ -124,13 +128,13 @@ Clases principales en `app/src/main/java/com/SOFTBAR_F_A/data`:
 
 - `Mesa`: numero, estado y `comandaActivaId`.
 - `Producto`: codigo de barras, nombre y precio.
-- `Venta`: fecha, total y metodo de pago.
+- `Venta`: fecha, total, metodo, desglose de pago, turno, usuario y lineas.
 - `IndicadoresVentas`: calculos de total, numero de tickets, ticket medio y distribucion por hora.
 - `EstadoMesaColor`: mapeo de estados de mesa a colores.
 
 Clases Verifactu en `data/verifactu`:
 
-- `Factura`: numero, fecha, NIF emisor, total, cuota IVA, hash anterior, hash actual y URL de validacion.
+- `Factura`: numero, fecha, NIF emisor, total, cuota IVA, desglose de pago, hash anterior, hash actual y URL de validacion.
 - `HashVerifactu`: hash SHA-256 encadenado.
 - `GeneradorQrVerifactu`: URL de validacion y bitmap QR.
 
@@ -140,6 +144,7 @@ Clases Verifactu en `data/verifactu`:
 - `productos`: catalogo basico escaneado por codigo de barras.
 - `ventas`: ventas registradas al confirmar cobro.
 - `facturas`: facturas simplificadas con hash y QR Verifactu.
+- `configuracion/fiscal`: NIF/CIF y serie de facturacion.
 - `contadores`: numeracion e hash de la ultima factura emitida.
 - `movimientos_caja`: entradas, retiradas y aperturas manuales de caja.
 - `turnos`: apertura y cierre del turno activo.
@@ -225,9 +230,9 @@ Estado validado:
 - [x] Pasar `ventaId` y `facturaId` al ticket.
 - [x] Esperar a que venta y factura se guarden correctamente antes de abrir ticket.
 - [x] Controlar errores durante el cobro y evitar dobles cobros por doble pulsacion.
-- [ ] Implementar pagos parciales y mixtos reales.
-- [ ] Calcular cambio para efectivo.
-- [ ] Guardar desglose de pagos por metodo.
+- [x] Implementar pagos parciales y mixtos reales.
+- [x] Calcular cambio para efectivo.
+- [x] Guardar desglose de pagos por metodo.
 - [x] Guardar lineas reales en el ticket/factura.
 - [ ] Implementar impresion real.
 - [ ] Implementar envio por email o compartir ticket.
