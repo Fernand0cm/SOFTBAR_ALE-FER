@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Navegacion principal de SOFTBAR</title>
+  <desc id="desc">Mapa de entrada, login, home y modulos principales de la aplicacion.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7faf9}
+      .card{fill:#ffffff;stroke:#d7e5df;stroke-width:2}
+      .start{fill:#0f766e;stroke:#0f766e}
+      .module{fill:#ecfdf5;stroke:#14b8a6}
+      .pending{fill:#fff7ed;stroke:#fb923c}
+      .text{font-family:Arial,Helvetica,sans-serif;fill:#14322e}
+      .small{font-size:18px}
+      .title{font-size:28px;font-weight:700}
+      .label{font-size:20px;font-weight:700}
+      .white{fill:#ffffff}
+      .line{stroke:#6b8f87;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#6b8f87"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1100" height="620"/>
+  <text x="60" y="55" class="text title">SOFTBAR - navegacion principal</text>
+  <text x="60" y="88" class="text small">Flujo de acceso y modulos disponibles desde la pantalla Home</text>
+
+  <rect x="70" y="145" width="170" height="74" rx="12" class="start"/>
+  <text x="155" y="177" text-anchor="middle" class="text label white">Splash</text>
+  <text x="155" y="203" text-anchor="middle" class="text small white">Sesion activa</text>
+
+  <rect x="320" y="105" width="180" height="74" rx="12" class="card"/>
+  <text x="410" y="150" text-anchor="middle" class="text label">Login</text>
+
+  <rect x="320" y="225" width="180" height="74" rx="12" class="card"/>
+  <text x="410" y="270" text-anchor="middle" class="text label">Home</text>
+
+  <path d="M240 177 C275 150 285 142 320 142" class="line"/>
+  <path d="M240 188 C275 225 285 262 320 262" class="line"/>
+  <path d="M410 179 L410 225" class="line"/>
+
+  <rect x="600" y="70" width="180" height="70" rx="12" class="module"/>
+  <text x="690" y="112" text-anchor="middle" class="text label">Turno</text>
+
+  <rect x="840" y="70" width="180" height="70" rx="12" class="module"/>
+  <text x="930" y="112" text-anchor="middle" class="text label">Caja</text>
+
+  <rect x="600" y="180" width="180" height="70" rx="12" class="module"/>
+  <text x="690" y="222" text-anchor="middle" class="text label">Sala</text>
+
+  <rect x="840" y="180" width="180" height="70" rx="12" class="module"/>
+  <text x="930" y="222" text-anchor="middle" class="text label">Barra</text>
+
+  <rect x="600" y="290" width="180" height="70" rx="12" class="module"/>
+  <text x="690" y="332" text-anchor="middle" class="text label">Informes</text>
+
+  <rect x="840" y="290" width="180" height="70" rx="12" class="module"/>
+  <text x="930" y="332" text-anchor="middle" class="text label">Configuracion</text>
+
+  <rect x="720" y="430" width="180" height="70" rx="12" class="pending"/>
+  <text x="810" y="472" text-anchor="middle" class="text label">Stock</text>
+
+  <path d="M500 262 C545 105 555 105 600 105" class="line"/>
+  <path d="M500 262 C560 215 560 215 600 215" class="line"/>
+  <path d="M500 262 C560 325 560 325 600 325" class="line"/>
+  <path d="M500 262 C675 105 665 105 840 105" class="line"/>
+  <path d="M500 262 C680 215 665 215 840 215" class="line"/>
+  <path d="M500 262 C680 325 665 325 840 325" class="line"/>
+  <path d="M500 262 C640 465 650 465 720 465" class="line"/>
+
+  <text x="65" y="555" class="text small">Leyenda: verde = modulo funcional conectado a Firebase; naranja = modulo navegable pendiente de desarrollo completo.</text>
+</svg>

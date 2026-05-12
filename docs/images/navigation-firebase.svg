@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Relacion entre pantallas y colecciones Firebase</title>
+  <desc id="desc">Mapa de pantallas de SOFTBAR conectadas con colecciones Firestore y Authentication.</desc>
+  <defs>
+    <style>
+      .bg{fill:#fbfdfc}
+      .screen{fill:#ecfdf5;stroke:#0f766e;stroke-width:2}
+      .data{fill:#eff6ff;stroke:#2563eb;stroke-width:2}
+      .auth{fill:#fef3c7;stroke:#d97706;stroke-width:2}
+      .text{font-family:Arial,Helvetica,sans-serif;fill:#172a2a}
+      .title{font-size:28px;font-weight:700}
+      .label{font-size:18px;font-weight:700}
+      .small{font-size:14px}
+      .line{stroke:#64748b;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1100" height="620"/>
+  <text x="60" y="55" class="text title">Pantallas y datos Firebase</text>
+  <text x="60" y="85" class="text small">Resumen de las conexiones principales entre UI, Authentication y Cloud Firestore.</text>
+
+  <rect x="70" y="135" width="170" height="62" rx="12" class="auth"/>
+  <text x="155" y="172" text-anchor="middle" class="text label">Login</text>
+
+  <rect x="70" y="235" width="170" height="62" rx="12" class="screen"/>
+  <text x="155" y="272" text-anchor="middle" class="text label">Configuracion</text>
+
+  <rect x="70" y="335" width="170" height="62" rx="12" class="screen"/>
+  <text x="155" y="372" text-anchor="middle" class="text label">Sala / Barra</text>
+
+  <rect x="70" y="435" width="170" height="62" rx="12" class="screen"/>
+  <text x="155" y="472" text-anchor="middle" class="text label">Cobro / Ticket</text>
+
+  <rect x="355" y="95" width="185" height="62" rx="12" class="data"/>
+  <text x="447" y="132" text-anchor="middle" class="text label">Auth Users</text>
+
+  <rect x="355" y="195" width="185" height="62" rx="12" class="data"/>
+  <text x="447" y="232" text-anchor="middle" class="text label">productos</text>
+
+  <rect x="355" y="295" width="185" height="62" rx="12" class="data"/>
+  <text x="447" y="332" text-anchor="middle" class="text label">mesas</text>
+
+  <rect x="355" y="395" width="185" height="62" rx="12" class="data"/>
+  <text x="447" y="432" text-anchor="middle" class="text label">comandas</text>
+
+  <rect x="355" y="495" width="185" height="62" rx="12" class="data"/>
+  <text x="447" y="532" text-anchor="middle" class="text label">ventas</text>
+
+  <rect x="700" y="95" width="210" height="62" rx="12" class="data"/>
+  <text x="805" y="132" text-anchor="middle" class="text label">turnos</text>
+
+  <rect x="700" y="195" width="210" height="62" rx="12" class="data"/>
+  <text x="805" y="232" text-anchor="middle" class="text label">movimientos_caja</text>
+
+  <rect x="700" y="295" width="210" height="62" rx="12" class="data"/>
+  <text x="805" y="332" text-anchor="middle" class="text label">facturas</text>
+
+  <rect x="700" y="395" width="210" height="62" rx="12" class="data"/>
+  <text x="805" y="432" text-anchor="middle" class="text label">contadores</text>
+
+  <rect x="700" y="495" width="210" height="62" rx="12" class="data"/>
+  <text x="805" y="532" text-anchor="middle" class="text label">configuracion/fiscal</text>
+
+  <path d="M240 166 L355 126" class="line"/>
+  <path d="M240 266 L355 226" class="line"/>
+  <path d="M240 366 L355 326" class="line"/>
+  <path d="M240 366 L355 426" class="line"/>
+  <path d="M240 466 L355 526" class="line"/>
+  <path d="M540 526 C620 510 635 345 700 326" class="line"/>
+  <path d="M540 526 C620 505 635 430 700 426" class="line"/>
+  <path d="M540 526 C620 520 635 530 700 526" class="line"/>
+  <path d="M240 466 C520 90 605 126 700 126" class="line"/>
+  <path d="M240 466 C530 180 605 226 700 226" class="line"/>
+</svg>
