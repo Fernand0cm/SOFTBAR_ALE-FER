@@ -12,6 +12,8 @@ public class Turno {
     private String estado;
     private double importeInicial;
     private double efectivoContado;
+    private double efectivoEsperado;
+    private double diferenciaCaja;
     private String usuarioUid;
     private String usuarioEmail;
 
@@ -42,6 +44,12 @@ public class Turno {
 
     public double getEfectivoContado() { return efectivoContado; }
     public void setEfectivoContado(double efectivoContado) { this.efectivoContado = efectivoContado; }
+
+    public double getEfectivoEsperado() { return efectivoEsperado; }
+    public void setEfectivoEsperado(double efectivoEsperado) { this.efectivoEsperado = efectivoEsperado; }
+
+    public double getDiferenciaCaja() { return diferenciaCaja; }
+    public void setDiferenciaCaja(double diferenciaCaja) { this.diferenciaCaja = diferenciaCaja; }
 
     public String getUsuarioUid() { return usuarioUid; }
     public void setUsuarioUid(String usuarioUid) { this.usuarioUid = usuarioUid; }

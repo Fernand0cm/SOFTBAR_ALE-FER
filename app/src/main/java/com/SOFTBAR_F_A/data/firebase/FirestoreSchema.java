@@ -32,6 +32,9 @@ public final class FirestoreSchema {
         public static final String FECHA_CIERRE = "fechaCierre";
         public static final String FECHA = "fecha";
         public static final String HASH_ULTIMO = "hashUltimo";
+        public static final String DIFERENCIA_CAJA = "diferenciaCaja";
+        public static final String EFECTIVO_CONTADO = "efectivoContado";
+        public static final String EFECTIVO_ESPERADO = "efectivoEsperado";
         public static final String IMPORTE_INICIAL = "importeInicial";
         public static final String LINEAS = "lineas";
         public static final String METODO = "metodo";

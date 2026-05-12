@@ -63,9 +63,9 @@ Tareas:
 - [x] Guardar `turnoId`, usuario y fecha de apertura.
 - [x] Bloquear cobros si no hay turno activo.
 - [x] Asociar cada venta al turno activo.
-- Registrar entradas, retiradas y ajustes de caja.
-- [ ] Implementar cierre de turno con efectivo contado.
-- Calcular diferencia entre efectivo esperado y contado.
+- [x] Registrar entradas, retiradas y ajustes de caja.
+- [x] Implementar cierre de turno con efectivo contado.
+- [x] Calcular diferencia entre efectivo esperado y contado.
 - [x] Guardar cierre historico.
 
 Resultado esperado:

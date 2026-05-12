@@ -1,6 +1,7 @@
 package com.SOFTBAR_F_A.ui.caja;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import java.util.Locale;
 public class CajaActivity extends AppCompatActivity {
 
     private TextView txtApertura, txtEfectivo, txtTarjeta, txtRetiradas, txtTotalEsperado;
+    private TextView txtContado, txtDiferencia;
     private LinearLayout listaMovimientos;
     private TextView txtMovimientosVacios;
     private Button btnMovimiento;
@@ -49,6 +51,7 @@ public class CajaActivity extends AppCompatActivity {
     private final SimpleDateFormat horaFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     private String turnoActivoId;
+    private ResumenCaja resumenActual;
     private ListenerRegistration suscripcionVentas;
     private ListenerRegistration suscripcionMovimientos;
 
@@ -64,6 +67,8 @@ public class CajaActivity extends AppCompatActivity {
         txtTarjeta = findViewById(R.id.txt_caja_tarjeta);
         txtRetiradas = findViewById(R.id.txt_caja_retiradas);
         txtTotalEsperado = findViewById(R.id.txt_caja_total);
+        txtContado = findViewById(R.id.txt_caja_contado);
+        txtDiferencia = findViewById(R.id.txt_caja_diferencia);
         listaMovimientos = findViewById(R.id.lista_movimientos);
         txtMovimientosVacios = findViewById(R.id.txt_movimientos_vacios);
 
@@ -95,6 +100,9 @@ public class CajaActivity extends AppCompatActivity {
                         return;
                     }
                     turnoActivoId = snap.getDocuments().get(0).getId();
+                    btnMovimiento.setEnabled(true);
+                    btnCierre.setEnabled(true);
+                    txtMovimientosVacios.setText(R.string.caja_movimientos_vacios);
                     suscribirseAVentas();
                     suscribirseAMovimientos();
                 });
@@ -131,16 +139,19 @@ public class CajaActivity extends AppCompatActivity {
     }
 
     private void refrescarPantalla() {
-        ResumenCaja resumen = ResumenCaja.calcular(
+        resumenActual = ResumenCaja.calcular(
                 ventasDelTurno, movimientosDelTurno,
                 getString(R.string.cobro_efectivo),
                 getString(R.string.cobro_tarjeta));
 
-        txtApertura.setText(formato(resumen.getApertura()));
-        txtEfectivo.setText(formato(resumen.getVentasEfectivo()));
-        txtTarjeta.setText(formato(resumen.getVentasTarjeta()));
-        txtRetiradas.setText("-" + formato(resumen.getRetiradas()));
-        txtTotalEsperado.setText(formato(resumen.totalEsperado()));
+        txtApertura.setText(formato(resumenActual.getApertura()));
+        txtEfectivo.setText(formato(resumenActual.getVentasEfectivo()));
+        txtTarjeta.setText(formato(resumenActual.getVentasTarjeta()));
+        txtRetiradas.setText("-" + formato(resumenActual.getRetiradas()));
+        txtTotalEsperado.setText(formato(resumenActual.efectivoEsperado()));
+        txtContado.setText("--");
+        txtDiferencia.setText("--");
+        txtDiferencia.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
 
         pintarMovimientos();
     }
@@ -267,19 +278,99 @@ public class CajaActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.turno_error_sin_turno, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (resumenActual == null) {
+            resumenActual = ResumenCaja.calcular(
+                    ventasDelTurno, movimientosDelTurno,
+                    getString(R.string.cobro_efectivo),
+                    getString(R.string.cobro_tarjeta));
+        }
+
+        final double esperado = resumenActual.efectivoEsperado();
+        LinearLayout contenedor = new LinearLayout(this);
+        contenedor.setOrientation(LinearLayout.VERTICAL);
+        int padding = (int) (20 * getResources().getDisplayMetrics().density);
+        contenedor.setPadding(padding, padding / 2, padding, 0);
+
+        TextView txtEsperado = new TextView(this);
+        txtEsperado.setText(getString(R.string.caja_cierre_esperado, esperado));
+        txtEsperado.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+        contenedor.addView(txtEsperado);
+
+        EditText inputContado = new EditText(this);
+        inputContado.setHint(R.string.caja_cierre_contado_hint);
+        inputContado.setInputType(InputType.TYPE_CLASS_NUMBER
+                | InputType.TYPE_NUMBER_FLAG_DECIMAL
+                | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        inputContado.setSingleLine(true);
+        contenedor.addView(inputContado);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.caja_cierre_titulo)
+                .setView(contenedor)
+                .setNegativeButton(R.string.dialog_cancelar, null)
+                .setPositiveButton(R.string.caja_cierre_turno, null)
+                .create();
+        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(v -> {
+                    String txt = inputContado.getText().toString().trim();
+                    if (TextUtils.isEmpty(txt)) {
+                        Toast.makeText(this, R.string.caja_cierre_error_contado,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    double contado;
+                    try {
+                        contado = Double.parseDouble(txt.replace(',', '.'));
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, R.string.dialog_error_precio,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    guardarCierre(contado, esperado, dialog);
+                }));
+        dialog.show();
+    }
+
+    private void guardarCierre(double contado, double esperado, AlertDialog dialog) {
+        double diferencia = contado - esperado;
         FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.TURNOS)
                 .document(turnoActivoId)
                 .update(
                         FirestoreSchema.Fields.ESTADO, Turno.CERRADO,
-                        FirestoreSchema.Fields.FECHA_CIERRE, Timestamp.now())
+                        FirestoreSchema.Fields.FECHA_CIERRE, Timestamp.now(),
+                        FirestoreSchema.Fields.EFECTIVO_CONTADO, contado,
+                        FirestoreSchema.Fields.EFECTIVO_ESPERADO, esperado,
+                        FirestoreSchema.Fields.DIFERENCIA_CAJA, diferencia)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, R.string.turno_cerrado_ok, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    txtContado.setText(formato(contado));
+                    txtDiferencia.setText(formato(diferencia));
+                    txtDiferencia.setTextColor(ContextCompat.getColor(this,
+                            diferencia < 0 ? R.color.warning : R.color.brand_600));
+                    Toast.makeText(this,
+                            getString(R.string.caja_cierre_resumen, contado, diferencia),
+                            Toast.LENGTH_LONG).show();
                     limpiarSuscripciones();
-                    pintarSinTurno();
+                    pintarTurnoCerrado(contado, diferencia);
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show());
+    }
+
+    private void pintarTurnoCerrado(double contado, double diferencia) {
+        turnoActivoId = null;
+        ventasDelTurno.clear();
+        movimientosDelTurno.clear();
+        txtContado.setText(formato(contado));
+        txtDiferencia.setText(formato(diferencia));
+        txtDiferencia.setTextColor(ContextCompat.getColor(this,
+                diferencia < 0 ? R.color.warning : R.color.brand_600));
+        listaMovimientos.removeAllViews();
+        txtMovimientosVacios.setText(R.string.turno_detalle_vacio);
+        txtMovimientosVacios.setVisibility(View.VISIBLE);
+        btnMovimiento.setEnabled(false);
+        btnCierre.setEnabled(false);
     }
 
     private void pintarSinTurno() {
@@ -291,6 +382,9 @@ public class CajaActivity extends AppCompatActivity {
         txtTarjeta.setText(formato(0));
         txtRetiradas.setText("-" + formato(0));
         txtTotalEsperado.setText(formato(0));
+        txtContado.setText("--");
+        txtDiferencia.setText("--");
+        txtDiferencia.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
         listaMovimientos.removeAllViews();
         txtMovimientosVacios.setText(R.string.turno_detalle_vacio);
         txtMovimientosVacios.setVisibility(View.VISIBLE);

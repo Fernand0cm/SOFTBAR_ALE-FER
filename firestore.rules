@@ -83,7 +83,8 @@ service cloud.firestore {
     function validTurno() {
       return request.resource.data.keys().hasOnly([
           'fechaApertura', 'fechaCierre', 'estado', 'importeInicial',
-          'efectivoContado', 'usuarioUid', 'usuarioEmail'
+          'efectivoContado', 'efectivoEsperado', 'diferenciaCaja',
+          'usuarioUid', 'usuarioEmail'
         ])
         && request.resource.data.fechaApertura is timestamp
         && (!request.resource.data.keys().hasAny(['fechaCierre'])
@@ -94,6 +95,10 @@ service cloud.firestore {
         && request.resource.data.importeInicial >= 0
         && (!request.resource.data.keys().hasAny(['efectivoContado'])
           || request.resource.data.efectivoContado is number)
+        && (!request.resource.data.keys().hasAny(['efectivoEsperado'])
+          || request.resource.data.efectivoEsperado is number)
+        && (!request.resource.data.keys().hasAny(['diferenciaCaja'])
+          || request.resource.data.diferenciaCaja is number)
         && nonEmptyString(request.resource.data.usuarioUid)
         && request.resource.data.usuarioEmail is string;
     }
