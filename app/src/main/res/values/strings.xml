@@ -49,6 +49,7 @@
     <string name="comanda_extras">Anadir extras</string>
     <string name="comanda_cobrar">Cobrar</string>
     <string name="barra_title">Barra rapida</string>
+    <string name="barra_subtitulo">Pedido directo sin asignar mesa</string>
     <string name="barra_cobrar">Cobrar</string>
     <string name="modificadores_title">Modificadores</string>
     <string name="cobro_title">Cobro</string>
@@ -90,6 +91,15 @@
     <string name="caja_anadir_movimiento">Anadir movimiento</string>
     <string name="caja_cierre_turno">Cerrar turno</string>
     <string name="caja_pendiente">Pendiente de implementar</string>
+    <string name="caja_movimientos_vacios">Aun no hay movimientos hoy.</string>
+    <string name="movimiento_titulo">Nuevo movimiento</string>
+    <string name="movimiento_tipo">Tipo</string>
+    <string name="movimiento_apertura">Apertura</string>
+    <string name="movimiento_entrada">Entrada</string>
+    <string name="movimiento_retirada">Retirada</string>
+    <string name="movimiento_importe_hint">Importe (EUR)</string>
+    <string name="movimiento_descripcion_hint">Descripcion (opcional)</string>
+    <string name="movimiento_error">Elige un tipo y un importe valido</string>
     <string name="informes_title">Informes</string>
     <string name="informes_subtitulo">Resumen del dia</string>
     <string name="informes_kpi_ventas">Ventas</string>

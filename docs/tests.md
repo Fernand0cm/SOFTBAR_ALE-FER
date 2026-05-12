@@ -107,6 +107,29 @@ Calculos puros sobre las lineas de una comanda.
 | `numeroArticulos_sumaCantidades` | El conteo de articulos suma las cantidades de cada linea. |
 | `numeroArticulos_listaNula_devuelveCero` | Conteo sobre null devuelve 0. |
 
+### `data/MovimientoCajaTest`
+
+POJO de los movimientos manuales de caja del turno.
+
+| Prueba | Que verifica |
+|---|---|
+| `constructorVacio_dejaCamposPorDefecto` | Constructor por defecto deja campos a null/0. |
+| `constructorConDatos_asignaTodo` | Constructor (fecha, tipo, importe, descripcion) asigna correctamente. |
+| `constantesTipo_sonValoresEsperados` | APERTURA, RETIRADA y ENTRADA tienen los valores esperados. |
+
+### `data/ResumenCajaTest`
+
+Calculos del estado de la caja a partir de ventas y movimientos del turno.
+
+| Prueba | Que verifica |
+|---|---|
+| `totalEsperado_aperturaMasVentasMenosRetiradas` | La formula global del total esperado es correcta. |
+| `calcular_listasNulas_devuelveCero` | Listas nulas no rompen el calculo y devuelven 0. |
+| `calcular_separaEfectivoYTarjeta` | Separa correctamente las ventas por metodo de pago. |
+| `calcular_mixtoCuentaComoEfectivo` | Los pagos "Mixto" u otros se agrupan como efectivo en la caja. |
+| `calcular_sumaMovimientosPorTipo` | Apertura, entradas y retiradas se acumulan en los campos correctos. |
+| `calcular_retiradaConImporteNegativo_seToma_enValorAbsoluto` | Una retirada negativa se interpreta correctamente. |
+
 ### `data/IndicadoresVentasTest`
 
 Calculos del dashboard de informes (suma, ticket medio, distribucion horaria).
@@ -153,10 +176,12 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | LineaComandaTest | 4 | OK |
 | ComandaTest | 4 | OK |
 | CalculoTotalComandaTest | 5 | OK |
+| MovimientoCajaTest | 3 | OK |
+| ResumenCajaTest | 6 | OK |
 | IndicadoresVentasTest | 7 | OK |
 | HashVerifactuTest | 5 | OK |
 | GeneradorQrVerifactuTest | 2 | OK |
-| **Total** | **41** | **OK** |
+| **Total** | **50** | **OK** |
 
 (El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
 
