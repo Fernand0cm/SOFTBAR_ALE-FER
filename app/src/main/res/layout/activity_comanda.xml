@@ -19,11 +19,48 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <!-- Catalogo -->
+            <TextView
+                style="@style/Text.Eyebrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/comanda_catalogo_eyebrow" />
+
+            <TextView
+                android:id="@+id/txt_catalogo_vacio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/comanda_catalogo_vacio"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <GridLayout
+                android:id="@+id/grid_catalogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:columnCount="2"
+                android:useDefaultMargins="true" />
+
+            <!-- Lineas -->
+            <TextView
+                style="@style/Text.Eyebrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_marginStart="4dp"
+                android:text="@string/comanda_lineas_eyebrow" />
+
             <com.google.android.material.card.MaterialCardView
                 style="@style/SoftbarCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentPadding="20dp">
+                android:layout_marginTop="10dp"
+                app:contentPadding="18dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -31,127 +68,24 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Eyebrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/comanda_lineas_eyebrow" />
-
-                    <!-- Lineas mock -->
-                    <LinearLayout
+                        android:id="@+id/txt_lineas_vacias"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="36dp"
-                            android:layout_height="wrap_content"
-                            android:text="2x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cana"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5,00 EUR"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                        android:gravity="center"
+                        android:paddingVertical="20dp"
+                        android:text="@string/comanda_lineas_vacias"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
 
                     <LinearLayout
+                        android:id="@+id/lista_lineas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="36dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Tortilla"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3,50 EUR"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="36dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cafe con leche"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1,80 EUR"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="36dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Bocadillo jamon"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4,20 EUR"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Total destacado -->
+            <!-- Total -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,9 +111,10 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/txt_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="14,50 EUR"
+                        android:text="0,00 EUR"
                         android:textColor="@color/white"
                         android:textSize="28sp"
                         android:textStyle="bold" />
@@ -187,22 +122,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_extras"
-                style="@style/SoftbarButton.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/comanda_extras"
-                app:icon="@drawable/ic_plus"
-                app:iconGravity="textStart"
-                app:iconTint="@color/brand_600" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cobrar"
                 style="@style/SoftbarButton.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/comanda_cobrar"
                 app:icon="@drawable/ic_cash"
