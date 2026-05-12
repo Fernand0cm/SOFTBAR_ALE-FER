@@ -29,6 +29,20 @@
     <string name="volver">Volver</string>
 
     <string name="turno_title">Apertura de turno</string>
+    <string name="turno_estado">Estado del turno</string>
+    <string name="turno_estado_abierto">Turno abierto</string>
+    <string name="turno_estado_cerrado">No hay turno abierto</string>
+    <string name="turno_apertura">Apertura</string>
+    <string name="turno_importe_inicial_hint">Importe inicial (EUR)</string>
+    <string name="turno_abrir">Abrir turno</string>
+    <string name="turno_cerrar">Cerrar turno</string>
+    <string name="turno_abierto_ok">Turno abierto correctamente</string>
+    <string name="turno_cerrado_ok">Turno cerrado correctamente</string>
+    <string name="turno_error_importe">Introduce un importe valido</string>
+    <string name="turno_error_ya_abierto">Ya hay un turno abierto</string>
+    <string name="turno_error_sin_turno">No hay ningun turno abierto</string>
+    <string name="turno_detalle_apertura">Apertura: %1$s - %2$.2f EUR</string>
+    <string name="turno_detalle_vacio">Abre un turno para empezar a cobrar.</string>
     <string name="mesas_title">Sala y mesas</string>
     <string name="mesas_subtitulo">Selecciona una mesa para abrir comanda</string>
     <string name="mesa_estado_libre">Libre</string>
@@ -62,6 +76,7 @@
     <string name="cobro_cambio">Cambio</string>
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
+    <string name="cobro_error_sin_turno">Abre un turno antes de cobrar</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
     <string name="ticket_subtitulo">Ticket simplificado</string>

@@ -14,6 +14,9 @@ public class Venta {
     private String comandaId;
     private String mesaId;
     private int mesaNumero;
+    private String turnoId;
+    private String usuarioUid;
+    private String usuarioEmail;
     private List<LineaComanda> lineas = new ArrayList<>();
 
     public Venta() {
@@ -46,6 +49,15 @@ public class Venta {
 
     public int getMesaNumero() { return mesaNumero; }
     public void setMesaNumero(int mesaNumero) { this.mesaNumero = mesaNumero; }
+
+    public String getTurnoId() { return turnoId; }
+    public void setTurnoId(String turnoId) { this.turnoId = turnoId; }
+
+    public String getUsuarioUid() { return usuarioUid; }
+    public void setUsuarioUid(String usuarioUid) { this.usuarioUid = usuarioUid; }
+
+    public String getUsuarioEmail() { return usuarioEmail; }
+    public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

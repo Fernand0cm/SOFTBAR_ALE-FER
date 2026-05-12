@@ -18,10 +18,13 @@ import androidx.core.content.ContextCompat;
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.MovimientoCaja;
 import com.SOFTBAR_F_A.data.ResumenCaja;
+import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -29,7 +32,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,11 +41,14 @@ public class CajaActivity extends AppCompatActivity {
     private TextView txtApertura, txtEfectivo, txtTarjeta, txtRetiradas, txtTotalEsperado;
     private LinearLayout listaMovimientos;
     private TextView txtMovimientosVacios;
+    private Button btnMovimiento;
+    private Button btnCierre;
 
-    private final List<Venta> ventasDelDia = new ArrayList<>();
-    private final List<MovimientoCaja> movimientosDelDia = new ArrayList<>();
+    private final List<Venta> ventasDelTurno = new ArrayList<>();
+    private final List<MovimientoCaja> movimientosDelTurno = new ArrayList<>();
     private final SimpleDateFormat horaFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+    private String turnoActivoId;
     private ListenerRegistration suscripcionVentas;
     private ListenerRegistration suscripcionMovimientos;
 
@@ -62,36 +67,49 @@ public class CajaActivity extends AppCompatActivity {
         listaMovimientos = findViewById(R.id.lista_movimientos);
         txtMovimientosVacios = findViewById(R.id.txt_movimientos_vacios);
 
-        Button btnMovimiento = findViewById(R.id.btn_movimiento);
+        btnMovimiento = findViewById(R.id.btn_movimiento);
         btnMovimiento.setOnClickListener(v -> mostrarDialogMovimiento());
 
-        Button btnCierre = findViewById(R.id.btn_cierre);
-        btnCierre.setOnClickListener(v ->
-                Toast.makeText(this, R.string.caja_pendiente, Toast.LENGTH_SHORT).show());
+        btnCierre = findViewById(R.id.btn_cierre);
+        btnCierre.setOnClickListener(v -> cerrarTurno());
 
-        suscribirseAVentas();
-        suscribirseAMovimientos();
+        cargarTurnoActivo();
     }
 
-    private Timestamp inicioDelDia() {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return new Timestamp(c.getTime());
+    private void cargarTurnoActivo() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            pintarSinTurno();
+            return;
+        }
+
+        FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.TURNOS)
+                .whereEqualTo(FirestoreSchema.Fields.ESTADO, Turno.ABIERTO)
+                .whereEqualTo(FirestoreSchema.Fields.USUARIO_UID, user.getUid())
+                .limit(1)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    if (snap == null || snap.isEmpty()) {
+                        pintarSinTurno();
+                        return;
+                    }
+                    turnoActivoId = snap.getDocuments().get(0).getId();
+                    suscribirseAVentas();
+                    suscribirseAMovimientos();
+                });
     }
 
     private void suscribirseAVentas() {
         suscripcionVentas = FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.VENTAS)
-                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, inicioDelDia())
+                .whereEqualTo(FirestoreSchema.Fields.TURNO_ID, turnoActivoId)
                 .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
-                    ventasDelDia.clear();
+                    ventasDelTurno.clear();
                     for (QueryDocumentSnapshot doc : snap) {
-                        ventasDelDia.add(doc.toObject(Venta.class));
+                        ventasDelTurno.add(doc.toObject(Venta.class));
                     }
                     refrescarPantalla();
                 });
@@ -100,13 +118,13 @@ public class CajaActivity extends AppCompatActivity {
     private void suscribirseAMovimientos() {
         suscripcionMovimientos = FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.MOVIMIENTOS_CAJA)
-                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, inicioDelDia())
+                .whereEqualTo(FirestoreSchema.Fields.TURNO_ID, turnoActivoId)
                 .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
-                    movimientosDelDia.clear();
+                    movimientosDelTurno.clear();
                     for (QueryDocumentSnapshot doc : snap) {
-                        movimientosDelDia.add(doc.toObject(MovimientoCaja.class));
+                        movimientosDelTurno.add(doc.toObject(MovimientoCaja.class));
                     }
                     refrescarPantalla();
                 });
@@ -114,7 +132,7 @@ public class CajaActivity extends AppCompatActivity {
 
     private void refrescarPantalla() {
         ResumenCaja resumen = ResumenCaja.calcular(
-                ventasDelDia, movimientosDelDia,
+                ventasDelTurno, movimientosDelTurno,
                 getString(R.string.cobro_efectivo),
                 getString(R.string.cobro_tarjeta));
 
@@ -135,8 +153,8 @@ public class CajaActivity extends AppCompatActivity {
         listaMovimientos.removeAllViews();
 
         List<Object> filas = new ArrayList<>();
-        filas.addAll(movimientosDelDia);
-        filas.addAll(ventasDelDia);
+        filas.addAll(movimientosDelTurno);
+        filas.addAll(ventasDelTurno);
 
         if (filas.isEmpty()) {
             txtMovimientosVacios.setVisibility(View.VISIBLE);
@@ -146,7 +164,7 @@ public class CajaActivity extends AppCompatActivity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (MovimientoCaja m : movimientosDelDia) {
+        for (MovimientoCaja m : movimientosDelTurno) {
             View item = inflater.inflate(R.layout.item_movimiento_caja, listaMovimientos, false);
             ((TextView) item.findViewById(R.id.txt_hora)).setText(
                     m.getFecha() != null ? horaFmt.format(m.getFecha().toDate()) : "");
@@ -162,7 +180,7 @@ public class CajaActivity extends AppCompatActivity {
             listaMovimientos.addView(item);
         }
 
-        for (Venta v : ventasDelDia) {
+        for (Venta v : ventasDelTurno) {
             View item = inflater.inflate(R.layout.item_movimiento_caja, listaMovimientos, false);
             ((TextView) item.findViewById(R.id.txt_hora)).setText(
                     v.getFecha() != null ? horaFmt.format(v.getFecha().toDate()) : "");
@@ -188,6 +206,11 @@ public class CajaActivity extends AppCompatActivity {
     }
 
     private void mostrarDialogMovimiento() {
+        if (turnoActivoId == null) {
+            Toast.makeText(this, R.string.turno_error_sin_turno, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_movimiento, null);
         RadioGroup grupo = vista.findViewById(R.id.grupo_tipo);
         EditText inputImporte = vista.findViewById(R.id.input_importe);
@@ -230,13 +253,65 @@ public class CajaActivity extends AppCompatActivity {
     private void guardarMovimiento(String tipo, double importe, String descripcion) {
         MovimientoCaja m = new MovimientoCaja(
                 new Timestamp(new Date()), tipo, importe, descripcion);
+        m.setTurnoId(turnoActivoId);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            m.setUsuarioUid(user.getUid());
+            m.setUsuarioEmail(user.getEmail());
+        }
         FirebaseFirestore.getInstance().collection(FirestoreSchema.Collections.MOVIMIENTOS_CAJA).add(m);
+    }
+
+    private void cerrarTurno() {
+        if (turnoActivoId == null) {
+            Toast.makeText(this, R.string.turno_error_sin_turno, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.TURNOS)
+                .document(turnoActivoId)
+                .update(
+                        FirestoreSchema.Fields.ESTADO, Turno.CERRADO,
+                        FirestoreSchema.Fields.FECHA_CIERRE, Timestamp.now())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, R.string.turno_cerrado_ok, Toast.LENGTH_SHORT).show();
+                    limpiarSuscripciones();
+                    pintarSinTurno();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show());
+    }
+
+    private void pintarSinTurno() {
+        turnoActivoId = null;
+        ventasDelTurno.clear();
+        movimientosDelTurno.clear();
+        txtApertura.setText(formato(0));
+        txtEfectivo.setText(formato(0));
+        txtTarjeta.setText(formato(0));
+        txtRetiradas.setText("-" + formato(0));
+        txtTotalEsperado.setText(formato(0));
+        listaMovimientos.removeAllViews();
+        txtMovimientosVacios.setText(R.string.turno_detalle_vacio);
+        txtMovimientosVacios.setVisibility(View.VISIBLE);
+        btnMovimiento.setEnabled(false);
+        btnCierre.setEnabled(false);
+    }
+
+    private void limpiarSuscripciones() {
+        if (suscripcionVentas != null) {
+            suscripcionVentas.remove();
+            suscripcionVentas = null;
+        }
+        if (suscripcionMovimientos != null) {
+            suscripcionMovimientos.remove();
+            suscripcionMovimientos = null;
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (suscripcionVentas != null) suscripcionVentas.remove();
-        if (suscripcionMovimientos != null) suscripcionMovimientos.remove();
+        limpiarSuscripciones();
     }
 }

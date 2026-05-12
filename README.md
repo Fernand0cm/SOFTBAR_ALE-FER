@@ -141,6 +141,7 @@ Clases Verifactu en `data/verifactu`:
 - `facturas`: facturas simplificadas con hash y QR Verifactu.
 - `contadores`: numeracion e hash de la ultima factura emitida.
 - `movimientos_caja`: entradas, retiradas y aperturas manuales de caja.
+- `turnos`: apertura y cierre del turno activo.
 - `splash_backgrounds`: imagenes opcionales para el splash.
 
 ## Pruebas
@@ -237,13 +238,13 @@ Estado validado:
 
 ### Caja y turnos
 
-- [ ] Implementar apertura de turno con importe inicial.
-- [ ] Asociar ventas al turno activo.
+- [x] Implementar apertura de turno con importe inicial.
+- [x] Asociar ventas al turno activo.
 - [ ] Registrar movimientos manuales: entradas, salidas, retiradas y ajustes.
 - [ ] Calcular ventas por metodo de pago dentro del turno.
 - [ ] Implementar cierre de turno y arqueo.
 - [ ] Registrar diferencia de caja.
-- [ ] Bloquear cobros si no hay turno abierto, si esta regla aplica al negocio.
+- [x] Bloquear cobros si no hay turno abierto, si esta regla aplica al negocio.
 - [ ] Permitir consulta de cierres historicos.
 - [ ] Exportar o imprimir resumen de cierre.
 

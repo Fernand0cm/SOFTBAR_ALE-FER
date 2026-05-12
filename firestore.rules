@@ -37,7 +37,8 @@ service cloud.firestore {
     function validVenta() {
       return request.resource.data.keys().hasOnly([
           'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
-          'mesaId', 'mesaNumero', 'lineas'
+          'mesaId', 'mesaNumero', 'lineas', 'turnoId',
+          'usuarioUid', 'usuarioEmail'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.total is number
@@ -52,18 +53,49 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['mesaNumero'])
           || request.resource.data.mesaNumero is int)
         && (!request.resource.data.keys().hasAny(['lineas'])
-          || request.resource.data.lineas is list);
+          || request.resource.data.lineas is list)
+        && (!request.resource.data.keys().hasAny(['turnoId'])
+          || nonEmptyString(request.resource.data.turnoId))
+        && (!request.resource.data.keys().hasAny(['usuarioUid'])
+          || nonEmptyString(request.resource.data.usuarioUid))
+        && (!request.resource.data.keys().hasAny(['usuarioEmail'])
+          || request.resource.data.usuarioEmail is string);
     }
 
     function validMovimientoCaja() {
       return request.resource.data.keys().hasOnly([
-          'fecha', 'tipo', 'importe', 'descripcion'
+          'fecha', 'tipo', 'importe', 'descripcion',
+          'turnoId', 'usuarioUid', 'usuarioEmail'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.tipo in ['apertura', 'entrada', 'retirada']
         && request.resource.data.importe is number
         && (!request.resource.data.keys().hasAny(['descripcion'])
-          || nullableString(request.resource.data.descripcion));
+          || nullableString(request.resource.data.descripcion))
+        && (!request.resource.data.keys().hasAny(['turnoId'])
+          || nonEmptyString(request.resource.data.turnoId))
+        && (!request.resource.data.keys().hasAny(['usuarioUid'])
+          || nonEmptyString(request.resource.data.usuarioUid))
+        && (!request.resource.data.keys().hasAny(['usuarioEmail'])
+          || request.resource.data.usuarioEmail is string);
+    }
+
+    function validTurno() {
+      return request.resource.data.keys().hasOnly([
+          'fechaApertura', 'fechaCierre', 'estado', 'importeInicial',
+          'efectivoContado', 'usuarioUid', 'usuarioEmail'
+        ])
+        && request.resource.data.fechaApertura is timestamp
+        && (!request.resource.data.keys().hasAny(['fechaCierre'])
+          || request.resource.data.fechaCierre == null
+          || request.resource.data.fechaCierre is timestamp)
+        && request.resource.data.estado in ['abierto', 'cerrado']
+        && request.resource.data.importeInicial is number
+        && request.resource.data.importeInicial >= 0
+        && (!request.resource.data.keys().hasAny(['efectivoContado'])
+          || request.resource.data.efectivoContado is number)
+        && nonEmptyString(request.resource.data.usuarioUid)
+        && request.resource.data.usuarioEmail is string;
     }
 
     function validFactura() {
@@ -141,6 +173,12 @@ service cloud.firestore {
     match /movimientos_caja/{id} {
       allow read: if signedIn();
       allow create, update: if signedIn() && validMovimientoCaja();
+      allow delete: if false;
+    }
+
+    match /turnos/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validTurno();
       allow delete: if false;
     }
 

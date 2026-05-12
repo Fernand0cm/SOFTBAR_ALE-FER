@@ -12,6 +12,7 @@ public final class FirestoreSchema {
         public static final String MOVIMIENTOS_CAJA = "movimientos_caja";
         public static final String PRODUCTOS = "productos";
         public static final String SPLASH_BACKGROUNDS = "splash_backgrounds";
+        public static final String TURNOS = "turnos";
         public static final String VENTAS = "ventas";
 
         private Collections() { }
@@ -27,8 +28,11 @@ public final class FirestoreSchema {
         public static final String COMANDA_ACTIVA_ID = "comandaActivaId";
         public static final String ESTADO = "estado";
         public static final String FACTURA_ID = "facturaId";
+        public static final String FECHA_APERTURA = "fechaApertura";
+        public static final String FECHA_CIERRE = "fechaCierre";
         public static final String FECHA = "fecha";
         public static final String HASH_ULTIMO = "hashUltimo";
+        public static final String IMPORTE_INICIAL = "importeInicial";
         public static final String LINEAS = "lineas";
         public static final String METODO = "metodo";
         public static final String MESA_ID = "mesaId";
@@ -37,7 +41,10 @@ public final class FirestoreSchema {
         public static final String NUMERO = "numero";
         public static final String SPLASH_ACTIVE = "active";
         public static final String SPLASH_IMAGE_URL = "imageUrl";
+        public static final String TURNO_ID = "turnoId";
         public static final String ULTIMO = "ultimo";
+        public static final String USUARIO_EMAIL = "usuarioEmail";
+        public static final String USUARIO_UID = "usuarioUid";
 
         private Fields() { }
     }
