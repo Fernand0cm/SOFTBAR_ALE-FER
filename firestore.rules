@@ -1,0 +1,230 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function nonEmptyString(value) {
+      return value is string && value.size() > 0;
+    }
+
+    function nullableString(value) {
+      return value == null || value is string;
+    }
+
+    function validMesa() {
+      return request.resource.data.keys().hasOnly([
+          'numero', 'estado', 'comandaActivaId'
+        ])
+        && request.resource.data.numero is int
+        && request.resource.data.estado in ['libre', 'ocupada', 'cobro', 'cerrada']
+        && (!request.resource.data.keys().hasAny(['comandaActivaId'])
+          || nullableString(request.resource.data.comandaActivaId));
+    }
+
+    function validProducto() {
+      return request.resource.data.keys().hasOnly([
+          'codigoBarras', 'nombre', 'precio'
+        ])
+        && nonEmptyString(request.resource.data.codigoBarras)
+        && nonEmptyString(request.resource.data.nombre)
+        && request.resource.data.precio is number
+        && request.resource.data.precio >= 0;
+    }
+
+    function validConfigFiscal() {
+      return request.resource.data.keys().hasOnly([
+          'nifEmisor', 'serie'
+        ])
+        && nonEmptyString(request.resource.data.nifEmisor)
+        && nonEmptyString(request.resource.data.serie);
+    }
+
+    function validVenta() {
+      return request.resource.data.keys().hasOnly([
+          'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
+          'mesaId', 'mesaNumero', 'lineas', 'turnoId',
+          'usuarioUid', 'usuarioEmail', 'pagoEfectivo', 'pagoTarjeta',
+          'importeRecibido', 'cambio'
+        ])
+        && request.resource.data.fecha is timestamp
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && nonEmptyString(request.resource.data.metodo)
+        && (!request.resource.data.keys().hasAny(['facturaId'])
+          || nullableString(request.resource.data.facturaId))
+        && (!request.resource.data.keys().hasAny(['comandaId'])
+          || nullableString(request.resource.data.comandaId))
+        && (!request.resource.data.keys().hasAny(['mesaId'])
+          || nullableString(request.resource.data.mesaId))
+        && (!request.resource.data.keys().hasAny(['mesaNumero'])
+          || request.resource.data.mesaNumero is int)
+        && (!request.resource.data.keys().hasAny(['lineas'])
+          || request.resource.data.lineas is list)
+        && (!request.resource.data.keys().hasAny(['turnoId'])
+          || nonEmptyString(request.resource.data.turnoId))
+        && (!request.resource.data.keys().hasAny(['usuarioUid'])
+          || nonEmptyString(request.resource.data.usuarioUid))
+        && (!request.resource.data.keys().hasAny(['usuarioEmail'])
+          || request.resource.data.usuarioEmail is string)
+        && (!request.resource.data.keys().hasAny(['pagoEfectivo'])
+          || request.resource.data.pagoEfectivo is number)
+        && (!request.resource.data.keys().hasAny(['pagoTarjeta'])
+          || request.resource.data.pagoTarjeta is number)
+        && (!request.resource.data.keys().hasAny(['importeRecibido'])
+          || request.resource.data.importeRecibido is number)
+        && (!request.resource.data.keys().hasAny(['cambio'])
+          || request.resource.data.cambio is number);
+    }
+
+    function validMovimientoCaja() {
+      return request.resource.data.keys().hasOnly([
+          'fecha', 'tipo', 'importe', 'descripcion',
+          'turnoId', 'usuarioUid', 'usuarioEmail'
+        ])
+        && request.resource.data.fecha is timestamp
+        && request.resource.data.tipo in ['apertura', 'entrada', 'retirada']
+        && request.resource.data.importe is number
+        && (!request.resource.data.keys().hasAny(['descripcion'])
+          || nullableString(request.resource.data.descripcion))
+        && (!request.resource.data.keys().hasAny(['turnoId'])
+          || nonEmptyString(request.resource.data.turnoId))
+        && (!request.resource.data.keys().hasAny(['usuarioUid'])
+          || nonEmptyString(request.resource.data.usuarioUid))
+        && (!request.resource.data.keys().hasAny(['usuarioEmail'])
+          || request.resource.data.usuarioEmail is string);
+    }
+
+    function validTurno() {
+      return request.resource.data.keys().hasOnly([
+          'fechaApertura', 'fechaCierre', 'estado', 'importeInicial',
+          'efectivoContado', 'efectivoEsperado', 'diferenciaCaja',
+          'usuarioUid', 'usuarioEmail'
+        ])
+        && request.resource.data.fechaApertura is timestamp
+        && (!request.resource.data.keys().hasAny(['fechaCierre'])
+          || request.resource.data.fechaCierre == null
+          || request.resource.data.fechaCierre is timestamp)
+        && request.resource.data.estado in ['abierto', 'cerrado']
+        && request.resource.data.importeInicial is number
+        && request.resource.data.importeInicial >= 0
+        && (!request.resource.data.keys().hasAny(['efectivoContado'])
+          || request.resource.data.efectivoContado is number)
+        && (!request.resource.data.keys().hasAny(['efectivoEsperado'])
+          || request.resource.data.efectivoEsperado is number)
+        && (!request.resource.data.keys().hasAny(['diferenciaCaja'])
+          || request.resource.data.diferenciaCaja is number)
+        && nonEmptyString(request.resource.data.usuarioUid)
+        && request.resource.data.usuarioEmail is string;
+    }
+
+    function validFactura() {
+      return request.resource.data.keys().hasOnly([
+          'numero', 'fecha', 'nifEmisor', 'total', 'cuotaIva',
+          'hashAnterior', 'hashActual', 'urlValidacion',
+          'metodo', 'mesaId', 'mesaNumero', 'lineas',
+          'pagoEfectivo', 'pagoTarjeta', 'importeRecibido', 'cambio'
+        ])
+        && nonEmptyString(request.resource.data.numero)
+        && request.resource.data.fecha is timestamp
+        && nonEmptyString(request.resource.data.nifEmisor)
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.cuotaIva is number
+        && request.resource.data.cuotaIva >= 0
+        && request.resource.data.hashAnterior is string
+        && nonEmptyString(request.resource.data.hashActual)
+        && nonEmptyString(request.resource.data.urlValidacion)
+        && (!request.resource.data.keys().hasAny(['metodo'])
+          || request.resource.data.metodo is string)
+        && (!request.resource.data.keys().hasAny(['mesaId'])
+          || nullableString(request.resource.data.mesaId))
+        && (!request.resource.data.keys().hasAny(['mesaNumero'])
+          || request.resource.data.mesaNumero is int)
+        && (!request.resource.data.keys().hasAny(['lineas'])
+          || request.resource.data.lineas is list)
+        && (!request.resource.data.keys().hasAny(['pagoEfectivo'])
+          || request.resource.data.pagoEfectivo is number)
+        && (!request.resource.data.keys().hasAny(['pagoTarjeta'])
+          || request.resource.data.pagoTarjeta is number)
+        && (!request.resource.data.keys().hasAny(['importeRecibido'])
+          || request.resource.data.importeRecibido is number)
+        && (!request.resource.data.keys().hasAny(['cambio'])
+          || request.resource.data.cambio is number);
+    }
+
+    function validComanda() {
+      return request.resource.data.keys().hasOnly([
+          'mesaId', 'mesaNumero', 'estado', 'fechaApertura', 'lineas'
+        ])
+        && nullableString(request.resource.data.mesaId)
+        && request.resource.data.mesaNumero is int
+        && request.resource.data.estado in ['abierta', 'pagada']
+        && request.resource.data.fechaApertura is timestamp
+        && request.resource.data.lineas is list;
+    }
+
+    match /splash_backgrounds/{id} {
+      allow read: if true;
+      allow write: if signedIn();
+    }
+
+    match /configuracion/fiscal {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validConfigFiscal();
+      allow delete: if false;
+    }
+
+    match /mesas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validMesa();
+      allow delete: if false;
+    }
+
+    match /productos/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validProducto();
+      allow delete: if signedIn();
+    }
+
+    match /comandas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validComanda();
+      allow delete: if false;
+    }
+
+    match /ventas/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && validVenta();
+      allow update, delete: if false;
+    }
+
+    match /facturas/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validFactura();
+      allow delete: if false;
+    }
+
+    match /movimientos_caja/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validMovimientoCaja();
+      allow delete: if false;
+    }
+
+    match /turnos/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && validTurno();
+      allow delete: if false;
+    }
+
+    match /contadores/{id} {
+      allow read, write: if signedIn();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

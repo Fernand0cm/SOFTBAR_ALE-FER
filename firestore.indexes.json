@@ -1,0 +1,33 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "ventas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "turnoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fecha",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movimientos_caja",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "turnoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fecha",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

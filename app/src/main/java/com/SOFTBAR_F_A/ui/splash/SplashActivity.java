@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.home.HomeActivity;
 import com.SOFTBAR_F_A.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,9 +29,6 @@ import java.util.concurrent.Executors;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final String COLECCION_FONDOS = "splash_backgrounds";
-    private static final String CAMPO_URL = "imageUrl";
-    private static final String CAMPO_ACTIVA = "active";
     private static final long SPLASH_DELAY_MS = 1400;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -51,15 +49,15 @@ public class SplashActivity extends AppCompatActivity {
 
     private void cargarFondoAleatorio() {
         FirebaseFirestore.getInstance()
-                .collection(COLECCION_FONDOS)
-                .whereEqualTo(CAMPO_ACTIVA, true)
+                .collection(FirestoreSchema.Collections.SPLASH_BACKGROUNDS)
+                .whereEqualTo(FirestoreSchema.Fields.SPLASH_ACTIVE, true)
                 .get()
                 .addOnSuccessListener(snap -> {
                     if (snap == null || snap.isEmpty()) return;
 
                     List<String> urls = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snap) {
-                        String url = doc.getString(CAMPO_URL);
+                        String url = doc.getString(FirestoreSchema.Fields.SPLASH_IMAGE_URL);
                         if (url != null && !url.trim().isEmpty()) {
                             urls.add(url);
                         }

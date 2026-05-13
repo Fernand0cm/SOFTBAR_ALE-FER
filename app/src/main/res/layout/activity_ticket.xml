@@ -103,9 +103,9 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp" />
                         <TextView
+                            android:id="@+id/txt_ticket_numero"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0001"
                             android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -124,9 +124,9 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp" />
                         <TextView
+                            android:id="@+id/txt_ticket_mesa"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3"
                             android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -138,114 +138,12 @@
                         android:layout_marginTop="14dp"
                         android:background="@color/surface_50" />
 
-                    <!-- Lineas -->
                     <LinearLayout
+                        android:id="@+id/lista_ticket_lineas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="32dp"
-                            android:layout_height="wrap_content"
-                            android:text="2x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cana"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5,00"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="32dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Tortilla"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3,50"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="32dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cafe con leche"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1,80"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="32dp"
-                            android:layout_height="wrap_content"
-                            android:text="1x"
-                            android:textColor="@color/brand_600"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Bocadillo jamon"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4,20"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <View
                         android:layout_width="match_parent"
@@ -267,9 +165,9 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/txt_ticket_total"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="14,50 EUR"
                             android:textColor="@color/brand_600"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -288,9 +186,69 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                         <TextView
+                            android:id="@+id/txt_ticket_pago"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/cobro_efectivo"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/ticket_pago_efectivo"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/txt_ticket_pago_efectivo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/ticket_pago_tarjeta"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/txt_ticket_pago_tarjeta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/ticket_cambio"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/txt_ticket_cambio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>

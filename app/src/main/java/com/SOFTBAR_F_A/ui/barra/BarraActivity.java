@@ -16,6 +16,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.CalculoTotalComanda;
 import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Producto;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,8 +35,6 @@ import java.util.Locale;
  * comanda persistente (el pedido de barra se considera puntual).
  */
 public class BarraActivity extends AppCompatActivity {
-
-    private static final String COL_PRODUCTOS = "productos";
 
     private final List<LineaComanda> lineas = new ArrayList<>();
 
@@ -69,8 +68,8 @@ public class BarraActivity extends AppCompatActivity {
 
     private void suscribirseAProductos() {
         suscripcionProductos = FirebaseFirestore.getInstance()
-                .collection(COL_PRODUCTOS)
-                .orderBy("nombre", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.PRODUCTOS)
+                .orderBy(FirestoreSchema.Fields.NOMBRE, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     List<Producto> productos = new ArrayList<>();
@@ -166,6 +165,7 @@ public class BarraActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(this, CobroActivity.class);
         intent.putExtra(CobroActivity.EXTRA_TOTAL, CalculoTotalComanda.total(lineas));
+        intent.putExtra(CobroActivity.EXTRA_LINEAS, new ArrayList<>(lineas));
         startActivity(intent);
         lineas.clear();
         pintarLineas();

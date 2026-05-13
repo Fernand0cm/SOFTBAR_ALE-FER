@@ -13,10 +13,16 @@ import java.util.List;
 public class ResumenCajaTest {
 
     @Test
-    public void totalEsperado_aperturaMasVentasMenosRetiradas() {
+    public void totalEsperado_noIncluyeVentasTarjeta() {
         ResumenCaja r = new ResumenCaja(100, 200, 150, 10, 30);
-        // 100 + 200 + 150 + 10 - 30 = 430
-        assertEquals(430.0, r.totalEsperado(), 0.0001);
+        assertEquals(280.0, r.totalEsperado(), 0.0001);
+        assertEquals(280.0, r.efectivoEsperado(), 0.0001);
+    }
+
+    @Test
+    public void diferencia_restaEsperadoAlContado() {
+        ResumenCaja r = new ResumenCaja(100, 200, 150, 10, 30);
+        assertEquals(20.0, r.diferencia(300), 0.0001);
     }
 
     @Test
@@ -50,6 +56,21 @@ public class ResumenCajaTest {
                 "Efectivo", "Tarjeta");
         assertEquals(14.5, r.getVentasEfectivo(), 0.0001);
         assertEquals(0.0, r.getVentasTarjeta(), 0.0001);
+    }
+
+    @Test
+    public void calcular_usaDesgloseDePagoSiExiste() {
+        Timestamp t = Timestamp.now();
+        Venta venta = new Venta(t, 20.0, "Mixto");
+        venta.setPagoEfectivo(8.0);
+        venta.setPagoTarjeta(12.0);
+
+        ResumenCaja r = ResumenCaja.calcular(Collections.singletonList(venta),
+                Collections.emptyList(), "Efectivo", "Tarjeta");
+
+        assertEquals(8.0, r.getVentasEfectivo(), 0.0001);
+        assertEquals(12.0, r.getVentasTarjeta(), 0.0001);
+        assertEquals(8.0, r.efectivoEsperado(), 0.0001);
     }
 
     @Test
