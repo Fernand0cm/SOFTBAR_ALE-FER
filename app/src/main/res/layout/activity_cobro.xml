@@ -207,13 +207,49 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/cobro_recibido"
+                            android:text="@string/cobro_pago_efectivo"
                             android:textColor="@color/text_secondary"
                             android:textSize="14sp" />
-                        <TextView
+                        <EditText
+                            android:id="@+id/input_pago_efectivo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="20,00 EUR"
+                            android:ems="8"
+                            android:gravity="end"
+                            android:hint="@string/cobro_importe_hint"
+                            android:inputType="numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="10dp"
+                        android:background="@color/surface_50" />
+
+                    <LinearLayout
+                        android:id="@+id/fila_pago_tarjeta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cobro_pago_tarjeta"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+                        <EditText
+                            android:id="@+id/input_pago_tarjeta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="8"
+                            android:gravity="end"
+                            android:hint="@string/cobro_importe_hint"
+                            android:inputType="numberDecimal"
+                            android:singleLine="true"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -237,9 +273,10 @@
                             android:textSize="15sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/txt_cambio_cobro"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5,50 EUR"
+                            android:text="0,00 EUR"
                             android:textColor="@color/brand_600"
                             android:textSize="18sp"
                             android:textStyle="bold" />

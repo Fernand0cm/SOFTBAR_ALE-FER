@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="680" viewBox="0 0 1100 680" role="img" aria-labelledby="title desc">
+  <title id="title">Flujo de venta de SOFTBAR</title>
+  <desc id="desc">Mapa del recorrido operativo desde apertura de turno hasta ticket y cierre de caja.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}
+      .card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2}
+      .main{fill:#ecfdf5;stroke:#14b8a6;stroke-width:2}
+      .warn{fill:#fff7ed;stroke:#fb923c;stroke-width:2}
+      .text{font-family:Arial,Helvetica,sans-serif;fill:#172a2a}
+      .title{font-size:28px;font-weight:700}
+      .label{font-size:19px;font-weight:700}
+      .small{font-size:15px}
+      .line{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1100" height="680"/>
+  <text x="60" y="55" class="text title">Flujo funcional de venta</text>
+  <text x="60" y="85" class="text small">Recorrido principal defendible: turno, venta, cobro, factura, ticket y caja.</text>
+
+  <rect x="70" y="260" width="165" height="82" rx="12" class="main"/>
+  <text x="152" y="291" text-anchor="middle" class="text label">Abrir turno</text>
+  <text x="152" y="317" text-anchor="middle" class="text small">Importe inicial</text>
+
+  <rect x="300" y="150" width="165" height="82" rx="12" class="main"/>
+  <text x="382" y="181" text-anchor="middle" class="text label">Sala</text>
+  <text x="382" y="207" text-anchor="middle" class="text small">Mesa y comanda</text>
+
+  <rect x="300" y="370" width="165" height="82" rx="12" class="main"/>
+  <text x="382" y="401" text-anchor="middle" class="text label">Barra</text>
+  <text x="382" y="427" text-anchor="middle" class="text small">Pedido directo</text>
+
+  <rect x="540" y="260" width="170" height="82" rx="12" class="main"/>
+  <text x="625" y="291" text-anchor="middle" class="text label">Cobro</text>
+  <text x="625" y="317" text-anchor="middle" class="text small">Efectivo/tarjeta/mixto</text>
+
+  <rect x="790" y="260" width="165" height="82" rx="12" class="main"/>
+  <text x="872" y="291" text-anchor="middle" class="text label">Venta</text>
+  <text x="872" y="317" text-anchor="middle" class="text small">Factura y ticket</text>
+
+  <rect x="790" y="420" width="165" height="82" rx="12" class="main"/>
+  <text x="872" y="451" text-anchor="middle" class="text label">Caja</text>
+  <text x="872" y="477" text-anchor="middle" class="text small">Resumen del turno</text>
+
+  <rect x="540" y="520" width="170" height="82" rx="12" class="warn"/>
+  <text x="625" y="551" text-anchor="middle" class="text label">Cierre</text>
+  <text x="625" y="577" text-anchor="middle" class="text small">Arqueo y diferencia</text>
+
+  <path d="M235 301 C260 210 270 191 300 191" class="line"/>
+  <path d="M235 301 C260 390 270 411 300 411" class="line"/>
+  <path d="M465 191 C505 205 520 245 540 285" class="line"/>
+  <path d="M465 411 C505 395 520 355 540 317" class="line"/>
+  <path d="M710 301 L790 301" class="line"/>
+  <path d="M872 342 L872 420" class="line"/>
+  <path d="M790 461 C750 515 725 550 710 561" class="line"/>
+
+  <text x="70" y="640" class="text small">La app bloquea cobros sin turno abierto y guarda usuario, turno, lineas, metodo, desglose de pago, factura y ticket.</text>
+</svg>

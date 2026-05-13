@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.EstadoMesaColor;
 import com.SOFTBAR_F_A.data.Mesa;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.comanda.ComandaActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,7 +29,6 @@ public class MesasActivity extends AppCompatActivity {
     public static final String EXTRA_MESA_ID = "mesaId";
     public static final String EXTRA_MESA_NUMERO = "mesaNumero";
 
-    private static final String COLECCION = "mesas";
     private static final int NUM_MESAS_INICIAL = 8;
 
     private GridLayout grid;
@@ -49,19 +49,19 @@ public class MesasActivity extends AppCompatActivity {
 
     private void sembrarSiVacio() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(COLECCION).limit(1).get().addOnSuccessListener(snap -> {
+        db.collection(FirestoreSchema.Collections.MESAS).limit(1).get().addOnSuccessListener(snap -> {
             if (snap == null || !snap.isEmpty()) return;
             for (int i = 1; i <= NUM_MESAS_INICIAL; i++) {
                 Mesa m = new Mesa(i, Mesa.LIBRE);
-                db.collection(COLECCION).document(String.valueOf(i)).set(m);
+                db.collection(FirestoreSchema.Collections.MESAS).document(String.valueOf(i)).set(m);
             }
         });
     }
 
     private void suscribirseAMesas() {
         suscripcion = FirebaseFirestore.getInstance()
-                .collection(COLECCION)
-                .orderBy("numero", Query.Direction.ASCENDING)
+                .collection(FirestoreSchema.Collections.MESAS)
+                .orderBy(FirestoreSchema.Fields.NUMERO, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
                     List<DocMesa> mesas = new ArrayList<>();
@@ -115,9 +115,9 @@ public class MesasActivity extends AppCompatActivity {
     private void abrirMesa(DocMesa dm) {
         if (Mesa.LIBRE.equals(dm.mesa.getEstado())) {
             FirebaseFirestore.getInstance()
-                    .collection(COLECCION)
+                    .collection(FirestoreSchema.Collections.MESAS)
                     .document(dm.id)
-                    .update("estado", Mesa.OCUPADA);
+                    .update(FirestoreSchema.Fields.ESTADO, Mesa.OCUPADA);
         }
         Intent intent = new Intent(this, ComandaActivity.class);
         intent.putExtra(EXTRA_MESA_ID, dm.id);

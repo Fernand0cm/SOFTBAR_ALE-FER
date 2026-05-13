@@ -1,6 +1,10 @@
 package com.SOFTBAR_F_A.data;
 
-public class LineaComanda {
+import java.io.Serializable;
+
+public class LineaComanda implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String codigoBarras;
     private String nombre;

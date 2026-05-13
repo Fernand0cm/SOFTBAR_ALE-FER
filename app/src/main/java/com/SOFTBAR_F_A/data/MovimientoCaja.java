@@ -12,6 +12,9 @@ public class MovimientoCaja {
     private String tipo;
     private double importe;
     private String descripcion;
+    private String turnoId;
+    private String usuarioUid;
+    private String usuarioEmail;
 
     public MovimientoCaja() {
         // Necesario para Firestore
@@ -35,4 +38,13 @@ public class MovimientoCaja {
 
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getTurnoId() { return turnoId; }
+    public void setTurnoId(String turnoId) { this.turnoId = turnoId; }
+
+    public String getUsuarioUid() { return usuarioUid; }
+    public void setUsuarioUid(String usuarioUid) { this.usuarioUid = usuarioUid; }
+
+    public String getUsuarioEmail() { return usuarioEmail; }
+    public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
 }
