@@ -152,4 +152,8 @@
     <string name="dialog_cancelar">Cancelar</string>
     <string name="dialog_error_vacio">Rellena nombre y precio</string>
     <string name="dialog_error_precio">Precio no valido</string>
+    <string name="config_alta_manual">Alta manual de producto</string>
+    <string name="dialog_codigo_hint">Codigo de barras o referencia</string>
+    <string name="dialog_codigo_manual">Introduce manualmente el codigo del producto</string>
+    <string name="dialog_error_codigo">Introduce un codigo de producto</string>
 </resources>

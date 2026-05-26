@@ -45,6 +45,9 @@ public class ConfigActivity extends AppCompatActivity {
         Button btnEscanear = findViewById(R.id.btn_escanear);
         btnEscanear.setOnClickListener(v -> escanear());
 
+        Button btnAltaManual = findViewById(R.id.btn_alta_manual);
+        btnAltaManual.setOnClickListener(v -> mostrarDialogProducto(null));
+
         suscribirseAProductos();
     }
 
@@ -66,19 +69,36 @@ public class ConfigActivity extends AppCompatActivity {
                 .addOnCanceledListener(() -> { /* el usuario cancelo, sin accion */ });
     }
 
-    private void mostrarDialogProducto(String codigo) {
+    private void mostrarDialogProducto(String codigoEscaneado) {
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_producto, null);
+
         TextView txtCodigo = vista.findViewById(R.id.txt_codigo_dialog);
+        EditText inputCodigo = vista.findViewById(R.id.input_codigo);
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
-        txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
+
+        if (codigoEscaneado != null && !codigoEscaneado.trim().isEmpty()) {
+            inputCodigo.setText(codigoEscaneado);
+            inputCodigo.setEnabled(false);
+            txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigoEscaneado));
+        } else {
+            txtCodigo.setText(R.string.dialog_codigo_manual);
+            inputCodigo.setEnabled(true);
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_titulo)
                 .setView(vista)
                 .setPositiveButton(R.string.dialog_guardar, (d, w) -> {
+                    String codigo = inputCodigo.getText().toString().trim();
                     String nombre = inputNombre.getText().toString().trim();
                     String precioTxt = inputPrecio.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(codigo)) {
+                        Toast.makeText(this, R.string.dialog_error_codigo,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(precioTxt)) {
                         Toast.makeText(this, R.string.dialog_error_vacio,

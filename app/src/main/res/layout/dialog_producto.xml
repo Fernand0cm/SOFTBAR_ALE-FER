@@ -13,6 +13,14 @@
         android:textSize="13sp" />
 
     <EditText
+        android:id="@+id/input_codigo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:hint="@string/dialog_codigo_hint"
+        android:inputType="text" />
+
+    <EditText
         android:id="@+id/input_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
