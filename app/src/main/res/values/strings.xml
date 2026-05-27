@@ -156,4 +156,9 @@
     <string name="dialog_codigo_hint">Codigo de barras o referencia</string>
     <string name="dialog_codigo_manual">Introduce manualmente el codigo del producto</string>
     <string name="dialog_error_codigo">Introduce un codigo de producto</string>
+    <string name="producto_editar">Editar</string>
+    <string name="producto_desactivar">Desactivar</string>
+    <string name="producto_activar">Activar</string>
+    <string name="producto_inactivo">Producto inactivo</string>
+    <string name="producto_actualizado">Producto actualizado</string>
 </resources>

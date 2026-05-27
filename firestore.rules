@@ -26,12 +26,14 @@ service cloud.firestore {
 
     function validProducto() {
       return request.resource.data.keys().hasOnly([
-          'codigoBarras', 'nombre', 'precio'
+          'codigoBarras', 'nombre', 'precio', 'activo'
         ])
         && nonEmptyString(request.resource.data.codigoBarras)
         && nonEmptyString(request.resource.data.nombre)
         && request.resource.data.precio is number
-        && request.resource.data.precio >= 0;
+        && request.resource.data.precio >= 0
+        && (!request.resource.data.keys().hasAny(['activo'])
+          || request.resource.data.activo is bool);
     }
 
     function validConfigFiscal() {

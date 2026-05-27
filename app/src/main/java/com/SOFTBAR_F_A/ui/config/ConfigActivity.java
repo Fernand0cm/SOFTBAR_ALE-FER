@@ -17,12 +17,12 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
 import java.util.Locale;
 
@@ -66,10 +66,14 @@ public class ConfigActivity extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show())
-                .addOnCanceledListener(() -> { /* el usuario cancelo, sin accion */ });
+                .addOnCanceledListener(() -> { });
     }
 
     private void mostrarDialogProducto(String codigoEscaneado) {
+        mostrarDialogProducto(codigoEscaneado, null);
+    }
+
+    private void mostrarDialogProducto(String codigoEscaneado, Producto productoEditar) {
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_producto, null);
 
         TextView txtCodigo = vista.findViewById(R.id.txt_codigo_dialog);
@@ -77,7 +81,15 @@ public class ConfigActivity extends AppCompatActivity {
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
 
-        if (codigoEscaneado != null && !codigoEscaneado.trim().isEmpty()) {
+        boolean editando = productoEditar != null;
+
+        if (editando) {
+            inputCodigo.setText(productoEditar.getCodigoBarras());
+            inputCodigo.setEnabled(false);
+            inputNombre.setText(productoEditar.getNombre());
+            inputPrecio.setText(String.format(Locale.ROOT, "%.2f", productoEditar.getPrecio()));
+            txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, productoEditar.getCodigoBarras()));
+        } else if (codigoEscaneado != null && !codigoEscaneado.trim().isEmpty()) {
             inputCodigo.setText(codigoEscaneado);
             inputCodigo.setEnabled(false);
             txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigoEscaneado));
@@ -115,7 +127,13 @@ public class ConfigActivity extends AppCompatActivity {
                         return;
                     }
 
-                    guardarProducto(new Producto(codigo, nombre, precio));
+                    Producto producto = new Producto(codigo, nombre, precio);
+
+                    if (editando) {
+                        producto.setActivo(productoEditar.isActivo());
+                    }
+
+                    guardarProducto(producto);
                 })
                 .setNegativeButton(R.string.dialog_cancelar, null)
                 .show();
@@ -142,23 +160,49 @@ public class ConfigActivity extends AppCompatActivity {
                     if (error != null || snap == null) return;
 
                     listaProductos.removeAllViews();
+
                     if (snap.isEmpty()) {
                         txtListaVacia.setVisibility(View.VISIBLE);
                         return;
                     }
+
                     txtListaVacia.setVisibility(View.GONE);
 
                     LayoutInflater inflater = LayoutInflater.from(this);
+
                     for (Producto p : snap.toObjects(Producto.class)) {
                         View item = inflater.inflate(R.layout.item_producto,
                                 listaProductos, false);
+
                         ((TextView) item.findViewById(R.id.txt_nombre))
                                 .setText(p.getNombre());
+
                         ((TextView) item.findViewById(R.id.txt_codigo))
                                 .setText(p.getCodigoBarras());
+
                         ((TextView) item.findViewById(R.id.txt_precio))
                                 .setText(String.format(Locale.getDefault(),
                                         "%.2f EUR", p.getPrecio()));
+
+                        TextView txtEstado = item.findViewById(R.id.txt_estado);
+                        Button btnEditar = item.findViewById(R.id.btn_editar);
+                        Button btnToggleActivo = item.findViewById(R.id.btn_toggle_activo);
+
+                        boolean activo = p.isActivo();
+
+                        txtEstado.setVisibility(activo ? View.GONE : View.VISIBLE);
+
+                        btnToggleActivo.setText(activo
+                                ? R.string.producto_desactivar
+                                : R.string.producto_activar);
+
+                        btnEditar.setOnClickListener(v -> mostrarDialogProducto(null, p));
+
+                        btnToggleActivo.setOnClickListener(v -> {
+                            p.setActivo(!p.isActivo());
+                            guardarProducto(p);
+                        });
+
                         listaProductos.addView(item);
                     }
                 });

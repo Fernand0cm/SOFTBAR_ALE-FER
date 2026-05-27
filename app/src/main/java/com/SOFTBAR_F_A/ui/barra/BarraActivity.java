@@ -74,7 +74,10 @@ public class BarraActivity extends AppCompatActivity {
                     if (error != null || snap == null) return;
                     List<Producto> productos = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snap) {
-                        productos.add(doc.toObject(Producto.class));
+                        Producto producto = doc.toObject(Producto.class);
+                        if (producto.isActivo()) {
+                            productos.add(producto);
+                        }
                     }
                     pintarCatalogo(productos);
                 });

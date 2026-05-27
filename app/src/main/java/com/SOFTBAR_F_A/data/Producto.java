@@ -5,6 +5,7 @@ public class Producto {
     private String codigoBarras;
     private String nombre;
     private double precio;
+    private boolean activo = true;
 
     public Producto() {
         // Necesario para Firestore
@@ -14,14 +15,38 @@ public class Producto {
         this.codigoBarras = codigoBarras;
         this.nombre = nombre;
         this.precio = precio;
+        this.activo = true;
     }
 
-    public String getCodigoBarras() { return codigoBarras; }
-    public void setCodigoBarras(String codigoBarras) { this.codigoBarras = codigoBarras; }
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
+    }
 
-    public double getPrecio() { return precio; }
-    public void setPrecio(double precio) { this.precio = precio; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 }
