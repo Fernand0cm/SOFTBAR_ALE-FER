@@ -43,6 +43,7 @@
         <activity android:name=".ui.informes.InformesActivity" />
         <activity android:name=".ui.stock.StockActivity" />
         <activity android:name=".ui.config.ConfigActivity" />
+        <activity android:name=".ui.caja.HistorialCierresActivity" />
     </application>
 
 </manifest>

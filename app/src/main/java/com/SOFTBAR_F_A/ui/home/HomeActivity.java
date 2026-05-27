@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.ui.barra.BarraActivity;
 import com.SOFTBAR_F_A.ui.caja.CajaActivity;
+import com.SOFTBAR_F_A.ui.caja.HistorialCierresActivity;
 import com.SOFTBAR_F_A.ui.config.ConfigActivity;
 import com.SOFTBAR_F_A.ui.informes.InformesActivity;
 import com.SOFTBAR_F_A.ui.login.LoginActivity;
@@ -65,6 +66,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ConfigActivity.class)));
         findViewById(R.id.btn_historial).setOnClickListener(v ->
                 startActivity(new Intent(this, HistorialTicketsActivity.class)));
+        findViewById(R.id.btn_historial_cierres).setOnClickListener(v ->
+                startActivity(new Intent(this, HistorialCierresActivity.class)));
 
         Button btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> {

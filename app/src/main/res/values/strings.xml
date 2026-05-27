@@ -167,4 +167,12 @@
     <string name="historial_tickets_vacio">Todavia no hay tickets registrados.</string>
     <string name="historial_tickets_mesa">Mesa %1$d</string>
     <string name="historial_tickets_barra">Barra</string>
+    <string name="historial_cierres_title">Historial de cierres</string>
+    <string name="historial_cierres_subtitulo">Consulta arqueos y diferencias de caja</string>
+    <string name="historial_cierres_vacio">Todavia no hay cierres registrados.</string>
+    <string name="historial_cierre_usuario">Usuario: %1$s</string>
+    <string name="historial_cierre_esperado">Efectivo esperado: %.2f EUR</string>
+    <string name="historial_cierre_contado">Efectivo contado: %.2f EUR</string>
+    <string name="historial_cierre_diferencia">Diferencia: %.2f EUR</string>
+    <string name="home_btn_historial_cierres">Cierres</string>
 </resources>
