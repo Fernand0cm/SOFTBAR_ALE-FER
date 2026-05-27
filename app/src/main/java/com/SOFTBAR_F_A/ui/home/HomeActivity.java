@@ -25,6 +25,7 @@ import com.SOFTBAR_F_A.ui.stock.StockActivity;
 import com.SOFTBAR_F_A.ui.turno.TurnoActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.SOFTBAR_F_A.ui.ticket.HistorialTicketsActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -56,10 +57,14 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, CajaActivity.class)));
         findViewById(R.id.btn_informes).setOnClickListener(v ->
                 startActivity(new Intent(this, InformesActivity.class)));
+        findViewById(R.id.btn_historial).setOnClickListener(v ->
+                startActivity(new Intent(this, HistorialTicketsActivity.class)));
         findViewById(R.id.btn_stock).setOnClickListener(v ->
                 startActivity(new Intent(this, StockActivity.class)));
         findViewById(R.id.btn_config).setOnClickListener(v ->
                 startActivity(new Intent(this, ConfigActivity.class)));
+        findViewById(R.id.btn_historial).setOnClickListener(v ->
+                startActivity(new Intent(this, HistorialTicketsActivity.class)));
 
         Button btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> {

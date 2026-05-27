@@ -161,4 +161,10 @@
     <string name="producto_activar">Activar</string>
     <string name="producto_inactivo">Producto inactivo</string>
     <string name="producto_actualizado">Producto actualizado</string>
+    <string name="home_btn_historial">Historial tickets</string>
+    <string name="historial_tickets_title">Historial de tickets</string>
+    <string name="historial_tickets_subtitulo">Consulta ventas y abre tickets anteriores</string>
+    <string name="historial_tickets_vacio">Todavia no hay tickets registrados.</string>
+    <string name="historial_tickets_mesa">Mesa %1$d</string>
+    <string name="historial_tickets_barra">Barra</string>
 </resources>

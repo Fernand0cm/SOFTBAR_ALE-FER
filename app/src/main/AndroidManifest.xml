@@ -38,6 +38,7 @@
         <activity android:name=".ui.modificadores.ModificadoresActivity" />
         <activity android:name=".ui.cobro.CobroActivity" />
         <activity android:name=".ui.ticket.TicketActivity" />
+        <activity android:name=".ui.ticket.HistorialTicketsActivity" />
         <activity android:name=".ui.caja.CajaActivity" />
         <activity android:name=".ui.informes.InformesActivity" />
         <activity android:name=".ui.stock.StockActivity" />
