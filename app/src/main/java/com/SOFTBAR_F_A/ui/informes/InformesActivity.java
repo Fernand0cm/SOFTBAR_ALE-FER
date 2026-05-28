@@ -7,9 +7,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.IndicadoresVentas;
@@ -33,6 +41,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class InformesActivity extends AppCompatActivity {
 
@@ -48,6 +59,7 @@ public class InformesActivity extends AppCompatActivity {
 
     private Button btnTodos, btnEfectivo, btnTarjeta, btnMixto;
     private Button btnFechaHoy, btnFechaSemana, btnFechaMes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +85,8 @@ public class InformesActivity extends AppCompatActivity {
         btnFechaHoy = findViewById(R.id.btn_fecha_hoy);
         btnFechaSemana = findViewById(R.id.btn_fecha_semana);
         btnFechaMes = findViewById(R.id.btn_fecha_mes);
-
+        Button btnExportarPdf = findViewById(R.id.btn_exportar_pdf);
+        btnExportarPdf.setOnClickListener(v -> exportarInformePdf());
         configurarListenersFiltros();
         configurarGrafica();
 
@@ -301,7 +314,122 @@ public class InformesActivity extends AppCompatActivity {
     private int dp(int value) {
         return (int) (value * getResources().getDisplayMetrics().density);
     }
+    private void exportarInformePdf() {
+        List<Venta> filtradas = obtenerVentasFiltradas();
 
+        File carpeta = new File(getCacheDir(), "informes");
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+
+        File archivo = new File(carpeta, "informe_softbar.pdf");
+
+        PdfDocument documento = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+        PdfDocument.Page pagina = documento.startPage(pageInfo);
+
+        Canvas canvas = pagina.getCanvas();
+        Paint paint = new Paint();
+        paint.setTextSize(16);
+        paint.setFakeBoldText(true);
+
+        int y = 50;
+
+        canvas.drawText("SOFTBAR - Informe de ventas", 40, y, paint);
+
+        paint.setFakeBoldText(false);
+        paint.setTextSize(12);
+        y += 30;
+
+        canvas.drawText("Filtro fecha: " + filtroFecha, 40, y, paint);
+        y += 20;
+        canvas.drawText("Filtro metodo: " + filtroMetodo, 40, y, paint);
+        y += 30;
+
+        canvas.drawText("Total vendido: " +
+                String.format(Locale.getDefault(), "%.2f EUR", IndicadoresVentas.total(filtradas)), 40, y, paint);
+        y += 20;
+
+        canvas.drawText("Numero de tickets: " +
+                IndicadoresVentas.numeroTickets(filtradas), 40, y, paint);
+        y += 20;
+
+        canvas.drawText("Ticket medio: " +
+                String.format(Locale.getDefault(), "%.2f EUR", IndicadoresVentas.ticketMedio(filtradas)), 40, y, paint);
+        y += 35;
+
+        paint.setFakeBoldText(true);
+        canvas.drawText("Ventas por producto", 40, y, paint);
+        y += 25;
+
+        paint.setFakeBoldText(false);
+
+        List<IndicadoresVentas.ProductoVendido> productos =
+                IndicadoresVentas.ventasPorProducto(filtradas);
+
+        if (productos.isEmpty()) {
+            canvas.drawText("No hay productos vendidos.", 40, y, paint);
+        } else {
+            int max = Math.min(productos.size(), 10);
+
+            for (int i = 0; i < max; i++) {
+                IndicadoresVentas.ProductoVendido p = productos.get(i);
+
+                String linea = String.format(Locale.getDefault(),
+                        "%d. %s - %d uds. - %.2f EUR",
+                        i + 1,
+                        p.getNombre(),
+                        p.getCantidad(),
+                        p.getTotal());
+
+                canvas.drawText(linea, 40, y, paint);
+                y += 20;
+            }
+        }
+
+        documento.finishPage(pagina);
+
+        try {
+            documento.writeTo(new FileOutputStream(archivo));
+            compartirPdf(archivo);
+        } catch (IOException e) {
+            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            documento.close();
+        }
+    }
+
+    private List<Venta> obtenerVentasFiltradas() {
+        List<Venta> filtradas = new ArrayList<>();
+
+        for (Venta venta : ventasActuales) {
+            if (!"todos".equals(filtroMetodo)) {
+                if (venta.getMetodo() == null ||
+                        !venta.getMetodo().equalsIgnoreCase(filtroMetodo)) {
+                    continue;
+                }
+            }
+
+            filtradas.add(venta);
+        }
+
+        return filtradas;
+    }
+
+    private void compartirPdf(File archivo) {
+        Uri uri = FileProvider.getUriForFile(
+                this,
+                getPackageName() + ".fileprovider",
+                archivo
+        );
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/pdf");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivity(Intent.createChooser(intent, "Compartir informe PDF"));
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
