@@ -1,11 +1,12 @@
 package com.SOFTBAR_F_A.ui.informes;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -40,8 +41,13 @@ public class InformesActivity extends AppCompatActivity {
     private LinearLayout listaProductosVendidos;
     private BarChart grafica;
     private ListenerRegistration suscripcion;
+
     private String filtroMetodo = "todos";
+    private String filtroFecha = "hoy";
     private List<Venta> ventasActuales = new ArrayList<>();
+
+    private Button btnTodos, btnEfectivo, btnTarjeta, btnMixto;
+    private Button btnFechaHoy, btnFechaSemana, btnFechaMes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,33 +65,66 @@ public class InformesActivity extends AppCompatActivity {
         txtProductosSinDatos = findViewById(R.id.txt_productos_sin_datos);
         listaProductosVendidos = findViewById(R.id.lista_productos_vendidos);
 
-        Button btnTodos = findViewById(R.id.btn_filtro_todos);
-        Button btnEfectivo = findViewById(R.id.btn_filtro_efectivo);
-        Button btnTarjeta = findViewById(R.id.btn_filtro_tarjeta);
-        Button btnMixto = findViewById(R.id.btn_filtro_mixto);
+        btnTodos = findViewById(R.id.btn_filtro_todos);
+        btnEfectivo = findViewById(R.id.btn_filtro_efectivo);
+        btnTarjeta = findViewById(R.id.btn_filtro_tarjeta);
+        btnMixto = findViewById(R.id.btn_filtro_mixto);
 
+        btnFechaHoy = findViewById(R.id.btn_fecha_hoy);
+        btnFechaSemana = findViewById(R.id.btn_fecha_semana);
+        btnFechaMes = findViewById(R.id.btn_fecha_mes);
+
+        configurarListenersFiltros();
+        configurarGrafica();
+
+        marcarFiltroActivo(btnTodos, btnTodos, btnEfectivo, btnTarjeta, btnMixto);
+        marcarFiltroActivo(btnFechaHoy, btnFechaHoy, btnFechaSemana, btnFechaMes);
+
+        cargarVentasPorFecha();
+    }
+
+    private void configurarListenersFiltros() {
         btnTodos.setOnClickListener(v -> {
             filtroMetodo = "todos";
+            marcarFiltroActivo(btnTodos, btnTodos, btnEfectivo, btnTarjeta, btnMixto);
             aplicarFiltros();
         });
 
         btnEfectivo.setOnClickListener(v -> {
             filtroMetodo = "efectivo";
+            marcarFiltroActivo(btnEfectivo, btnTodos, btnEfectivo, btnTarjeta, btnMixto);
             aplicarFiltros();
         });
 
         btnTarjeta.setOnClickListener(v -> {
             filtroMetodo = "tarjeta";
+            marcarFiltroActivo(btnTarjeta, btnTodos, btnEfectivo, btnTarjeta, btnMixto);
             aplicarFiltros();
         });
 
         btnMixto.setOnClickListener(v -> {
             filtroMetodo = "mixto";
+            marcarFiltroActivo(btnMixto, btnTodos, btnEfectivo, btnTarjeta, btnMixto);
             aplicarFiltros();
         });
 
-        configurarGrafica();
-        cargarVentasDelDia();
+        btnFechaHoy.setOnClickListener(v -> {
+            filtroFecha = "hoy";
+            marcarFiltroActivo(btnFechaHoy, btnFechaHoy, btnFechaSemana, btnFechaMes);
+            cargarVentasPorFecha();
+        });
+
+        btnFechaSemana.setOnClickListener(v -> {
+            filtroFecha = "semana";
+            marcarFiltroActivo(btnFechaSemana, btnFechaHoy, btnFechaSemana, btnFechaMes);
+            cargarVentasPorFecha();
+        });
+
+        btnFechaMes.setOnClickListener(v -> {
+            filtroFecha = "mes";
+            marcarFiltroActivo(btnFechaMes, btnFechaHoy, btnFechaSemana, btnFechaMes);
+            cargarVentasPorFecha();
+        });
     }
 
     private void configurarGrafica() {
@@ -109,12 +148,26 @@ public class InformesActivity extends AppCompatActivity {
         grafica.getAxisRight().setEnabled(false);
     }
 
-    private void cargarVentasDelDia() {
+    private void cargarVentasPorFecha() {
+        if (suscripcion != null) {
+            suscripcion.remove();
+            suscripcion = null;
+        }
+
         Calendar inicio = Calendar.getInstance();
-        inicio.set(Calendar.HOUR_OF_DAY, 0);
-        inicio.set(Calendar.MINUTE, 0);
-        inicio.set(Calendar.SECOND, 0);
-        inicio.set(Calendar.MILLISECOND, 0);
+
+        if ("semana".equals(filtroFecha)) {
+            inicio.add(Calendar.DAY_OF_YEAR, -7);
+        } else if ("mes".equals(filtroFecha)) {
+            inicio.set(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        if ("hoy".equals(filtroFecha) || "mes".equals(filtroFecha)) {
+            inicio.set(Calendar.HOUR_OF_DAY, 0);
+            inicio.set(Calendar.MINUTE, 0);
+            inicio.set(Calendar.SECOND, 0);
+            inicio.set(Calendar.MILLISECOND, 0);
+        }
 
         suscripcion = FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.VENTAS)
@@ -125,6 +178,25 @@ public class InformesActivity extends AppCompatActivity {
                     ventasActuales = snap.toObjects(Venta.class);
                     aplicarFiltros();
                 });
+    }
+
+    private void aplicarFiltros() {
+        List<Venta> filtradas = new ArrayList<>();
+
+        for (Venta venta : ventasActuales) {
+            if (!"todos".equals(filtroMetodo)) {
+                if (venta.getMetodo() == null ||
+                        !venta.getMetodo().equalsIgnoreCase(filtroMetodo)) {
+                    continue;
+                }
+            }
+
+            filtradas.add(venta);
+        }
+
+        pintarKpis(filtradas);
+        pintarGrafica(filtradas);
+        pintarVentasPorProducto(filtradas);
     }
 
     private void pintarKpis(List<Venta> ventas) {
@@ -143,6 +215,7 @@ public class InformesActivity extends AppCompatActivity {
             txtSinDatos.setVisibility(View.VISIBLE);
             return;
         }
+
         grafica.setVisibility(View.VISIBLE);
         txtSinDatos.setVisibility(View.GONE);
 
@@ -151,6 +224,7 @@ public class InformesActivity extends AppCompatActivity {
         List<BarEntry> entradas = new ArrayList<>();
         List<String> etiquetas = new ArrayList<>();
         int idx = 0;
+
         for (int h = 8; h <= 23; h++) {
             entradas.add(new BarEntry(idx, (float) porHora[h]));
             etiquetas.add(String.format(Locale.getDefault(), "%02d", h));
@@ -209,7 +283,7 @@ public class InformesActivity extends AppCompatActivity {
                     "%.2f EUR", p.getTotal()));
             total.setTextColor(ContextCompat.getColor(this, R.color.brand_600));
             total.setTextSize(13);
-            total.setTypeface(total.getTypeface(), android.graphics.Typeface.BOLD);
+            total.setTypeface(total.getTypeface(), Typeface.BOLD);
 
             fila.addView(total);
 
@@ -217,32 +291,16 @@ public class InformesActivity extends AppCompatActivity {
         }
     }
 
-    private void aplicarFiltros() {
-
-        List<Venta> filtradas = new ArrayList<>();
-
-        for (Venta venta : ventasActuales) {
-
-            if (!"todos".equals(filtroMetodo)) {
-
-                if (venta.getMetodo() == null ||
-                        !venta.getMetodo().equalsIgnoreCase(filtroMetodo)) {
-                    continue;
-                }
-            }
-
-            filtradas.add(venta);
+    private void marcarFiltroActivo(Button activo, Button... botones) {
+        for (Button b : botones) {
+            b.setAlpha(b == activo ? 1f : 0.55f);
+            b.setTypeface(null, b == activo ? Typeface.BOLD : Typeface.NORMAL);
         }
-
-        pintarKpis(filtradas);
-        pintarGrafica(filtradas);
-        pintarVentasPorProducto(filtradas);
     }
 
     private int dp(int value) {
         return (int) (value * getResources().getDisplayMetrics().density);
     }
-
 
     @Override
     protected void onDestroy() {
