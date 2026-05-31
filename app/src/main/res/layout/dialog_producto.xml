@@ -28,6 +28,12 @@
         android:hint="@string/dialog_nombre_hint"
         android:inputType="textCapSentences" />
 
+    <Spinner
+        android:id="@+id/spinner_categoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
     <EditText
         android:id="@+id/input_precio"
         android:layout_width="match_parent"

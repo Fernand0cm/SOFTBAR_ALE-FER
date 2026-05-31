@@ -177,4 +177,14 @@
     <string name="home_btn_historial_cierres">Cierres</string>
     <string name="informes_productos_titulo">Ventas por producto</string>
     <string name="informes_productos_sin_datos">Todavia no hay productos vendidos hoy.</string>
+    <string name="config_lista_sin_resultados">No hay productos que coincidan con el filtro.</string>
+    <string-array name="categorias_productos">
+        <item>Todas</item>
+        <item>Bebidas</item>
+        <item>Cervezas</item>
+        <item>Refrescos</item>
+        <item>Cocktails</item>
+        <item>Cafes</item>
+        <item>Comida</item>
+    </string-array>
 </resources>

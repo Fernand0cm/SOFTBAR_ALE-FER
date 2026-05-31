@@ -5,6 +5,7 @@ public class Producto {
     private String codigoBarras;
     private String nombre;
     private double precio;
+    private String categoria;
     private boolean activo = true;
 
     public Producto() {
@@ -48,5 +49,11 @@ public class Producto {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+
+    }
+    public String getCategoria() {
+        return categoria; }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 }

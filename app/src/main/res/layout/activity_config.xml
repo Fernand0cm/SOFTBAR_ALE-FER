@@ -32,7 +32,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/config_alta_manual" />
-
+        <Spinner
+            android:id="@+id/spinner_filtro_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+        <EditText
+            android:id="@+id/input_buscar_producto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Buscar producto por nombre o codigo"
+            android:inputType="text" />
         <TextView
             style="@style/Text.Eyebrow"
             android:layout_width="wrap_content"
