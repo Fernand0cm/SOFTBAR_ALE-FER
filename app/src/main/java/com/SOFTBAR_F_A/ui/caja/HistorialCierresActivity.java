@@ -1,8 +1,8 @@
 package com.SOFTBAR_F_A.ui.caja;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,7 +16,6 @@ import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -27,7 +26,7 @@ public class HistorialCierresActivity extends AppCompatActivity {
     private TextView txtCierresVacio;
     private ListenerRegistration suscripcion;
 
-    private final SimpleDateFormat fechaFmt =
+    private final SimpleDateFormat formatoFecha =
             new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
     @Override
@@ -42,15 +41,14 @@ public class HistorialCierresActivity extends AppCompatActivity {
         listaHistorialCierres = findViewById(R.id.lista_historial_cierres);
         txtCierresVacio = findViewById(R.id.txt_cierres_vacio);
 
-        suscribirseACierres();
+        cargarCierres();
     }
 
-    private void suscribirseACierres() {
+    private void cargarCierres() {
         suscripcion = FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.TURNOS)
                 .whereEqualTo(FirestoreSchema.Fields.ESTADO, Turno.CERRADO)
                 .orderBy(FirestoreSchema.Fields.FECHA_CIERRE, Query.Direction.DESCENDING)
-                .limit(50)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
 
@@ -63,51 +61,50 @@ public class HistorialCierresActivity extends AppCompatActivity {
 
                     txtCierresVacio.setVisibility(View.GONE);
 
-                    LayoutInflater inflater = LayoutInflater.from(this);
-
-                    for (QueryDocumentSnapshot doc : snap) {
-                        Turno turno = doc.toObject(Turno.class);
-                        pintarCierre(inflater, turno);
+                    for (Turno turno : snap.toObjects(Turno.class)) {
+                        pintarCierre(turno);
                     }
                 });
     }
+    private void pintarCierre(Turno turno) {
+        View item = LayoutInflater.from(this)
+                .inflate(R.layout.item_cierre_caja, listaHistorialCierres, false);
 
-    private void pintarCierre(LayoutInflater inflater, Turno turno) {
-        if (turno == null) return;
+        String fechaApertura = turno.getFechaApertura() != null
+                ? formatoFecha.format(turno.getFechaApertura().toDate())
+                : "-";
 
-        View item = inflater.inflate(R.layout.item_cierre_historial,
-                listaHistorialCierres, false);
+        String fechaCierre = turno.getFechaCierre() != null
+                ? formatoFecha.format(turno.getFechaCierre().toDate())
+                : "-";
 
-        TextView txtFecha = item.findViewById(R.id.txt_fecha_cierre);
-        TextView txtUsuario = item.findViewById(R.id.txt_usuario_cierre);
-        TextView txtEsperado = item.findViewById(R.id.txt_esperado_cierre);
-        TextView txtContado = item.findViewById(R.id.txt_contado_cierre);
-        TextView txtDiferencia = item.findViewById(R.id.txt_diferencia_cierre);
+        ((TextView) item.findViewById(R.id.txt_fecha_cierre))
+                .setText("Cierre: " + fechaCierre);
 
-        if (turno.getFechaCierre() != null) {
-            txtFecha.setText(fechaFmt.format(turno.getFechaCierre().toDate()));
-        } else {
-            txtFecha.setText("");
-        }
+        ((TextView) item.findViewById(R.id.txt_fecha_apertura))
+                .setText("Apertura: " + fechaApertura);
 
-        txtUsuario.setText(getString(R.string.historial_cierre_usuario,
-                turno.getUsuarioEmail() != null ? turno.getUsuarioEmail() : ""));
+        ((TextView) item.findViewById(R.id.txt_usuario))
+                .setText("Usuario: " +
+                        (turno.getUsuarioEmail() != null ? turno.getUsuarioEmail() : "-"));
 
-        txtEsperado.setText(getString(R.string.historial_cierre_esperado,
-                turno.getEfectivoEsperado()));
+        ((TextView) item.findViewById(R.id.txt_esperado))
+                .setText(String.format(Locale.getDefault(),
+                        "Esperado\n%.2f EUR", turno.getEfectivoEsperado()));
 
-        txtContado.setText(getString(R.string.historial_cierre_contado,
-                turno.getEfectivoContado()));
+        ((TextView) item.findViewById(R.id.txt_contado))
+                .setText(String.format(Locale.getDefault(),
+                        "Contado\n%.2f EUR", turno.getEfectivoContado()));
 
-        double diferencia = turno.getDiferenciaCaja();
-
-        txtDiferencia.setText(getString(R.string.historial_cierre_diferencia,
-                diferencia));
-
-        txtDiferencia.setTextColor(ContextCompat.getColor(this,
-                diferencia < 0 ? R.color.warning : R.color.brand_600));
+        ((TextView) item.findViewById(R.id.txt_diferencia))
+                .setText(String.format(Locale.getDefault(),
+                        "Dif.\n%.2f EUR", turno.getDiferenciaCaja()));
 
         listaHistorialCierres.addView(item);
+    }
+
+    private int dp(int value) {
+        return (int) (value * getResources().getDisplayMetrics().density);
     }
 
     @Override
