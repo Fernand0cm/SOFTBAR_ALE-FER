@@ -26,7 +26,8 @@ service cloud.firestore {
 
     function validProducto() {
       return request.resource.data.keys().hasOnly([
-          'codigoBarras', 'nombre', 'precio', 'activo', 'categoria'
+          'codigoBarras', 'nombre', 'precio', 'activo', 'categoria',
+          'stock', 'stockMinimo'
         ])
         && nonEmptyString(request.resource.data.codigoBarras)
         && nonEmptyString(request.resource.data.nombre)
@@ -35,7 +36,11 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['activo'])
           || request.resource.data.activo is bool)
         && (!request.resource.data.keys().hasAny(['categoria'])
-          || request.resource.data.categoria is string);
+          || request.resource.data.categoria is string)
+        && (!request.resource.data.keys().hasAny(['stock'])
+          || request.resource.data.stock is int)
+        && (!request.resource.data.keys().hasAny(['stockMinimo'])
+          || request.resource.data.stockMinimo is int);
     }
 
     function validConfigFiscal() {

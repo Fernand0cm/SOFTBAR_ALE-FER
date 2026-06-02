@@ -97,6 +97,8 @@ public class ConfigActivity extends AppCompatActivity {
         EditText inputCodigo = vista.findViewById(R.id.input_codigo);
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
+        EditText inputStock = vista.findViewById(R.id.input_stock);
+        EditText inputStockMinimo = vista.findViewById(R.id.input_stock_minimo);
 
         Spinner spinnerCategoria = vista.findViewById(R.id.spinner_categoria);
 
@@ -122,6 +124,8 @@ public class ConfigActivity extends AppCompatActivity {
             inputCodigo.setEnabled(false);
             inputNombre.setText(productoEditar.getNombre());
             inputPrecio.setText(String.format(Locale.ROOT, "%.2f", productoEditar.getPrecio()));
+            inputStock.setText(String.valueOf(productoEditar.getStock()));
+            inputStockMinimo.setText(String.valueOf(productoEditar.getStockMinimo()));
             txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, productoEditar.getCodigoBarras()));
             String categoriaEditar = productoEditar.getCategoria();
 
@@ -147,6 +151,8 @@ public class ConfigActivity extends AppCompatActivity {
                     String codigo = inputCodigo.getText().toString().trim();
                     String nombre = inputNombre.getText().toString().trim();
                     String precioTxt = inputPrecio.getText().toString().trim();
+                    String stockTxt = inputStock.getText().toString().trim();
+                    String stockMinimoTxt = inputStockMinimo.getText().toString().trim();
                     String categoria = spinnerCategoria.getSelectedItem().toString();
 
                     if (TextUtils.isEmpty(codigo)) {
@@ -169,9 +175,25 @@ public class ConfigActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    int stock = 0;
+                    int stockMinimo = 0;
 
+                    try {
+                        if (!TextUtils.isEmpty(stockTxt)) {
+                            stock = Integer.parseInt(stockTxt);
+                        }
+                        if (!TextUtils.isEmpty(stockMinimoTxt)) {
+                            stockMinimo = Integer.parseInt(stockMinimoTxt);
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, R.string.dialog_error_stock,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Producto producto = new Producto(codigo, nombre, precio);
                     producto.setCategoria(categoria);
+                    producto.setStock(stock);
+                    producto.setStockMinimo(stockMinimo);
                     if (editando) {
                         producto.setActivo(productoEditar.isActivo());
                     }
@@ -309,7 +331,18 @@ public class ConfigActivity extends AppCompatActivity {
 
             ((TextView) item.findViewById(R.id.txt_categoria))
                     .setText(p.getCategoria() != null ? p.getCategoria() : "");
+            ((TextView) item.findViewById(R.id.txt_stock))
+                    .setText(getString(R.string.producto_stock, p.getStock()));
 
+            ((TextView) item.findViewById(R.id.txt_stock_minimo))
+                    .setText(getString(R.string.producto_stock_minimo, p.getStockMinimo()));
+
+            TextView txtStockBajo = item.findViewById(R.id.txt_stock_bajo);
+            txtStockBajo.setVisibility(
+                    p.getStockMinimo() > 0 && p.getStock() <= p.getStockMinimo()
+                            ? View.VISIBLE
+                            : View.GONE
+            );
             ((TextView) item.findViewById(R.id.txt_precio))
                     .setText(String.format(Locale.getDefault(),
                             "%.2f EUR", p.getPrecio()));

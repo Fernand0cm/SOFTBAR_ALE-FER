@@ -41,4 +41,19 @@
         android:layout_marginTop="8dp"
         android:hint="@string/dialog_precio_hint"
         android:inputType="numberDecimal" />
+    <EditText
+        android:id="@+id/input_stock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/dialog_stock_hint"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/input_stock_minimo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/dialog_stock_minimo_hint"
+        android:inputType="number" />
 </LinearLayout>

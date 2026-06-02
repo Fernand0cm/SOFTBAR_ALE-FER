@@ -7,6 +7,8 @@ public class Producto {
     private double precio;
     private String categoria;
     private boolean activo = true;
+    private int stock;
+    private int stockMinimo;
 
     public Producto() {
         // Necesario para Firestore
@@ -17,6 +19,8 @@ public class Producto {
         this.nombre = nombre;
         this.precio = precio;
         this.activo = true;
+        this.stock = 0;
+        this.stockMinimo = 0;
     }
 
     public String getCodigoBarras() {
@@ -43,17 +47,35 @@ public class Producto {
         this.precio = precio;
     }
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
     public boolean isActivo() {
         return activo;
     }
 
     public void setActivo(boolean activo) {
         this.activo = activo;
-
     }
-    public String getCategoria() {
-        return categoria; }
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public int getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(int stockMinimo) {
+        this.stockMinimo = stockMinimo;
     }
 }

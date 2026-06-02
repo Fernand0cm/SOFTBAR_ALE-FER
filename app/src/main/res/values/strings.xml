@@ -178,6 +178,24 @@
     <string name="informes_productos_titulo">Ventas por producto</string>
     <string name="informes_productos_sin_datos">Todavia no hay productos vendidos hoy.</string>
     <string name="config_lista_sin_resultados">No hay productos que coincidan con el filtro.</string>
+    <string name="dialog_stock_hint">Stock actual</string>
+    <string name="dialog_stock_minimo_hint">Stock minimo</string>
+    <string name="dialog_error_stock">Introduce un stock valido</string>
+    <string name="producto_stock">Stock: %1$d uds</string>
+    <string name="producto_stock_minimo">Minimo: %1$d uds</string>
+    <string name="producto_stock_bajo">Stock bajo</string>
+    <string name="stock_catalogo">Inventario actual</string>
+    <string name="stock_vacio">No hay productos en el inventario.</string>
+    <string name="stock_anadir">Añadir stock</string>
+    <string name="stock_dialog_titulo">Entrada de stock</string>
+    <string name="stock_unidades_hint">Unidades recibidas</string>
+    <string name="stock_error_unidades">Introduce unidades validas</string>
+    <string name="stock_actualizado">Stock actualizado</string>
+    <string name="stock_cambiar_minimo">Cambiar mínimo</string>
+    <string name="stock_minimo_dialog_titulo">Stock mínimo</string>
+    <string name="stock_minimo_hint">Nuevo stock mínimo</string>
+    <string name="stock_minimo_actualizado">Stock mínimo actualizado</string>
+
     <string-array name="categorias_productos">
         <item>Todas</item>
         <item>Bebidas</item>

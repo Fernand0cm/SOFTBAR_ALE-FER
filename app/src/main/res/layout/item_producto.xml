@@ -65,6 +65,31 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
                 <TextView
+                    android:id="@+id/txt_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/txt_stock_minimo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/txt_stock_bajo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/producto_stock_bajo"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+                <TextView
                     android:id="@+id/txt_estado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

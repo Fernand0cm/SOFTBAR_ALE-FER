@@ -44,8 +44,6 @@
         <activity android:name=".ui.stock.StockActivity" />
         <activity android:name=".ui.config.ConfigActivity" />
         <activity android:name=".ui.caja.HistorialCierresActivity" />
-        <activity android:name=".ui.caja.HistorialCierresActivity" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

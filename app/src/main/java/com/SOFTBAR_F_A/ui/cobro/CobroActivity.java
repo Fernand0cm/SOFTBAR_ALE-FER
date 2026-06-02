@@ -26,12 +26,14 @@ import com.SOFTBAR_F_A.ui.comanda.ComandaActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
 import com.SOFTBAR_F_A.ui.ticket.TicketActivity;
+import com.SOFTBAR_F_A.data.Producto;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -192,6 +194,50 @@ public class CobroActivity extends AppCompatActivity {
                     if (hashAnterior == null) hashAnterior = "";
                     int siguiente = (int) ultimo + 1;
                     List<LineaComanda> lineas = comanda != null ? comanda.getLineas() : lineasBarra;
+                    if (lineas == null || lineas.isEmpty()) {
+                        throw new FirebaseFirestoreException(
+                                "No hay lineas para cobrar",
+                                FirebaseFirestoreException.Code.ABORTED
+                        );
+                    }
+
+                    for (LineaComanda linea : lineas) {
+                        if (linea.getCodigoBarras() == null) continue;
+
+                        DocumentReference productoRef = db
+                                .collection(FirestoreSchema.Collections.PRODUCTOS)
+                                .document(linea.getCodigoBarras());
+
+                        DocumentSnapshot productoDoc = transaction.get(productoRef);
+
+                        if (!productoDoc.exists()) {
+                            throw new FirebaseFirestoreException(
+                                    "Producto no encontrado: " + linea.getNombre(),
+                                    FirebaseFirestoreException.Code.ABORTED
+                            );
+                        }
+
+                        Producto producto = productoDoc.toObject(Producto.class);
+
+                        if (producto == null) {
+                            throw new FirebaseFirestoreException(
+                                    "Producto no valido: " + linea.getNombre(),
+                                    FirebaseFirestoreException.Code.ABORTED
+                            );
+                        }
+
+                        int stockActual = producto.getStock();
+                        int cantidadVendida = linea.getCantidad();
+
+                        if (stockActual < cantidadVendida) {
+                            throw new FirebaseFirestoreException(
+                                    "Stock insuficiente: " + producto.getNombre(),
+                                    FirebaseFirestoreException.Code.ABORTED
+                            );
+                        }
+
+                        transaction.update(productoRef, "stock", stockActual - cantidadVendida);
+                    }
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
                     Factura factura = construirFactura(
