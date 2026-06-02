@@ -16,12 +16,16 @@ service cloud.firestore {
 
     function validMesa() {
       return request.resource.data.keys().hasOnly([
-          'numero', 'estado', 'comandaActivaId'
+          'numero', 'estado', 'comandaActivaId', 'posX', 'posY'
         ])
         && request.resource.data.numero is int
         && request.resource.data.estado in ['libre', 'ocupada', 'cobro', 'cerrada']
         && (!request.resource.data.keys().hasAny(['comandaActivaId'])
-          || nullableString(request.resource.data.comandaActivaId));
+          || nullableString(request.resource.data.comandaActivaId))
+        && (!request.resource.data.keys().hasAny(['posX'])
+          || request.resource.data.posX is number)
+        && (!request.resource.data.keys().hasAny(['posY'])
+          || request.resource.data.posY is number);
     }
 
     function validProducto() {
@@ -189,7 +193,7 @@ service cloud.firestore {
     match /mesas/{id} {
       allow read: if signedIn();
       allow create, update: if signedIn() && validMesa();
-      allow delete: if false;
+      allow delete: if signedIn() && resource.data.estado == 'libre';
     }
 
     match /productos/{id} {

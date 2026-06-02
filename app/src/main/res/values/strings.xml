@@ -195,6 +195,16 @@
     <string name="stock_minimo_dialog_titulo">Stock mínimo</string>
     <string name="stock_minimo_hint">Nuevo stock mínimo</string>
     <string name="stock_minimo_actualizado">Stock mínimo actualizado</string>
+    <string name="mesas_modo_edicion">Modo edición</string>
+    <string name="mesas_modo_normal">Modo normal</string>
+    <string name="mesas_anadir">Añadir mesa</string>
+    <string name="mesas_modo_edicion_info">Modo edición activo: mantén y arrastra las mesas para cambiar su posición.</string>
+    <string name="mesas_eliminar">Eliminar mesa</string>
+    <string name="mesas_no_eliminar">Solo se pueden eliminar mesas libres.</string>
+    <string name="mesas_eliminar_titulo">Eliminar mesa</string>
+    <string name="mesas_eliminar_msg">¿Quieres eliminar la mesa %1$d?</string>
+    <string name="mesas_creada">Mesa creada</string>
+    <string name="mesas_posicion_guardada">Posición guardada</string>
 
     <string-array name="categorias_productos">
         <item>Todas</item>

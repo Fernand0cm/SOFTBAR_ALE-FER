@@ -110,12 +110,50 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Grid de mesas -->
-            <GridLayout
-                android:id="@+id/grid_mesas"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:columnCount="4" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_modo_edicion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mesas_modo_edicion" />
+
+                <Button
+                    android:id="@+id/btn_anadir_mesa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/mesas_anadir" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_modo_edicion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/mesas_modo_edicion_info"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <FrameLayout
+                    android:id="@+id/plano_mesas"
+                    android:layout_width="900dp"
+                    android:layout_height="520dp"
+                    android:background="@color/surface_0" />
+            </HorizontalScrollView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
