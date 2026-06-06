@@ -191,10 +191,44 @@ Validacion reciente:
 - Las pruebas unitarias actuales pasan.
 - La primera ejecucion puede requerir acceso a la cache local de Gradle del usuario si el wrapper necesita bloquear o descargar la distribucion.
 
+## Pruebas de reglas Firestore (emulador)
+
+Ademas de las pruebas unitarias de Java, el proyecto incluye una suite que valida
+las reglas de seguridad de Firestore contra el emulador oficial. Vive en
+`firestore-tests/` y usa `@firebase/rules-unit-testing` con el runner nativo de
+Node.
+
+Como ejecutarlas:
+
+```bash
+cd firestore-tests
+npm install
+npm test
+```
+
+`npm test` arranca el emulador con `firebase emulators:exec --only firestore` y
+corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
+
+| Prueba | Que verifica |
+|---|---|
+| Lectura sin auth | Un usuario no autenticado no puede leer ventas. |
+| Escritura sin auth | Un usuario no autenticado no puede crear productos. |
+| Splash publico | `splash_backgrounds` es de lectura publica. |
+| Venta propia | Un usuario puede crear una venta con su propio uid. |
+| Venta ajena | Un usuario NO puede crear una venta atribuida a otro uid. |
+| Venta inmutable (update) | Una venta no se puede modificar tras crearse. |
+| Venta inmutable (delete) | Una venta no se puede borrar. |
+| Factura inmutable | Una factura no admite update tras crearse. |
+| Factura valida | Una factura con datos correctos se crea. |
+| Contador monotono | El contador de facturas solo puede avanzar. |
+| Movimiento inmutable | Un movimiento de caja no se puede modificar. |
+| Producto invalido | Un producto con precio negativo es rechazado. |
+
+Estado: **12 pruebas, todas OK** sobre el emulador de Firestore.
+
 ## Pendiente / fuera de alcance
 
 - Pruebas instrumentadas de navegacion entre Activities (Espresso).
-- Pruebas de integracion contra el emulador de Firestore.
 - Pruebas de UI del dashboard (verificar que pinta la grafica correctamente).
 - Generacion de bitmap del QR (requiere Android, no se prueba en JUnit puro).
 - Pruebas del flujo completo de TPV: login, mesa, comanda, cobro, ticket e informes.

@@ -65,8 +65,7 @@ service cloud.firestore {
           || request.resource.data.lineas is list)
         && (!request.resource.data.keys().hasAny(['turnoId'])
           || nonEmptyString(request.resource.data.turnoId))
-        && (!request.resource.data.keys().hasAny(['usuarioUid'])
-          || nonEmptyString(request.resource.data.usuarioUid))
+        && request.resource.data.usuarioUid == request.auth.uid
         && (!request.resource.data.keys().hasAny(['usuarioEmail'])
           || request.resource.data.usuarioEmail is string)
         && (!request.resource.data.keys().hasAny(['pagoEfectivo'])
@@ -91,8 +90,7 @@ service cloud.firestore {
           || nullableString(request.resource.data.descripcion))
         && (!request.resource.data.keys().hasAny(['turnoId'])
           || nonEmptyString(request.resource.data.turnoId))
-        && (!request.resource.data.keys().hasAny(['usuarioUid'])
-          || nonEmptyString(request.resource.data.usuarioUid))
+        && request.resource.data.usuarioUid == request.auth.uid
         && (!request.resource.data.keys().hasAny(['usuarioEmail'])
           || request.resource.data.usuarioEmail is string);
     }
@@ -116,7 +114,7 @@ service cloud.firestore {
           || request.resource.data.efectivoEsperado is number)
         && (!request.resource.data.keys().hasAny(['diferenciaCaja'])
           || request.resource.data.diferenciaCaja is number)
-        && nonEmptyString(request.resource.data.usuarioUid)
+        && request.resource.data.usuarioUid == request.auth.uid
         && request.resource.data.usuarioEmail is string;
     }
 
@@ -153,6 +151,13 @@ service cloud.firestore {
           || request.resource.data.importeRecibido is number)
         && (!request.resource.data.keys().hasAny(['cambio'])
           || request.resource.data.cambio is number);
+    }
+
+    function validContador() {
+      return request.resource.data.keys().hasOnly(['ultimo', 'hashUltimo'])
+        && request.resource.data.ultimo is int
+        && request.resource.data.ultimo >= 0
+        && request.resource.data.hashUltimo is string;
     }
 
     function validComanda() {
@@ -203,14 +208,14 @@ service cloud.firestore {
 
     match /facturas/{id} {
       allow read: if signedIn();
-      allow create, update: if signedIn() && validFactura();
-      allow delete: if false;
+      allow create: if signedIn() && validFactura();
+      allow update, delete: if false;
     }
 
     match /movimientos_caja/{id} {
       allow read: if signedIn();
-      allow create, update: if signedIn() && validMovimientoCaja();
-      allow delete: if false;
+      allow create: if signedIn() && validMovimientoCaja();
+      allow update, delete: if false;
     }
 
     match /turnos/{id} {
@@ -220,7 +225,11 @@ service cloud.firestore {
     }
 
     match /contadores/{id} {
-      allow read, write: if signedIn();
+      allow read: if signedIn();
+      allow create: if signedIn() && validContador();
+      allow update: if signedIn() && validContador()
+        && request.resource.data.ultimo > resource.data.ultimo;
+      allow delete: if false;
     }
 
     match /{document=**} {
