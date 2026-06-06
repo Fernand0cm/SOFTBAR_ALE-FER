@@ -27,4 +27,39 @@
         android:layout_marginTop="8dp"
         android:hint="@string/dialog_precio_hint"
         android:inputType="numberDecimal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/dialog_iva_label"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <RadioGroup
+        android:id="@+id/radio_iva_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_iva_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/dialog_iva_10" />
+
+        <RadioButton
+            android:id="@+id/radio_iva_21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_iva_21" />
+
+        <RadioButton
+            android:id="@+id/radio_iva_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_iva_4" />
+    </RadioGroup>
 </LinearLayout>

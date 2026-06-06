@@ -10,16 +10,23 @@ public class LineaComanda implements Serializable {
     private String nombre;
     private double precio;
     private int cantidad;
+    private double tipoIva = Producto.IVA_POR_DEFECTO;
 
     public LineaComanda() {
         // Necesario para Firestore
     }
 
     public LineaComanda(String codigoBarras, String nombre, double precio, int cantidad) {
+        this(codigoBarras, nombre, precio, cantidad, Producto.IVA_POR_DEFECTO);
+    }
+
+    public LineaComanda(String codigoBarras, String nombre, double precio,
+                        int cantidad, double tipoIva) {
         this.codigoBarras = codigoBarras;
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
+        this.tipoIva = tipoIva;
     }
 
     public String getCodigoBarras() { return codigoBarras; }
@@ -33,6 +40,16 @@ public class LineaComanda implements Serializable {
 
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
+    /**
+     * Tipo de IVA de la linea. Si no se definio (lineas antiguas) se devuelve el
+     * tipo general por defecto.
+     */
+    public double getTipoIva() {
+        return tipoIva > 0 ? tipoIva : Producto.IVA_POR_DEFECTO;
+    }
+
+    public void setTipoIva(double tipoIva) { this.tipoIva = tipoIva; }
 
     public double subtotal() {
         return Dinero.multiplicar(precio, cantidad);

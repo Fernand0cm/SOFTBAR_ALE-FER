@@ -202,3 +202,27 @@ test("un producto con precio negativo es rechazado", async () => {
     })
   );
 });
+
+test("un producto con tipoIva valido se acepta", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "productos/p3"), {
+      codigoBarras: "333",
+      nombre: "Cerveza",
+      precio: 2.5,
+      tipoIva: 0.21,
+    })
+  );
+});
+
+test("un producto con tipoIva fuera de rango es rechazado", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertFails(
+    setDoc(doc(db, "productos/p4"), {
+      codigoBarras: "444",
+      nombre: "Erroneo",
+      precio: 1.0,
+      tipoIva: 1.5,
+    })
+  );
+});

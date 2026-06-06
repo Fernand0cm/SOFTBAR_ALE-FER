@@ -165,6 +165,32 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | `construirUrl_contieneEndpointYParametrosClave` | URL apunta al endpoint correcto e incluye nif, fecha e importe. |
 | `construirUrl_codificaCaracteresEspeciales` | El "/" del numero de serie se URL-encodea como `%2F`. |
 
+### `data/DineroTest`
+
+Calculo monetario con BigDecimal y redondeo a centimos.
+
+| Prueba | Que verifica |
+|---|---|
+| `redondear_aDosDecimalesHalfUp` | Redondeo HALF_UP a 2 decimales. |
+| `sumar_evitaErrorDeComaFlotante` | `0.1 + 0.2` da exactamente `0.30`. |
+| `sumar_variosImportes` | Suma de varios importes. |
+| `restar_redondeaAResultadoLimpio` | Resta sin deriva de coma flotante. |
+| `multiplicar_precioPorCantidad` | Precio por cantidad redondeado. |
+| `cuotaIvaIncluido_diez_porciento` | Cuota de IVA contenida en un total. |
+| `cuotaIvaIncluido_redondeaADosDecimales` | La cuota se redondea a 2 decimales. |
+
+### `data/CalculoIvaTest`
+
+Cuota de IVA de una venta con tipos mixtos por linea.
+
+| Prueba | Que verifica |
+|---|---|
+| `cuotaTotal_listaNula_devuelveCero` | Lista nula devuelve 0. |
+| `cuotaTotal_listaVacia_devuelveCero` | Lista vacia devuelve 0. |
+| `cuotaTotal_unaLineaAlDiezPorCiento` | Cuota de una linea al 10%. |
+| `cuotaTotal_tiposMixtos_sumaCadaCuota` | Suma cuotas de lineas al 10% y al 21%. |
+| `cuotaTotal_respetaCantidadDeLaLinea` | Usa el subtotal (precio x cantidad) de la linea. |
+
 ## Resumen actual
 
 | Suite | Tests | Estado |
@@ -181,7 +207,9 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | IndicadoresVentasTest | 7 | OK |
 | HashVerifactuTest | 5 | OK |
 | GeneradorQrVerifactuTest | 2 | OK |
-| **Total** | **50** | **OK** |
+| DineroTest | 7 | OK |
+| CalculoIvaTest | 5 | OK |
+| **Total** | **62** | **OK** |
 
 (El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
 
@@ -223,8 +251,10 @@ corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
 | Contador monotono | El contador de facturas solo puede avanzar. |
 | Movimiento inmutable | Un movimiento de caja no se puede modificar. |
 | Producto invalido | Un producto con precio negativo es rechazado. |
+| Producto con IVA valido | Un producto con `tipoIva` correcto se acepta. |
+| Producto con IVA invalido | Un `tipoIva` fuera de rango (0..1) es rechazado. |
 
-Estado: **12 pruebas, todas OK** sobre el emulador de Firestore.
+Estado: **14 pruebas, todas OK** sobre el emulador de Firestore.
 
 ## Pendiente / fuera de alcance
 

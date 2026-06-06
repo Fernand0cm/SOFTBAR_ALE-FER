@@ -107,7 +107,7 @@ Tareas:
   - bebidas
   - tapas
   - bocadillos
-- Definir IVA por producto o categoria.
+- [x] Definir IVA por producto (10%, 21%, 4%); la factura calcula la cuota por tipo.
 - Modificar cantidades desde la comanda.
 - Anadir notas por linea.
 - Preparar modificadores:

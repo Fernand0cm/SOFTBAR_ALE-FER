@@ -152,4 +152,9 @@
     <string name="dialog_cancelar">Cancelar</string>
     <string name="dialog_error_vacio">Rellena nombre y precio</string>
     <string name="dialog_error_precio">Precio no valido</string>
+    <string name="dialog_iva_label">Tipo de IVA</string>
+    <string name="dialog_iva_10">10% general</string>
+    <string name="dialog_iva_21">21% alcohol</string>
+    <string name="dialog_iva_4">4% superreducido</string>
+    <string name="config_precio_iva">%1$.2f EUR · IVA %2$d%%</string>
 </resources>

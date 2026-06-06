@@ -121,7 +121,7 @@ public class BarraActivity extends AppCompatActivity {
         }
         if (!encontrado) {
             lineas.add(new LineaComanda(
-                    p.getCodigoBarras(), p.getNombre(), p.getPrecio(), 1));
+                    p.getCodigoBarras(), p.getNombre(), p.getPrecio(), 1, p.getTipoIva()));
         }
         pintarLineas();
     }

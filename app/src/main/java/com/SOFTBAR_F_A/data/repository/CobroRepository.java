@@ -2,8 +2,8 @@ package com.SOFTBAR_F_A.data.repository;
 
 import androidx.annotation.Nullable;
 
+import com.SOFTBAR_F_A.data.CalculoIva;
 import com.SOFTBAR_F_A.data.Comanda;
-import com.SOFTBAR_F_A.data.Dinero;
 import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Turno;
@@ -37,9 +37,6 @@ import java.util.Map;
  * Firebase, lo que mantiene la regla de negocio aislada y reutilizable.
  */
 public class CobroRepository {
-
-    /** Tipo de IVA aplicado (general de hosteleria, 10%). */
-    public static final double TIPO_IVA = 0.10;
 
     /** Resultado del cobro: identificadores para abrir el ticket. */
     public interface CobroCallback {
@@ -139,7 +136,8 @@ public class CobroRepository {
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
                     Factura factura = construirFactura(
-                            ts, ahora, siguiente, hashAnterior, config, solicitud.total);
+                            ts, ahora, siguiente, hashAnterior, config,
+                            solicitud.total, lineas);
                     factura.setMetodo(solicitud.metodo);
                     factura.setMesaId(solicitud.mesaId);
                     factura.setMesaNumero(mesaNumero);
@@ -196,14 +194,14 @@ public class CobroRepository {
 
     private Factura construirFactura(Timestamp ts, Date ahora, int siguiente,
                                      String hashAnterior, ConfiguracionFiscal config,
-                                     double total) {
+                                     double total, List<LineaComanda> lineas) {
         SimpleDateFormat anyoFmt = new SimpleDateFormat("yyyy", Locale.ROOT);
         SimpleDateFormat fechaIso = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
         SimpleDateFormat fechaQr = new SimpleDateFormat("dd-MM-yyyy", Locale.ROOT);
 
         String numero = String.format(Locale.ROOT, "%s-%04d/%s",
                 config.getSerie(), siguiente, anyoFmt.format(ahora));
-        double cuotaIva = Dinero.cuotaIvaIncluido(total, TIPO_IVA);
+        double cuotaIva = CalculoIva.cuotaTotal(lineas);
 
         String hashActual = HashVerifactu.calcular(
                 numero, fechaIso.format(ahora), config.getNifEmisor(),

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,7 @@ public class ConfigActivity extends AppCompatActivity {
         TextView txtCodigo = vista.findViewById(R.id.txt_codigo_dialog);
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
+        RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
         txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
 
         new AlertDialog.Builder(this)
@@ -95,10 +97,17 @@ public class ConfigActivity extends AppCompatActivity {
                         return;
                     }
 
-                    guardarProducto(new Producto(codigo, nombre, precio));
+                    double tipoIva = tipoIvaSeleccionado(grupoIva.getCheckedRadioButtonId());
+                    guardarProducto(new Producto(codigo, nombre, precio, tipoIva));
                 })
                 .setNegativeButton(R.string.dialog_cancelar, null)
                 .show();
+    }
+
+    private double tipoIvaSeleccionado(int idRadio) {
+        if (idRadio == R.id.radio_iva_21) return 0.21;
+        if (idRadio == R.id.radio_iva_4) return 0.04;
+        return Producto.IVA_POR_DEFECTO;
     }
 
     private void guardarProducto(Producto producto) {
@@ -137,8 +146,9 @@ public class ConfigActivity extends AppCompatActivity {
                         ((TextView) item.findViewById(R.id.txt_codigo))
                                 .setText(p.getCodigoBarras());
                         ((TextView) item.findViewById(R.id.txt_precio))
-                                .setText(String.format(Locale.getDefault(),
-                                        "%.2f EUR", p.getPrecio()));
+                                .setText(getString(R.string.config_precio_iva,
+                                        p.getPrecio(),
+                                        (int) Math.round(p.getTipoIva() * 100)));
                         listaProductos.addView(item);
                     }
                 });

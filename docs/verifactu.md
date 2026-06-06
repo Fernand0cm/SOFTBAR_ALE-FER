@@ -44,6 +44,7 @@ La implementacion actual es adecuada para demostrar el flujo tecnico del TFG:
 
 - Factura asociada a una venta real.
 - Lineas reales de venta.
+- Cuota de IVA calculada por tipo (10%, 21%, 4%) sumando la de cada linea.
 - Desglose de pago.
 - Hash encadenado.
 - QR de validacion en entorno de pruebas.
