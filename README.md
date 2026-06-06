@@ -409,10 +409,11 @@ TFG_SOFTBAR/
 ### Robustez Tecnica
 
 - [x] Separar el cobro en un repositorio (`data/repository/CobroRepository`).
-- Extender la capa de repositorios al resto de pantallas (caja, comanda, mesas).
+- [x] Pantalla de informes en MVVM (`InformesViewModel` + `InformesRepository`).
+- Extender el patron MVVM/repositorio al resto de pantallas (caja, comanda, mesas).
 - Introducir capa de dominio para reglas de negocio.
 - [x] Calculo monetario con `BigDecimal` y redondeo a centimos (`data/Dinero`).
-- Mejorar estados de carga, vacio y error.
+- [x] Estados de carga, vacio y error en informes (pendiente en el resto).
 - Crear pruebas instrumentadas de navegacion.
 - [x] Probar las reglas con Firebase Emulator Suite (`firestore-tests/`).
 - Revisar formato fiscal contra especificacion vigente antes de cualquier uso real.

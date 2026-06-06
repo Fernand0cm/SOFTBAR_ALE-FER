@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.play.services.code.scanner)
     implementation(libs.mp.android.chart)
     implementation(libs.zxing.core)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

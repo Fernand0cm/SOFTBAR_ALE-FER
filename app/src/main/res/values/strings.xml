@@ -137,6 +137,8 @@
     <string name="informes_kpi_medio">Ticket medio</string>
     <string name="informes_grafica">Ventas por hora</string>
     <string name="informes_sin_datos">No hay ventas registradas hoy todavia.</string>
+    <string name="informes_cargando">Cargando informes...</string>
+    <string name="informes_error">No se pudieron cargar los informes: %1$s</string>
     <string name="stock_title">Stock</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>

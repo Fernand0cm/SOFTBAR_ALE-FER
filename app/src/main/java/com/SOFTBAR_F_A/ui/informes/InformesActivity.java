@@ -7,11 +7,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.SOFTBAR_F_A.R;
-import com.SOFTBAR_F_A.data.IndicadoresVentas;
-import com.SOFTBAR_F_A.data.Venta;
-import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -21,21 +19,21 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Pantalla de informes. Sigue el patron MVVM: no accede a Firestore
+ * directamente, sino que observa el estado publicado por {@link InformesViewModel}
+ * y se limita a pintarlo, gestionando los estados de carga, vacio y error.
+ */
 public class InformesActivity extends AppCompatActivity {
 
     private TextView kpiVentas, kpiTickets, kpiMedio, txtSinDatos;
     private BarChart grafica;
-    private ListenerRegistration suscripcion;
+    private InformesViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,37 @@ public class InformesActivity extends AppCompatActivity {
         grafica = findViewById(R.id.grafica_horas);
 
         configurarGrafica();
-        cargarVentasDelDia();
+
+        viewModel = new ViewModelProvider(this).get(InformesViewModel.class);
+        viewModel.getEstado().observe(this, this::render);
+    }
+
+    private void render(InformesUiState estado) {
+        switch (estado.tipo) {
+            case CARGANDO:
+                mostrarMensaje(getString(R.string.informes_cargando));
+                break;
+            case ERROR:
+                mostrarMensaje(getString(R.string.informes_error,
+                        estado.error != null ? estado.error : ""));
+                break;
+            case DATOS:
+                pintarKpis(estado);
+                if (estado.isVacio()) {
+                    mostrarMensaje(getString(R.string.informes_sin_datos));
+                } else {
+                    grafica.setVisibility(View.VISIBLE);
+                    txtSinDatos.setVisibility(View.GONE);
+                    pintarGrafica(estado.ventasPorHora);
+                }
+                break;
+        }
+    }
+
+    private void mostrarMensaje(String mensaje) {
+        grafica.setVisibility(View.GONE);
+        txtSinDatos.setVisibility(View.VISIBLE);
+        txtSinDatos.setText(mensaje);
     }
 
     private void configurarGrafica() {
@@ -75,46 +103,13 @@ public class InformesActivity extends AppCompatActivity {
         grafica.getAxisRight().setEnabled(false);
     }
 
-    private void cargarVentasDelDia() {
-        Calendar inicio = Calendar.getInstance();
-        inicio.set(Calendar.HOUR_OF_DAY, 0);
-        inicio.set(Calendar.MINUTE, 0);
-        inicio.set(Calendar.SECOND, 0);
-        inicio.set(Calendar.MILLISECOND, 0);
-
-        suscripcion = FirebaseFirestore.getInstance()
-                .collection(FirestoreSchema.Collections.VENTAS)
-                .whereGreaterThanOrEqualTo(FirestoreSchema.Fields.FECHA, new Timestamp(inicio.getTime()))
-                .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
-                .addSnapshotListener((snap, error) -> {
-                    if (error != null || snap == null) return;
-                    List<Venta> ventas = snap.toObjects(Venta.class);
-                    pintarKpis(ventas);
-                    pintarGrafica(ventas);
-                });
+    private void pintarKpis(InformesUiState estado) {
+        kpiVentas.setText(String.format(Locale.getDefault(), "%.2f EUR", estado.total));
+        kpiTickets.setText(String.valueOf(estado.numeroTickets));
+        kpiMedio.setText(String.format(Locale.getDefault(), "%.2f EUR", estado.ticketMedio));
     }
 
-    private void pintarKpis(List<Venta> ventas) {
-        double total = IndicadoresVentas.total(ventas);
-        int num = IndicadoresVentas.numeroTickets(ventas);
-        double medio = IndicadoresVentas.ticketMedio(ventas);
-
-        kpiVentas.setText(String.format(Locale.getDefault(), "%.2f EUR", total));
-        kpiTickets.setText(String.valueOf(num));
-        kpiMedio.setText(String.format(Locale.getDefault(), "%.2f EUR", medio));
-    }
-
-    private void pintarGrafica(List<Venta> ventas) {
-        if (ventas.isEmpty()) {
-            grafica.setVisibility(View.GONE);
-            txtSinDatos.setVisibility(View.VISIBLE);
-            return;
-        }
-        grafica.setVisibility(View.VISIBLE);
-        txtSinDatos.setVisibility(View.GONE);
-
-        double[] porHora = IndicadoresVentas.ventasPorHora(ventas);
-
+    private void pintarGrafica(double[] porHora) {
         // Mostrar solo el rango horario tipico de un bar (8-23)
         List<BarEntry> entradas = new ArrayList<>();
         List<String> etiquetas = new ArrayList<>();
@@ -134,11 +129,5 @@ public class InformesActivity extends AppCompatActivity {
         grafica.setData(data);
         grafica.getXAxis().setValueFormatter(new IndexAxisValueFormatter(etiquetas));
         grafica.invalidate();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (suscripcion != null) suscripcion.remove();
     }
 }
