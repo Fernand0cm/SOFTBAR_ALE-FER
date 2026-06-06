@@ -211,8 +211,6 @@ Cuota de IVA de una venta con tipos mixtos por linea.
 | CalculoIvaTest | 5 | OK |
 | **Total** | **62** | **OK** |
 
-(El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
-
 Validacion reciente:
 
 - `testDebugUnitTest` ejecutado correctamente.
