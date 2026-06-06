@@ -26,6 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import android.graphics.Color;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,11 +163,38 @@ public class ComandaActivity extends AppCompatActivity {
         int margen = (int) (6 * density);
 
         for (Producto p : productos) {
-            View item = inflater.inflate(R.layout.item_catalogo, gridCatalogo, false);
+
+//            Desactivar boton en caso de que no haya stock
+//            if (p.getStock() <= 0) {
+//                continue;
+//            }
+
+            View item = inflater.inflate(
+                    R.layout.item_catalogo,
+                    gridCatalogo,
+                    false
+            );
+
+            MaterialCardView card = (MaterialCardView) item;
+
+            if (p.getStockMinimo() > 0 &&
+                    p.getStock() <= p.getStockMinimo()) {
+
+                card.setCardBackgroundColor(
+                        Color.parseColor("#FFF0F0")
+                );
+            }
+
             ((TextView) item.findViewById(R.id.txt_nombre_producto))
                     .setText(p.getNombre());
+
             ((TextView) item.findViewById(R.id.txt_precio_producto))
-                    .setText(String.format(Locale.getDefault(), "%.2f EUR", p.getPrecio()));
+                    .setText(String.format(
+                            Locale.getDefault(),
+                            "%.2f EUR",
+                            p.getPrecio()
+                    ));
+
             item.setOnClickListener(v -> anadirProducto(p));
 
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();

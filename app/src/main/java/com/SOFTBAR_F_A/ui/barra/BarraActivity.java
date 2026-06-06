@@ -1,6 +1,7 @@
 package com.SOFTBAR_F_A.ui.barra;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -97,6 +99,15 @@ public class BarraActivity extends AppCompatActivity {
 
         for (Producto p : productos) {
             View item = inflater.inflate(R.layout.item_catalogo, gridCatalogo, false);
+            MaterialCardView card = (MaterialCardView) item;
+
+            if (p.getStockMinimo() > 0 &&
+                    p.getStock() <= p.getStockMinimo()) {
+
+                card.setCardBackgroundColor(
+                        Color.parseColor("#FFF0F0")
+                );
+            }
             ((TextView) item.findViewById(R.id.txt_nombre_producto)).setText(p.getNombre());
             ((TextView) item.findViewById(R.id.txt_precio_producto))
                     .setText(String.format(Locale.getDefault(), "%.2f EUR", p.getPrecio()));

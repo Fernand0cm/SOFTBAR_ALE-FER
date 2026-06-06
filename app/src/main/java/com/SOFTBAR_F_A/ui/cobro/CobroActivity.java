@@ -201,6 +201,7 @@ public class CobroActivity extends AppCompatActivity {
                         );
                     }
 
+                    Map<DocumentReference, Integer> nuevosStocks = new HashMap<>();
                     for (LineaComanda linea : lineas) {
                         if (linea.getCodigoBarras() == null) continue;
 
@@ -236,8 +237,20 @@ public class CobroActivity extends AppCompatActivity {
                             );
                         }
 
-                        transaction.update(productoRef, "stock", stockActual - cantidadVendida);
+                        nuevosStocks.put(
+                                productoRef,
+                                stockActual - cantidadVendida
+                        );
                     }
+
+                    for (Map.Entry<DocumentReference, Integer> entry : nuevosStocks.entrySet()) {
+                        transaction.update(
+                                entry.getKey(),
+                                "stock",
+                                entry.getValue()
+                        );
+                    }
+
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
                     Factura factura = construirFactura(
