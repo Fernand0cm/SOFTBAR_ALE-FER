@@ -10,8 +10,6 @@ public class Mesa {
     private int numero;
     private String estado;
     private String comandaActivaId;
-    private double posX;
-    private double posY;
 
     public Mesa() {
         // Necesario para Firestore
@@ -20,31 +18,29 @@ public class Mesa {
     public Mesa(int numero, String estado) {
         this.numero = numero;
         this.estado = estado;
-        this.posX = 0;
-        this.posY = 0;
     }
 
-    public Mesa(int numero, String estado, double posX, double posY) {
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
         this.numero = numero;
-        this.estado = estado;
-        this.posX = posX;
-        this.posY = posY;
     }
 
-    public int getNumero() { return numero; }
-    public void setNumero(int numero) { this.numero = numero; }
+    public String getEstado() {
+        return estado;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-    public String getComandaActivaId() { return comandaActivaId; }
+    public String getComandaActivaId() {
+        return comandaActivaId;
+    }
+
     public void setComandaActivaId(String comandaActivaId) {
         this.comandaActivaId = comandaActivaId;
     }
-
-    public double getPosX() { return posX; }
-    public void setPosX(double posX) { this.posX = posX; }
-
-    public double getPosY() { return posY; }
-    public void setPosY(double posY) { this.posY = posY; }
 }

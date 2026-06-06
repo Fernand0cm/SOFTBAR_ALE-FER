@@ -119,6 +119,7 @@ public class MesasActivity extends AppCompatActivity {
                     .document(dm.id)
                     .update(FirestoreSchema.Fields.ESTADO, Mesa.OCUPADA);
         }
+
         Intent intent = new Intent(this, ComandaActivity.class);
         intent.putExtra(EXTRA_MESA_ID, dm.id);
         intent.putExtra(EXTRA_MESA_NUMERO, dm.mesa.getNumero());
@@ -134,6 +135,10 @@ public class MesasActivity extends AppCompatActivity {
     private static class DocMesa {
         final String id;
         final Mesa mesa;
-        DocMesa(String id, Mesa mesa) { this.id = id; this.mesa = mesa; }
+
+        DocMesa(String id, Mesa mesa) {
+            this.id = id;
+            this.mesa = mesa;
+        }
     }
 }

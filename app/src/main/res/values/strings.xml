@@ -205,6 +205,9 @@
     <string name="mesas_eliminar_msg">¿Quieres eliminar la mesa %1$d?</string>
     <string name="mesas_creada">Mesa creada</string>
     <string name="mesas_posicion_guardada">Posición guardada</string>
+    <string name="catalogo_stock_disponible">Stock: %1$d</string>
+    <string name="catalogo_sin_stock">Sin stock</string>
+    <string name="catalogo_stock_bajo">Stock bajo</string>zxm
 
     <string-array name="categorias_productos">
         <item>Todas</item>
