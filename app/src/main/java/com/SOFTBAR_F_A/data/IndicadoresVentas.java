@@ -13,7 +13,7 @@ public class IndicadoresVentas {
 
     public static double total(List<Venta> ventas) {
         double total = 0;
-        for (Venta v : ventas) total += v.getTotal();
+        for (Venta v : ventas) total = Dinero.sumar(total, v.getTotal());
         return total;
     }
 
@@ -23,7 +23,7 @@ public class IndicadoresVentas {
 
     public static double ticketMedio(List<Venta> ventas) {
         int n = ventas.size();
-        return n > 0 ? total(ventas) / n : 0;
+        return n > 0 ? Dinero.redondear(total(ventas) / n) : 0;
     }
 
     /**

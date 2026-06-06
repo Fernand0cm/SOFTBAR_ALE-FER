@@ -30,7 +30,8 @@ public class ResumenCaja {
     public double getRetiradas() { return retiradas; }
 
     public double efectivoEsperado() {
-        return apertura + ventasEfectivo + otrosIngresos - retiradas;
+        return Dinero.restar(
+                Dinero.sumar(apertura, ventasEfectivo, otrosIngresos), retiradas);
     }
 
     public double totalEsperado() {
@@ -38,7 +39,7 @@ public class ResumenCaja {
     }
 
     public double diferencia(double efectivoContado) {
-        return efectivoContado - efectivoEsperado();
+        return Dinero.restar(efectivoContado, efectivoEsperado());
     }
 
     public static ResumenCaja calcular(List<Venta> ventasDelTurno,
@@ -85,6 +86,11 @@ public class ResumenCaja {
             }
         }
 
-        return new ResumenCaja(apertura, efectivo, tarjeta, otrosIngresos, retiradas);
+        return new ResumenCaja(
+                Dinero.redondear(apertura),
+                Dinero.redondear(efectivo),
+                Dinero.redondear(tarjeta),
+                Dinero.redondear(otrosIngresos),
+                Dinero.redondear(retiradas));
     }
 }

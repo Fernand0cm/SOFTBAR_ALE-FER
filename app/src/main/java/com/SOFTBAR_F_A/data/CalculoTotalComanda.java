@@ -14,7 +14,7 @@ public class CalculoTotalComanda {
         if (lineas == null) return 0;
         double total = 0;
         for (LineaComanda l : lineas) {
-            total += l.subtotal();
+            total = Dinero.sumar(total, l.subtotal());
         }
         return total;
     }

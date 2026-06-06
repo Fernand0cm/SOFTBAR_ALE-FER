@@ -35,6 +35,6 @@ public class LineaComanda implements Serializable {
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
     public double subtotal() {
-        return precio * cantidad;
+        return Dinero.multiplicar(precio, cantidad);
     }
 }
