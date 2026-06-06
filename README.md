@@ -355,12 +355,14 @@ TFG_SOFTBAR/
 |  |- src/main/java/com/SOFTBAR_F_A/
 |  |  |- data/
 |  |  |- data/firebase/
+|  |  |- data/repository/
 |  |  |- data/verifactu/
 |  |  |- ui/
 |  |- src/main/res/
 |  |- src/test/
 |- docs/
 |  |- images/
+|- firestore-tests/
 |- firebase.json
 |- firestore.rules
 |- firestore.indexes.json
@@ -406,11 +408,13 @@ TFG_SOFTBAR/
 
 ### Robustez Tecnica
 
-- Separar acceso a Firestore en repositorios.
+- [x] Separar el cobro en un repositorio (`data/repository/CobroRepository`).
+- Extender la capa de repositorios al resto de pantallas (caja, comanda, mesas).
 - Introducir capa de dominio para reglas de negocio.
+- [x] Calculo monetario con `BigDecimal` y redondeo a centimos (`data/Dinero`).
 - Mejorar estados de carga, vacio y error.
 - Crear pruebas instrumentadas de navegacion.
-- Probar Firebase Emulator Suite.
+- [x] Probar las reglas con Firebase Emulator Suite (`firestore-tests/`).
 - Revisar formato fiscal contra especificacion vigente antes de cualquier uso real.
 
 ## Roadmap Recomendado
