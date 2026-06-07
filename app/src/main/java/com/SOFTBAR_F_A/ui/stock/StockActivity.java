@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,8 +41,7 @@ public class StockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stock);
 
         if (SesionUsuario.cargada() && !SesionUsuario.puede(Permisos.STOCK)) {
-            android.widget.Toast.makeText(this, R.string.permiso_denegado,
-                    android.widget.Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.permiso_denegado, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

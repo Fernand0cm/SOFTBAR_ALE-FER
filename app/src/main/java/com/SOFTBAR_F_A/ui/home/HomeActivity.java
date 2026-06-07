@@ -18,6 +18,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Permisos;
 import com.SOFTBAR_F_A.data.SesionUsuario;
 import com.SOFTBAR_F_A.data.Usuario;
+import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.data.repository.UsuarioRepository;
 import com.SOFTBAR_F_A.ui.barra.BarraActivity;
 import com.SOFTBAR_F_A.ui.caja.CajaActivity;
@@ -30,13 +31,16 @@ import com.SOFTBAR_F_A.ui.stock.StockActivity;
 import com.SOFTBAR_F_A.ui.turno.TurnoActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ConnectivityManager.NetworkCallback networkCallback;
     private View dotConexion;
     private TextView txtConexion;
-    private com.google.firebase.firestore.ListenerRegistration suscripcionSync;
+    private ListenerRegistration suscripcionSync;
     private boolean online = true;
     private boolean pendienteSync = false;
 
@@ -84,11 +88,10 @@ public class HomeActivity extends AppCompatActivity {
     private void suscribirseEstadoSync() {
         // Escucha los metadatos de Firestore: si hay escrituras pendientes de
         // subir (cambios hechos sin conexion), lo refleja el indicador.
-        suscripcionSync = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                .collection(com.SOFTBAR_F_A.data.firebase.FirestoreSchema.Collections.COMANDAS)
+        suscripcionSync = FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.COMANDAS)
                 .limit(1)
-                .addSnapshotListener(
-                        com.google.firebase.firestore.MetadataChanges.INCLUDE,
+                .addSnapshotListener(MetadataChanges.INCLUDE,
                         (snap, error) -> {
                             if (error != null || snap == null) return;
                             pendienteSync = snap.getMetadata().hasPendingWrites();

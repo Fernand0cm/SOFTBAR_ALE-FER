@@ -22,6 +22,7 @@ import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.data.repository.RectificacionRepository;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
+import com.SOFTBAR_F_A.ui.common.ConexionUtil;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.common.PersonalizacionLinea;
 import com.google.firebase.auth.FirebaseAuth;
@@ -165,7 +166,7 @@ public class TicketActivity extends AppCompatActivity {
     private void rectificar() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
-        if (!com.SOFTBAR_F_A.ui.common.ConexionUtil.hayConexion(this)) {
+        if (!ConexionUtil.hayConexion(this)) {
             Toast.makeText(this, R.string.cobro_sin_conexion, Toast.LENGTH_LONG).show();
             return;
         }

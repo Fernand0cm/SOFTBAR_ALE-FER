@@ -1,5 +1,6 @@
 package com.SOFTBAR_F_A.ui.caja;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -18,10 +19,13 @@ import androidx.core.content.ContextCompat;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.MovimientoCaja;
+import com.SOFTBAR_F_A.data.Permisos;
 import com.SOFTBAR_F_A.data.ResumenCaja;
+import com.SOFTBAR_F_A.data.SesionUsuario;
 import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
+import com.SOFTBAR_F_A.ui.cierres.CierresActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,9 +64,7 @@ public class CajaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caja);
 
-        if (com.SOFTBAR_F_A.data.SesionUsuario.cargada()
-                && !com.SOFTBAR_F_A.data.SesionUsuario.puede(
-                        com.SOFTBAR_F_A.data.Permisos.CAJA)) {
+        if (SesionUsuario.cargada() && !SesionUsuario.puede(Permisos.CAJA)) {
             Toast.makeText(this, R.string.permiso_denegado, Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -87,8 +89,7 @@ public class CajaActivity extends AppCompatActivity {
         btnCierre.setOnClickListener(v -> cerrarTurno());
 
         findViewById(R.id.btn_ver_cierres).setOnClickListener(v ->
-                startActivity(new android.content.Intent(this,
-                        com.SOFTBAR_F_A.ui.cierres.CierresActivity.class)));
+                startActivity(new Intent(this, CierresActivity.class)));
 
         cargarTurnoActivo();
     }
