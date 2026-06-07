@@ -18,9 +18,9 @@ import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
+import com.SOFTBAR_F_A.ui.common.CatalogoCategorias;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.common.PersonalizacionLinea;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -28,7 +28,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,8 +48,7 @@ public class BarraActivity extends AppCompatActivity {
     private TextView txtCatalogoVacio;
     private TextView txtLineasVacias;
 
-    private List<Producto> catalogoCompleto = new ArrayList<>();
-    private String categoriaSeleccionada;
+    private CatalogoCategorias catalogo;
 
     private ListenerRegistration suscripcionProductos;
 
@@ -67,6 +65,9 @@ public class BarraActivity extends AppCompatActivity {
         txtTotal = findViewById(R.id.txt_total);
         txtCatalogoVacio = findViewById(R.id.txt_catalogo_vacio);
         txtLineasVacias = findViewById(R.id.txt_lineas_vacias);
+
+        catalogo = new CatalogoCategorias(
+                this, gridCatalogo, chipsCategorias, txtCatalogoVacio, this::anadirProducto);
 
         Button btnCobrar = findViewById(R.id.btn_cobrar);
         btnCobrar.setOnClickListener(v -> irACobro());
@@ -86,76 +87,8 @@ public class BarraActivity extends AppCompatActivity {
                         Producto p = doc.toObject(Producto.class);
                         if (p.isActivo()) productos.add(p);
                     }
-                    catalogoCompleto = productos;
-                    construirChipsCategorias();
-                    pintarCatalogo(filtrarPorCategoria());
+                    catalogo.setProductos(productos);
                 });
-    }
-
-    private void construirChipsCategorias() {
-        if (chipsCategorias == null) return;
-        chipsCategorias.removeAllViews();
-
-        LinkedHashSet<String> categorias = new LinkedHashSet<>();
-        for (Producto p : catalogoCompleto) categorias.add(p.getCategoria());
-
-        chipsCategorias.addView(
-                crearChip(getString(R.string.historial_todas_categorias), null));
-        for (String categoria : categorias) {
-            chipsCategorias.addView(crearChip(categoria, categoria));
-        }
-    }
-
-    private Chip crearChip(String texto, String valorCategoria) {
-        Chip chip = new Chip(this);
-        chip.setText(texto);
-        chip.setCheckable(true);
-        boolean seleccionado = (valorCategoria == null && categoriaSeleccionada == null)
-                || (valorCategoria != null && valorCategoria.equals(categoriaSeleccionada));
-        chip.setChecked(seleccionado);
-        chip.setOnClickListener(v -> {
-            categoriaSeleccionada = valorCategoria;
-            pintarCatalogo(filtrarPorCategoria());
-        });
-        return chip;
-    }
-
-    private List<Producto> filtrarPorCategoria() {
-        if (categoriaSeleccionada == null) return catalogoCompleto;
-        List<Producto> filtrados = new ArrayList<>();
-        for (Producto p : catalogoCompleto) {
-            if (categoriaSeleccionada.equals(p.getCategoria())) filtrados.add(p);
-        }
-        return filtrados;
-    }
-
-    private void pintarCatalogo(List<Producto> productos) {
-        gridCatalogo.removeAllViews();
-        if (productos.isEmpty()) {
-            txtCatalogoVacio.setVisibility(View.VISIBLE);
-            return;
-        }
-        txtCatalogoVacio.setVisibility(View.GONE);
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        float density = getResources().getDisplayMetrics().density;
-        int margen = (int) (6 * density);
-
-        for (Producto p : productos) {
-            View item = inflater.inflate(R.layout.item_catalogo, gridCatalogo, false);
-            ((TextView) item.findViewById(R.id.txt_nombre_producto)).setText(p.getNombre());
-            ((TextView) item.findViewById(R.id.txt_precio_producto))
-                    .setText(String.format(Locale.getDefault(), "%.2f EUR", p.getPrecio()));
-            item.setOnClickListener(v -> anadirProducto(p));
-
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            params.setMargins(margen, margen, margen, margen);
-            item.setLayoutParams(params);
-
-            gridCatalogo.addView(item);
-        }
     }
 
     private void anadirProducto(Producto p) {
