@@ -1,10 +1,11 @@
 package com.SOFTBAR_F_A.ui.common;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Producto;
@@ -14,13 +15,12 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Pinta el catalogo de productos en una rejilla con un filtro de categorias por
- * chips. Encapsula toda la presentacion (rejilla, chips y filtrado) que antes
- * estaba duplicada en la comanda y en la barra: la pantalla solo aporta las
- * vistas y que hacer al pulsar un producto.
+ * Catalogo de productos con filtro de categorias por chips, pintado en un
+ * RecyclerView (rejilla de 2 columnas) que recicla las vistas. Encapsula la
+ * presentacion que antes estaba duplicada en comanda y barra: la pantalla solo
+ * aporta las vistas y que hacer al pulsar un producto.
  */
 public class CatalogoCategorias {
 
@@ -29,28 +29,28 @@ public class CatalogoCategorias {
     }
 
     private final Context context;
-    private final GridLayout grid;
     private final ChipGroup chips;
     private final TextView textoVacio;
-    private final OnProductoSeleccionado listener;
+    private final ProductoAdapter adapter;
 
     private List<Producto> catalogo = new ArrayList<>();
     private String categoriaSeleccionada; // null = todas
 
-    public CatalogoCategorias(Context context, GridLayout grid, ChipGroup chips,
+    public CatalogoCategorias(Context context, RecyclerView lista, ChipGroup chips,
                               TextView textoVacio, OnProductoSeleccionado listener) {
         this.context = context;
-        this.grid = grid;
         this.chips = chips;
         this.textoVacio = textoVacio;
-        this.listener = listener;
+        this.adapter = new ProductoAdapter(listener::onProducto);
+        lista.setLayoutManager(new GridLayoutManager(context, 2));
+        lista.setAdapter(adapter);
     }
 
     /** Actualiza el catalogo (productos ya filtrados por activo) y repinta. */
     public void setProductos(List<Producto> productos) {
         this.catalogo = productos != null ? productos : new ArrayList<>();
         construirChips();
-        pintarGrid(filtrar());
+        aplicarFiltro();
     }
 
     private void construirChips() {
@@ -73,9 +73,15 @@ public class CatalogoCategorias {
         chip.setChecked(seleccionado);
         chip.setOnClickListener(v -> {
             categoriaSeleccionada = valorCategoria;
-            pintarGrid(filtrar());
+            aplicarFiltro();
         });
         return chip;
+    }
+
+    private void aplicarFiltro() {
+        List<Producto> filtrados = filtrar();
+        adapter.setItems(filtrados);
+        textoVacio.setVisibility(filtrados.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private List<Producto> filtrar() {
@@ -85,34 +91,5 @@ public class CatalogoCategorias {
             if (categoriaSeleccionada.equals(p.getCategoria())) filtrados.add(p);
         }
         return filtrados;
-    }
-
-    private void pintarGrid(List<Producto> productos) {
-        grid.removeAllViews();
-        if (productos.isEmpty()) {
-            textoVacio.setVisibility(View.VISIBLE);
-            return;
-        }
-        textoVacio.setVisibility(View.GONE);
-
-        LayoutInflater inflater = LayoutInflater.from(context);
-        float density = context.getResources().getDisplayMetrics().density;
-        int margen = (int) (6 * density);
-
-        for (Producto p : productos) {
-            View item = inflater.inflate(R.layout.item_catalogo, grid, false);
-            ((TextView) item.findViewById(R.id.txt_nombre_producto)).setText(p.getNombre());
-            ((TextView) item.findViewById(R.id.txt_precio_producto))
-                    .setText(String.format(Locale.getDefault(), "%.2f EUR", p.getPrecio()));
-            item.setOnClickListener(v -> listener.onProducto(p));
-
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            params.setMargins(margen, margen, margen, margen);
-            item.setLayoutParams(params);
-
-            grid.addView(item);
-        }
     }
 }

@@ -38,17 +38,14 @@ nivel de codigo; las capturas se toman tras ejecutar `tools/seed`.
 | Stock | `productos` con `controlarStock` | ~110 productos (refrescos, cervezas, vinos, licores) con stock y alerta de bajo | OK (ver nota) |
 | Config | `productos` (todos) | Lista de 285 con codigo, categoria, precio+IVA; alta/edicion/desactivar | OK (ver nota) |
 
-## Nota de rendimiento (importante)
+## Nota de rendimiento (resuelta)
 
-Comanda, Barra, Config y Stock pintan sus listas inflando **todas** las vistas
-dentro de un `ScrollView` (no usan `RecyclerView`). Con ~285 productos:
-
-- En **Config** y en el catalogo con el filtro **"Todas"** se inflan cientos de
-  vistas de golpe: puede haber un pequeno tiron al abrir.
-- **Mitigacion para la demo**: en comanda/barra, selecciona una **categoria**
-  (muestra 15-30 productos, fluido). Es ademas el flujo natural de uso.
-- **Mejora futura** (documentada, no critica para el TFG): migrar estas listas a
-  `RecyclerView` para reciclar vistas.
+Comanda, Barra, Config y Stock **ya usan `RecyclerView`** (reciclan las vistas),
+por lo que pintar cientos de productos no infla cientos de vistas a la vez.
+Ademas, comanda y barra se rediseñaron para que el catalogo recicle y el boton
+**Cobrar quede siempre visible** (antes quedaba enterrado bajo el catalogo).
+Adaptadores: `ProductoAdapter` (catalogo), `ProductoConfigAdapter` (config) y
+`StockAdapter` (stock).
 
 ## Checklist para las capturas
 
