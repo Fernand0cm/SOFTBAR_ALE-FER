@@ -236,9 +236,17 @@
     <string-array name="categorias_producto">
         <item>General</item>
         <item>Cafes</item>
-        <item>Bebidas</item>
+        <item>Infusiones</item>
+        <item>Refrescos</item>
+        <item>Cervezas</item>
+        <item>Vinos</item>
+        <item>Licores</item>
+        <item>Desayunos</item>
         <item>Tapas</item>
+        <item>Raciones</item>
         <item>Bocadillos</item>
+        <item>Montaditos</item>
+        <item>Postres</item>
     </string-array>
     <string name="config_producto_inactivo">%1$s (inactivo)</string>
     <string name="config_codigo_categoria">%1$s · %2$s</string>
