@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class Factura {
 
+    public static final String TIPO_NORMAL = "normal";
+    public static final String TIPO_RECTIFICATIVA = "rectificativa";
+
     private String numero;            // ej. "0001/2026"
     private Timestamp fecha;
     private String nifEmisor;
@@ -29,6 +32,8 @@ public class Factura {
     private double pagoTarjeta;
     private double importeRecibido;
     private double cambio;
+    private String tipo = TIPO_NORMAL;
+    private String facturaRectificadaNumero;
     private List<LineaComanda> lineas = new ArrayList<>();
 
     public Factura() {
@@ -92,6 +97,22 @@ public class Factura {
 
     public double getCambio() { return cambio; }
     public void setCambio(double cambio) { this.cambio = cambio; }
+
+    public String getTipo() {
+        return tipo != null && !tipo.trim().isEmpty() ? tipo : TIPO_NORMAL;
+    }
+
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
+    public String getFacturaRectificadaNumero() { return facturaRectificadaNumero; }
+
+    public void setFacturaRectificadaNumero(String facturaRectificadaNumero) {
+        this.facturaRectificadaNumero = facturaRectificadaNumero;
+    }
+
+    public boolean esRectificativa() {
+        return TIPO_RECTIFICATIVA.equals(getTipo());
+    }
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

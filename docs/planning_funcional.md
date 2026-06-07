@@ -199,8 +199,8 @@ Tareas:
 - [x] Separar configuracion fiscal del codigo.
 - [x] Guardar datos fiscales del negocio en Firestore.
 - [x] Gestionar series por anio.
-- Preparar anulacion o rectificacion.
-- Revisar formato de QR y hash contra especificacion oficial.
+- [x] Preparar anulacion o rectificacion (factura rectificativa encadenada).
+- [x] Revisar formato de QR y hash contra especificacion oficial (documentado en docs/verifactu.md).
 - [x] Documentar limitaciones del prototipo.
 
 Resultado esperado:

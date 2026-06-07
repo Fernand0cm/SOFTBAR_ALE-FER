@@ -302,8 +302,10 @@ corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
 | Admin gestiona roles | Un administrador puede crear usuarios con cualquier rol. |
 | Producto con stock valido | Un producto con campos de stock correctos se acepta. |
 | Stock negativo denegado | Un producto con stock negativo es rechazado. |
+| Venta rectificativa negativa | Una venta rectificativa admite total negativo. |
+| Venta normal sin negativos | Una venta normal no admite total negativo. |
 
-Estado: **23 pruebas, todas OK** sobre el emulador de Firestore.
+Estado: **25 pruebas, todas OK** sobre el emulador de Firestore.
 
 ## Pendiente / fuera de alcance
 

@@ -411,7 +411,7 @@ TFG_SOFTBAR/
 - [x] Roles de usuario (administrador, camarero, caja, cocina) con permisos por modulo.
 - [x] Stock real opcional por producto, con descuento automatico al vender y alertas de bajo stock.
 - Impresion o exportacion de ticket.
-- Anulacion o rectificacion de factura.
+- [x] Anulacion o rectificacion de factura (factura rectificativa encadenada).
 
 ### Robustez Tecnica
 

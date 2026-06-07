@@ -116,6 +116,12 @@
     <string name="verifactu_titulo">QR Verifactu</string>
     <string name="verifactu_factura">Factura %1$s</string>
     <string name="verifactu_hash">Hash %1$s</string>
+    <string name="verifactu_rectificativa">RECTIFICATIVA de %1$s</string>
+    <string name="ticket_rectificar">Rectificar factura</string>
+    <string name="ticket_rectificar_titulo">Rectificar factura</string>
+    <string name="ticket_rectificar_mensaje">Se emitira una factura rectificativa que anula esta. La original no se borra. Esta accion no se puede deshacer.</string>
+    <string name="ticket_ya_rectificada">Esta factura ya tiene una rectificativa</string>
+    <string name="ticket_rectificar_error">No se pudo rectificar la factura</string>
     <string name="ticket_cerrar">Cerrar</string>
     <string name="caja_title">Caja del turno</string>
     <string name="caja_turno_ejemplo">Turno actual</string>

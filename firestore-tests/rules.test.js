@@ -131,6 +131,23 @@ test("un usuario NO puede crear una venta atribuida a otro uid", async () => {
   await assertFails(setDoc(doc(db, "ventas/v2"), ventaValida(UID_B)));
 });
 
+test("una venta rectificativa puede tener total negativo", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  const v = ventaValida(UID_A);
+  v.total = -12.5;
+  v.pagoEfectivo = -12.5;
+  v.tipo = "rectificativa";
+  v.facturaRectificadaId = "A-0001-2026";
+  await assertSucceeds(setDoc(doc(db, "ventas/vr1"), v));
+});
+
+test("una venta normal NO puede tener total negativo", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  const v = ventaValida(UID_A);
+  v.total = -12.5;
+  await assertFails(setDoc(doc(db, "ventas/vr2"), v));
+});
+
 test("una venta no se puede modificar una vez creada", async () => {
   await testEnv.withSecurityRulesDisabled(async (ctx) => {
     await setDoc(doc(ctx.firestore(), "ventas/v3"), ventaValida(UID_A));

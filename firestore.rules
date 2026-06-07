@@ -73,16 +73,25 @@ service cloud.firestore {
         && nonEmptyString(request.resource.data.serie);
     }
 
+    function esRectificativa() {
+      return request.resource.data.keys().hasAny(['tipo'])
+        && request.resource.data.tipo == 'rectificativa';
+    }
+
     function validVenta() {
       return request.resource.data.keys().hasOnly([
           'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
           'mesaId', 'mesaNumero', 'lineas', 'turnoId',
           'usuarioUid', 'usuarioEmail', 'pagoEfectivo', 'pagoTarjeta',
-          'importeRecibido', 'cambio'
+          'importeRecibido', 'cambio', 'tipo', 'facturaRectificadaId'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.total is number
-        && request.resource.data.total >= 0
+        && (request.resource.data.total >= 0 || esRectificativa())
+        && (!request.resource.data.keys().hasAny(['tipo'])
+          || request.resource.data.tipo in ['normal', 'rectificativa'])
+        && (!request.resource.data.keys().hasAny(['facturaRectificadaId'])
+          || nullableString(request.resource.data.facturaRectificadaId))
         && nonEmptyString(request.resource.data.metodo)
         && (!request.resource.data.keys().hasAny(['facturaId'])
           || nullableString(request.resource.data.facturaId))
@@ -154,15 +163,20 @@ service cloud.firestore {
           'numero', 'fecha', 'nifEmisor', 'total', 'cuotaIva',
           'hashAnterior', 'hashActual', 'urlValidacion',
           'metodo', 'mesaId', 'mesaNumero', 'lineas',
-          'pagoEfectivo', 'pagoTarjeta', 'importeRecibido', 'cambio'
+          'pagoEfectivo', 'pagoTarjeta', 'importeRecibido', 'cambio',
+          'tipo', 'facturaRectificadaNumero'
         ])
         && nonEmptyString(request.resource.data.numero)
         && request.resource.data.fecha is timestamp
         && nonEmptyString(request.resource.data.nifEmisor)
         && request.resource.data.total is number
-        && request.resource.data.total >= 0
         && request.resource.data.cuotaIva is number
-        && request.resource.data.cuotaIva >= 0
+        && ((request.resource.data.total >= 0 && request.resource.data.cuotaIva >= 0)
+          || esRectificativa())
+        && (!request.resource.data.keys().hasAny(['tipo'])
+          || request.resource.data.tipo in ['normal', 'rectificativa'])
+        && (!request.resource.data.keys().hasAny(['facturaRectificadaNumero'])
+          || nullableString(request.resource.data.facturaRectificadaNumero))
         && request.resource.data.hashAnterior is string
         && nonEmptyString(request.resource.data.hashActual)
         && nonEmptyString(request.resource.data.urlValidacion)
