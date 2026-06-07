@@ -33,6 +33,23 @@ operativo completo funcionando de extremo a extremo.
 - 90 pruebas unitarias (JUnit) y 25 pruebas de reglas sobre el emulador de Firestore.
 - Integracion continua con GitHub Actions (pruebas unitarias y de reglas en cada cambio).
 
+## Capturas De La App
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/demo/01_mesas.png" width="200"><br><sub>Sala y mesas</sub></td>
+    <td align="center"><img src="docs/demo/04_comanda_personalizada.png" width="200"><br><sub>Comanda con modificadores</sub></td>
+    <td align="center"><img src="docs/demo/05_cobro_mixto.png" width="200"><br><sub>Cobro mixto</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/demo/06_ticket_tarjeta.png" width="200"><br><sub>Ticket con QR Verifactu</sub></td>
+    <td align="center"><img src="docs/demo/08_caja_resumen.png" width="200"><br><sub>Caja y arqueo</sub></td>
+    <td align="center"><img src="docs/demo/11_informes.png" width="200"><br><sub>Informes</sub></td>
+  </tr>
+</table>
+
+Mas evidencias en `docs/demo/` y el recorrido completo en `docs/demo/RESULTADO_DEMO.md`.
+
 ## Navegacion
 
 ### Mapa Principal
@@ -409,6 +426,37 @@ TFG_SOFTBAR/
 |- settings.gradle.kts
 |- README.md
 ```
+
+## Diseno Y Carga Cognitiva
+
+El codigo sigue de forma consciente los principios de carga cognitiva recogidos en
+[zakirullin/cognitive-load](https://github.com/zakirullin/cognitive-load): el limite
+real a la velocidad de desarrollo no es el numero de lineas, sino cuanta informacion
+hay que retener en la mente para entender el codigo. Como la memoria de trabajo solo
+maneja unos pocos elementos a la vez, el objetivo es eliminar toda la carga cognitiva
+que no sea intrinseca al problema.
+
+Como se aplica en SOFTBAR:
+
+- **Modulos profundos, interfaces simples.** Los repositorios exponen operaciones de
+  negocio de alto nivel (por ejemplo, registrar un cobro) que ocultan la complejidad
+  de la transaccion de Firestore: pocas funciones, mucha funcionalidad.
+- **Logica pura aislada.** Los calculos criticos (dinero, IVA, hash Verifactu,
+  numeracion, indicadores) viven en clases sin dependencias de Android, faciles de
+  leer y de probar sin levantar infraestructura.
+- **Soluciones aburridas y directas.** Se evitan las abstracciones "por si acaso" y las
+  capas que solo anaden indireccion sin ocultar complejidad.
+- **Pocas dependencias.** Cada dependencia es codigo propio que hay que entender; se
+  usan librerias acotadas (ML Kit, ZXing, MPAndroidChart) solo donde aportan valor.
+- **Una unica fuente de verdad.** Los nombres de colecciones y campos se centralizan en
+  `FirestoreSchema`, sin cadenas magicas repartidas por el codigo.
+- **Frameworks como biblioteca, no como arquitectura.** Firebase se usa detras de los
+  repositorios, no como esqueleto del que dependa toda la aplicacion.
+
+> "El mejor codigo no es el mas elegante o sofisticado, es el que los desarrolladores
+> futuros entienden rapidamente." — Addy Osmani
+
+> "Un poco de copia es mejor que una pequena dependencia." — Rob Pike
 
 ## Estado Del Proyecto
 
