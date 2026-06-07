@@ -223,6 +223,8 @@ No se usan actualmente:
 
 Mas detalle en:
 
+- `docs/arquitectura.md`
+- `docs/guion_demo.md`
 - `docs/firebase.md`
 - `docs/verifactu.md`
 - `firestore.rules`
@@ -382,7 +384,8 @@ TFG_SOFTBAR/
 
 ### Antes De La Defensa
 
-- Crear guion de demo paso a paso.
+- [x] Crear guion de demo paso a paso (`docs/guion_demo.md`).
+- [x] Documentar la arquitectura (`docs/arquitectura.md`).
 - Preparar datos de prueba estables.
 - Probar flujo completo manualmente:
   - login
