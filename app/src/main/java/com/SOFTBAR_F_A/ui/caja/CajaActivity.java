@@ -326,9 +326,19 @@ public class CajaActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    guardarCierre(contado, esperado, dialog);
+                    confirmarCierre(contado, esperado, dialog);
                 }));
         dialog.show();
+    }
+
+    private void confirmarCierre(double contado, double esperado, AlertDialog dialogContado) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.caja_cierre_confirmar_titulo)
+                .setMessage(R.string.caja_cierre_confirmar_mensaje)
+                .setNegativeButton(R.string.dialog_cancelar, null)
+                .setPositiveButton(R.string.caja_cierre_confirmar_ok,
+                        (d, w) -> guardarCierre(contado, esperado, dialogContado))
+                .show();
     }
 
     private void guardarCierre(double contado, double esperado, AlertDialog dialog) {

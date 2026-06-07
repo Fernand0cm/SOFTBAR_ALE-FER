@@ -16,6 +16,8 @@
     <string name="conexion_online">Online</string>
     <string name="conexion_offline">Sin conexion</string>
     <string name="home_logout">Cerrar sesion</string>
+    <string name="home_logout_confirmar_titulo">Cerrar sesion</string>
+    <string name="home_logout_confirmar_mensaje">Vas a cerrar la sesion actual. Tendras que volver a iniciar sesion.</string>
     <string name="home_btn_turno">Apertura de turno</string>
     <string name="home_btn_mesas">Sala y mesas</string>
     <string name="home_btn_barra">Barra rapida</string>
@@ -118,6 +120,9 @@
     <string name="caja_mov_retirada">Retirada de efectivo</string>
     <string name="caja_anadir_movimiento">Anadir movimiento</string>
     <string name="caja_cierre_turno">Cerrar turno</string>
+    <string name="caja_cierre_confirmar_titulo">Confirmar cierre</string>
+    <string name="caja_cierre_confirmar_mensaje">Vas a cerrar el turno con el efectivo contado. Esta accion no se puede deshacer.</string>
+    <string name="caja_cierre_confirmar_ok">Si, cerrar turno</string>
     <string name="caja_cierre_titulo">Cierre de turno</string>
     <string name="caja_cierre_esperado">Efectivo esperado: %1$.2f EUR</string>
     <string name="caja_cierre_contado_hint">Efectivo contado (EUR)</string>

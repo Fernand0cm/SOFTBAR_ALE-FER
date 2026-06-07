@@ -258,7 +258,7 @@ Resultado esperado:
 - Pantalla de cierre de caja imprimible.
 - Vista de cocina con comandas pendientes.
 - Barra rapida por categorias.
-- Confirmaciones antes de acciones sensibles.
+- [x] Confirmaciones antes de acciones sensibles (cierre de turno, cierre de sesion).
 - Exportacion de informes.
 
 ## Riesgos principales

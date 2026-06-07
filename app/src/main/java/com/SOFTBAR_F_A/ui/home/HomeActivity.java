@@ -65,13 +65,22 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ConfigActivity.class)));
 
         Button btnLogout = findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        });
+        btnLogout.setOnClickListener(v -> confirmarLogout());
 
         registrarObservadorRed();
+    }
+
+    private void confirmarLogout() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(R.string.home_logout_confirmar_titulo)
+                .setMessage(R.string.home_logout_confirmar_mensaje)
+                .setNegativeButton(R.string.dialog_cancelar, null)
+                .setPositiveButton(R.string.home_logout, (d, w) -> {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                })
+                .show();
     }
 
     private void registrarObservadorRed() {
