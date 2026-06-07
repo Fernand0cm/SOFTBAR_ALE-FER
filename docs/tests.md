@@ -205,6 +205,16 @@ Agregacion de ventas por producto (ventas por producto / mas vendidos).
 | `agregar_sumaCantidadesEImportesDelMismoProducto` | Suma unidades e importe del mismo producto. |
 | `agregar_ordenaDeMasAMenosVendido` | Ordena de mas a menos vendido. |
 
+### `data/ComparativaDiasTest`
+
+Totales por dia en la ventana de los ultimos N dias.
+
+| Prueba | Que verifica |
+|---|---|
+| `totales_listaNula_devuelveArrayDeCeros` | Lista nula devuelve un array de ceros. |
+| `totales_colocaCadaVentaEnSuDia` | Cada venta suma en el dia correcto (hoy en la ultima posicion). |
+| `totales_ignoraVentasFueraDeVentana` | Las ventas fuera de la ventana no cuentan. |
+
 ## Resumen actual
 
 | Suite | Tests | Estado |
@@ -224,7 +234,8 @@ Agregacion de ventas por producto (ventas por producto / mas vendidos).
 | DineroTest | 7 | OK |
 | CalculoIvaTest | 5 | OK |
 | VentasPorProductoTest | 3 | OK |
-| **Total** | **69** | **OK** |
+| ComparativaDiasTest | 3 | OK |
+| **Total** | **72** | **OK** |
 
 Validacion reciente:
 

@@ -167,6 +167,9 @@
     <string name="informes_error">No se pudieron cargar los informes: %1$s</string>
     <string name="informes_fecha">Dia: %1$s</string>
     <string name="informes_metodo_todas">Todas</string>
+    <string name="informes_turno_todos">Todos los turnos</string>
+    <string name="informes_turno_n">Turno %1$d</string>
+    <string name="informes_comparativa">Ventas por dia (ultimos 7)</string>
     <string name="informes_desglose">Desglose fiscal</string>
     <string name="informes_base">Base imponible</string>
     <string name="informes_iva">IVA</string>

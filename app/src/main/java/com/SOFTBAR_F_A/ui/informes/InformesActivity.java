@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.text.SimpleDateFormat;
@@ -44,10 +45,13 @@ public class InformesActivity extends AppCompatActivity {
     private TextView txtTopVacio;
     private LinearLayout listaTopProductos;
     private BarChart grafica;
+    private BarChart graficaDias;
     private Button btnFecha;
     private ChipGroup chipsMetodo;
+    private ChipGroup chipsTurno;
     private InformesViewModel viewModel;
     private InformesUiState estadoActual;
+    private List<String> turnosActuales = new ArrayList<>();
 
     private final SimpleDateFormat fechaFmt =
             new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -68,10 +72,13 @@ public class InformesActivity extends AppCompatActivity {
         txtTopVacio = findViewById(R.id.txt_top_vacio);
         listaTopProductos = findViewById(R.id.lista_top_productos);
         grafica = findViewById(R.id.grafica_horas);
+        graficaDias = findViewById(R.id.grafica_dias);
         btnFecha = findViewById(R.id.btn_fecha);
         chipsMetodo = findViewById(R.id.chips_metodo);
+        chipsTurno = findViewById(R.id.chips_turno);
 
-        configurarGrafica();
+        configurarGrafica(grafica);
+        configurarGrafica(graficaDias);
 
         viewModel = new ViewModelProvider(this).get(InformesViewModel.class);
 
@@ -82,6 +89,8 @@ public class InformesActivity extends AppCompatActivity {
         findViewById(R.id.btn_exportar).setOnClickListener(v -> exportarResumen());
 
         viewModel.getEstado().observe(this, this::render);
+        viewModel.getTurnos().observe(this, this::construirChipsTurno);
+        viewModel.getComparativa().observe(this, this::pintarComparativa);
     }
 
     private String metodoSeleccionado(List<Integer> checkedIds) {
@@ -139,25 +148,69 @@ public class InformesActivity extends AppCompatActivity {
         txtSinDatos.setText(mensaje);
     }
 
-    private void configurarGrafica() {
+    private void configurarGrafica(BarChart chart) {
         Description desc = new Description();
         desc.setText("");
-        grafica.setDescription(desc);
-        grafica.setDrawGridBackground(false);
-        grafica.setDrawBarShadow(false);
-        grafica.setFitBars(true);
-        grafica.getLegend().setEnabled(false);
+        chart.setDescription(desc);
+        chart.setDrawGridBackground(false);
+        chart.setDrawBarShadow(false);
+        chart.setFitBars(true);
+        chart.getLegend().setEnabled(false);
 
-        XAxis x = grafica.getXAxis();
+        XAxis x = chart.getXAxis();
         x.setPosition(XAxis.XAxisPosition.BOTTOM);
         x.setDrawGridLines(false);
         x.setGranularity(1f);
         x.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
 
-        YAxis yL = grafica.getAxisLeft();
+        YAxis yL = chart.getAxisLeft();
         yL.setAxisMinimum(0f);
         yL.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-        grafica.getAxisRight().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+    }
+
+    private void construirChipsTurno(List<String> turnoIds) {
+        turnosActuales = turnoIds;
+        chipsTurno.removeAllViews();
+
+        Chip chipTodos = new Chip(this);
+        chipTodos.setText(R.string.informes_turno_todos);
+        chipTodos.setCheckable(true);
+        chipTodos.setChecked(true);
+        chipTodos.setOnClickListener(v -> viewModel.setTurno(null));
+        chipsTurno.addView(chipTodos);
+
+        for (int i = 0; i < turnoIds.size(); i++) {
+            String turnoId = turnoIds.get(i);
+            Chip chip = new Chip(this);
+            chip.setText(getString(R.string.informes_turno_n, i + 1));
+            chip.setCheckable(true);
+            chip.setOnClickListener(v -> viewModel.setTurno(turnoId));
+            chipsTurno.addView(chip);
+        }
+    }
+
+    private void pintarComparativa(double[] totales) {
+        List<BarEntry> entradas = new ArrayList<>();
+        List<String> etiquetas = new ArrayList<>();
+        SimpleDateFormat dm = new SimpleDateFormat("dd/MM", Locale.getDefault());
+        int dias = totales.length;
+        for (int i = 0; i < dias; i++) {
+            entradas.add(new BarEntry(i, (float) totales[i]));
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DAY_OF_MONTH, -(dias - 1 - i));
+            etiquetas.add(dm.format(c.getTime()));
+        }
+
+        BarDataSet set = new BarDataSet(entradas, "");
+        set.setColor(ContextCompat.getColor(this, R.color.brand_600));
+        set.setValueTextColor(Color.TRANSPARENT);
+
+        BarData data = new BarData(set);
+        data.setBarWidth(0.6f);
+        graficaDias.setData(data);
+        graficaDias.getXAxis().setValueFormatter(new IndexAxisValueFormatter(etiquetas));
+        graficaDias.invalidate();
     }
 
     private void pintarKpis(InformesUiState estado) {

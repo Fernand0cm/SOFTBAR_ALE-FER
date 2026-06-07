@@ -63,4 +63,30 @@ public class InformesRepository {
                     listener.onVentas(snap.toObjects(Venta.class));
                 });
     }
+
+    /**
+     * Escucha las ventas de los ultimos {@code dias} (incluido hoy), para la
+     * grafica comparativa. Rango sobre un unico campo: sin indice compuesto.
+     */
+    public ListenerRegistration escucharUltimosDias(int dias, VentasListener listener) {
+        Calendar inicio = Calendar.getInstance();
+        inicio.add(Calendar.DAY_OF_MONTH, -(dias - 1));
+        inicio.set(Calendar.HOUR_OF_DAY, 0);
+        inicio.set(Calendar.MINUTE, 0);
+        inicio.set(Calendar.SECOND, 0);
+        inicio.set(Calendar.MILLISECOND, 0);
+
+        return db.collection(FirestoreSchema.Collections.VENTAS)
+                .whereGreaterThanOrEqualTo(
+                        FirestoreSchema.Fields.FECHA, new Timestamp(inicio.getTime()))
+                .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
+                .addSnapshotListener((snap, error) -> {
+                    if (error != null) {
+                        listener.onError(error.getLocalizedMessage());
+                        return;
+                    }
+                    if (snap == null) return;
+                    listener.onVentas(snap.toObjects(Venta.class));
+                });
+    }
 }

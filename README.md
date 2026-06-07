@@ -401,8 +401,9 @@ TFG_SOFTBAR/
 - [x] Modificar cantidades, notas y modificadores por linea en la comanda.
 - [x] Historial de tickets (consulta y reapertura de ventas pasadas).
 - [x] Consulta de cierres historicos (turnos cerrados con su arqueo).
-- [x] Filtros de informes por fecha y metodo de pago (por turno pendiente).
+- [x] Filtros de informes por fecha, turno y metodo de pago.
 - [x] Ventas por producto y productos mas vendidos.
+- [x] Comparativa de ventas por dia (ultimos 7 dias).
 - [x] Desglose base/IVA y exportacion del resumen en informes.
 - Roles de usuario.
 - Stock real.
