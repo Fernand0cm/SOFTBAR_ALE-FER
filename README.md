@@ -1,5 +1,7 @@
 # SOFTBAR
 
+[![CI](https://github.com/Fernand0cm/SOFTBAR_ALE-FER/actions/workflows/ci.yml/badge.svg)](https://github.com/Fernand0cm/SOFTBAR_ALE-FER/actions/workflows/ci.yml)
+
 SOFTBAR es una aplicacion Android nativa para un TPV de hosteleria orientado a bares y cafeterias. El objetivo del TFG es demostrar un flujo operativo completo: acceso de usuario, apertura de turno, sala y mesas, barra rapida, comanda, cobro, factura, ticket, caja, informes y configuracion del catalogo.
 
 La app esta conectada a Firebase y mantiene la mayor parte de los datos operativos en Cloud Firestore.
