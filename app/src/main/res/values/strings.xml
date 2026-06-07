@@ -87,6 +87,8 @@
     <string name="ticket_numero">Numero</string>
     <string name="ticket_mesa">Mesa</string>
     <string name="ticket_total">Total</string>
+    <string name="ticket_base">Base imponible</string>
+    <string name="ticket_iva">IVA</string>
     <string name="ticket_pago">Forma de pago</string>
     <string name="ticket_pago_efectivo">Efectivo</string>
     <string name="ticket_pago_tarjeta">Tarjeta</string>

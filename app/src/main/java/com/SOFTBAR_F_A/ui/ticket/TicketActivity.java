@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SOFTBAR_F_A.R;
+import com.SOFTBAR_F_A.data.Dinero;
 import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
@@ -31,6 +32,8 @@ public class TicketActivity extends AppCompatActivity {
     private TextView txtTicketMesa;
     private LinearLayout listaTicketLineas;
     private TextView txtTicketTotal;
+    private TextView txtTicketBase;
+    private TextView txtTicketIva;
     private TextView txtTicketPago;
     private TextView txtTicketPagoEfectivo;
     private TextView txtTicketPagoTarjeta;
@@ -58,6 +61,8 @@ public class TicketActivity extends AppCompatActivity {
         txtTicketMesa = findViewById(R.id.txt_ticket_mesa);
         listaTicketLineas = findViewById(R.id.lista_ticket_lineas);
         txtTicketTotal = findViewById(R.id.txt_ticket_total);
+        txtTicketBase = findViewById(R.id.txt_ticket_base);
+        txtTicketIva = findViewById(R.id.txt_ticket_iva);
         txtTicketPago = findViewById(R.id.txt_ticket_pago);
         txtTicketPagoEfectivo = findViewById(R.id.txt_ticket_pago_efectivo);
         txtTicketPagoTarjeta = findViewById(R.id.txt_ticket_pago_tarjeta);
@@ -100,6 +105,7 @@ public class TicketActivity extends AppCompatActivity {
                         Factura f = doc.toObject(Factura.class);
                         if (f == null || f.getUrlValidacion() == null) return;
                         pintarFactura(f);
+                        pintarIva(f);
                         pintarVerifactu(f);
                     });
             return;
@@ -115,6 +121,7 @@ public class TicketActivity extends AppCompatActivity {
                     Factura f = snap.getDocuments().get(0).toObject(Factura.class);
                     if (f == null || f.getUrlValidacion() == null) return;
                     pintarFactura(f);
+                    pintarIva(f);
                     pintarVerifactu(f);
                 });
     }
@@ -173,6 +180,13 @@ public class TicketActivity extends AppCompatActivity {
             txtTicketCambio.setText(formatoImporte(cambio));
         }
         pintarLineas(lineas);
+    }
+
+    private void pintarIva(Factura factura) {
+        double cuota = factura.getCuotaIva();
+        double base = Dinero.restar(factura.getTotal(), cuota);
+        if (txtTicketBase != null) txtTicketBase.setText(formatoImporte(base));
+        if (txtTicketIva != null) txtTicketIva.setText(formatoImporte(cuota));
     }
 
     private String formatoImporte(double importe) {
