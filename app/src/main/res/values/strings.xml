@@ -165,6 +165,17 @@
     <string name="informes_sin_datos">No hay ventas registradas hoy todavia.</string>
     <string name="informes_cargando">Cargando informes...</string>
     <string name="informes_error">No se pudieron cargar los informes: %1$s</string>
+    <string name="informes_fecha">Dia: %1$s</string>
+    <string name="informes_metodo_todas">Todas</string>
+    <string name="informes_desglose">Desglose fiscal</string>
+    <string name="informes_base">Base imponible</string>
+    <string name="informes_iva">IVA</string>
+    <string name="informes_top_productos">Productos mas vendidos</string>
+    <string name="informes_top_vacio">Sin ventas en el periodo.</string>
+    <string name="informes_top_item">%1$d uds · %2$.2f EUR</string>
+    <string name="informes_exportar">Exportar resumen</string>
+    <string name="informes_resumen_titulo">Resumen SOFTBAR</string>
+    <string name="informes_resumen">Resumen SOFTBAR\nDia: %1$s\nMetodo: %2$s\nVentas: %3$.2f EUR\nTickets: %4$d\nTicket medio: %5$.2f EUR\nBase: %6$.2f EUR\nIVA: %7$.2f EUR</string>
     <string name="historial_title">Historial de tickets</string>
     <string name="historial_subtitulo">Ultimas ventas</string>
     <string name="historial_cargando">Cargando historial...</string>

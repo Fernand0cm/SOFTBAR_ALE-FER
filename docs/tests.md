@@ -195,6 +195,16 @@ Cuota de IVA de una venta con tipos mixtos por linea.
 | `cuotaTotal_tiposMixtos_sumaCadaCuota` | Suma cuotas de lineas al 10% y al 21%. |
 | `cuotaTotal_respetaCantidadDeLaLinea` | Usa el subtotal (precio x cantidad) de la linea. |
 
+### `data/VentasPorProductoTest`
+
+Agregacion de ventas por producto (ventas por producto / mas vendidos).
+
+| Prueba | Que verifica |
+|---|---|
+| `agregar_listaNula_devuelveListaVacia` | Lista nula devuelve lista vacia. |
+| `agregar_sumaCantidadesEImportesDelMismoProducto` | Suma unidades e importe del mismo producto. |
+| `agregar_ordenaDeMasAMenosVendido` | Ordena de mas a menos vendido. |
+
 ## Resumen actual
 
 | Suite | Tests | Estado |
@@ -213,7 +223,8 @@ Cuota de IVA de una venta con tipos mixtos por linea.
 | GeneradorQrVerifactuTest | 2 | OK |
 | DineroTest | 7 | OK |
 | CalculoIvaTest | 5 | OK |
-| **Total** | **66** | **OK** |
+| VentasPorProductoTest | 3 | OK |
+| **Total** | **69** | **OK** |
 
 Validacion reciente:
 

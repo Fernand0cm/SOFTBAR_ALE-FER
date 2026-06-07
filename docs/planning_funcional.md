@@ -127,14 +127,14 @@ Prioridad media.
 
 Tareas:
 
-- Filtro por fecha.
+- [x] Filtro por fecha.
 - Filtro por turno.
-- Filtro por metodo de pago.
-- Ventas por producto.
-- Productos mas vendidos.
+- [x] Filtro por metodo de pago.
+- [x] Ventas por producto.
+- [x] Productos mas vendidos.
 - Comparativa por dias.
-- Mostrar base imponible, IVA y total.
-- Exportar resumen en formato compartible.
+- [x] Mostrar base imponible, IVA y total.
+- [x] Exportar resumen en formato compartible.
 
 Resultado esperado:
 

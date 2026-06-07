@@ -8,6 +8,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,19 +33,26 @@ public class InformesRepository {
     }
 
     /**
-     * Escucha en tiempo real las ventas desde el inicio del dia actual.
-     * Devuelve el registro para poder cancelar la suscripcion.
+     * Escucha en tiempo real las ventas del dia indicado (desde las 00:00 hasta
+     * las 00:00 del dia siguiente). Devuelve el registro para cancelar la
+     * suscripcion. El rango sobre un unico campo no exige indice compuesto.
      */
-    public ListenerRegistration escucharVentasDelDia(VentasListener listener) {
+    public ListenerRegistration escucharVentasDelDia(Date dia, VentasListener listener) {
         Calendar inicio = Calendar.getInstance();
+        inicio.setTime(dia);
         inicio.set(Calendar.HOUR_OF_DAY, 0);
         inicio.set(Calendar.MINUTE, 0);
         inicio.set(Calendar.SECOND, 0);
         inicio.set(Calendar.MILLISECOND, 0);
 
+        Calendar fin = (Calendar) inicio.clone();
+        fin.add(Calendar.DAY_OF_MONTH, 1);
+
         return db.collection(FirestoreSchema.Collections.VENTAS)
                 .whereGreaterThanOrEqualTo(
                         FirestoreSchema.Fields.FECHA, new Timestamp(inicio.getTime()))
+                .whereLessThan(
+                        FirestoreSchema.Fields.FECHA, new Timestamp(fin.getTime()))
                 .orderBy(FirestoreSchema.Fields.FECHA, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null) {
