@@ -1,5 +1,6 @@
 package com.SOFTBAR_F_A.ui.caja;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -18,10 +19,13 @@ import androidx.core.content.ContextCompat;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.MovimientoCaja;
+import com.SOFTBAR_F_A.data.Permisos;
 import com.SOFTBAR_F_A.data.ResumenCaja;
+import com.SOFTBAR_F_A.data.SesionUsuario;
 import com.SOFTBAR_F_A.data.Turno;
 import com.SOFTBAR_F_A.data.Venta;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
+import com.SOFTBAR_F_A.ui.cierres.CierresActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +64,12 @@ public class CajaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caja);
 
+        if (SesionUsuario.cargada() && !SesionUsuario.puede(Permisos.CAJA)) {
+            Toast.makeText(this, R.string.permiso_denegado, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         Header.aplica(this, getString(R.string.caja_title), getString(R.string.caja_turno_ejemplo));
 
         txtApertura = findViewById(R.id.txt_caja_apertura);
@@ -77,6 +87,9 @@ public class CajaActivity extends AppCompatActivity {
 
         btnCierre = findViewById(R.id.btn_cierre);
         btnCierre.setOnClickListener(v -> cerrarTurno());
+
+        findViewById(R.id.btn_ver_cierres).setOnClickListener(v ->
+                startActivity(new Intent(this, CierresActivity.class)));
 
         cargarTurnoActivo();
     }
@@ -326,9 +339,19 @@ public class CajaActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    guardarCierre(contado, esperado, dialog);
+                    confirmarCierre(contado, esperado, dialog);
                 }));
         dialog.show();
+    }
+
+    private void confirmarCierre(double contado, double esperado, AlertDialog dialogContado) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.caja_cierre_confirmar_titulo)
+                .setMessage(R.string.caja_cierre_confirmar_mensaje)
+                .setNegativeButton(R.string.dialog_cancelar, null)
+                .setPositiveButton(R.string.caja_cierre_confirmar_ok,
+                        (d, w) -> guardarCierre(contado, esperado, dialogContado))
+                .show();
     }
 
     private void guardarCierre(double contado, double esperado, AlertDialog dialog) {

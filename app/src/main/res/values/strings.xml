@@ -15,13 +15,19 @@
     <string name="home_modulos">Modulos</string>
     <string name="conexion_online">Online</string>
     <string name="conexion_offline">Sin conexion</string>
+    <string name="conexion_sincronizando">Sincronizando...</string>
     <string name="home_logout">Cerrar sesion</string>
+    <string name="home_usuario_rol">%1$s · %2$s</string>
+    <string name="permiso_denegado">No tienes permiso para acceder aqui</string>
+    <string name="home_logout_confirmar_titulo">Cerrar sesion</string>
+    <string name="home_logout_confirmar_mensaje">Vas a cerrar la sesion actual. Tendras que volver a iniciar sesion.</string>
     <string name="home_btn_turno">Apertura de turno</string>
     <string name="home_btn_mesas">Sala y mesas</string>
     <string name="home_btn_barra">Barra rapida</string>
     <string name="home_btn_caja">Caja</string>
     <string name="home_btn_informes">Informes</string>
     <string name="home_btn_stock">Stock</string>
+    <string name="home_btn_historial">Historial</string>
     <string name="home_btn_config">Configuracion</string>
 
     <string name="pantalla_pendiente">Pantalla pendiente de implementar.</string>
@@ -58,6 +64,17 @@
     <string name="comanda_catalogo_vacio">Sin productos en el catalogo. Anadelos desde Configuracion.</string>
     <string name="comanda_lineas_vacias">Toca un producto del catalogo para anadirlo.</string>
     <string name="comanda_quitar">Quitar uno</string>
+    <string name="comanda_anadir_unidad">Anadir uno</string>
+    <string name="linea_dialog_titulo">Personalizar linea</string>
+    <string name="linea_modificadores_label">Modificadores</string>
+    <string name="linea_nota_label">Nota</string>
+    <string name="linea_nota_hint">Ej. poco hecho, para llevar...</string>
+    <string-array name="modificadores_linea">
+        <item>Sin hielo</item>
+        <item>Extra queso</item>
+        <item>Pan sin gluten</item>
+        <item>Punto de carne</item>
+    </string-array>
     <string name="comanda_no_lista">La comanda aun no esta lista, espera un instante</string>
     <string name="comanda_sin_lineas">Anade al menos un producto antes de cobrar</string>
     <string name="comanda_extras">Anadir extras</string>
@@ -80,6 +97,7 @@
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
     <string name="cobro_error_sin_turno">Abre un turno antes de cobrar</string>
+    <string name="cobro_sin_conexion">Sin conexion: no se puede cobrar ahora. Se evita asi duplicar la numeracion de facturas.</string>
     <string name="cobro_error_importe">El pago no cubre el total</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
@@ -87,6 +105,8 @@
     <string name="ticket_numero">Numero</string>
     <string name="ticket_mesa">Mesa</string>
     <string name="ticket_total">Total</string>
+    <string name="ticket_base">Base imponible</string>
+    <string name="ticket_iva">IVA</string>
     <string name="ticket_pago">Forma de pago</string>
     <string name="ticket_pago_efectivo">Efectivo</string>
     <string name="ticket_pago_tarjeta">Tarjeta</string>
@@ -98,6 +118,12 @@
     <string name="verifactu_titulo">QR Verifactu</string>
     <string name="verifactu_factura">Factura %1$s</string>
     <string name="verifactu_hash">Hash %1$s</string>
+    <string name="verifactu_rectificativa">RECTIFICATIVA de %1$s</string>
+    <string name="ticket_rectificar">Rectificar factura</string>
+    <string name="ticket_rectificar_titulo">Rectificar factura</string>
+    <string name="ticket_rectificar_mensaje">Se emitira una factura rectificativa que anula esta. La original no se borra. Esta accion no se puede deshacer.</string>
+    <string name="ticket_ya_rectificada">Esta factura ya tiene una rectificativa</string>
+    <string name="ticket_rectificar_error">No se pudo rectificar la factura</string>
     <string name="ticket_cerrar">Cerrar</string>
     <string name="caja_title">Caja del turno</string>
     <string name="caja_turno_ejemplo">Turno actual</string>
@@ -115,6 +141,16 @@
     <string name="caja_mov_retirada">Retirada de efectivo</string>
     <string name="caja_anadir_movimiento">Anadir movimiento</string>
     <string name="caja_cierre_turno">Cerrar turno</string>
+    <string name="caja_cierre_confirmar_titulo">Confirmar cierre</string>
+    <string name="caja_cierre_confirmar_mensaje">Vas a cerrar el turno con el efectivo contado. Esta accion no se puede deshacer.</string>
+    <string name="caja_cierre_confirmar_ok">Si, cerrar turno</string>
+    <string name="caja_ver_cierres">Ver cierres anteriores</string>
+    <string name="cierres_title">Cierres de caja</string>
+    <string name="cierres_subtitulo">Turnos cerrados</string>
+    <string name="cierres_cargando">Cargando cierres...</string>
+    <string name="cierres_vacio">Aun no hay turnos cerrados.</string>
+    <string name="cierres_error">No se pudieron cargar los cierres: %1$s</string>
+    <string name="cierres_detalle">Esperado %1$.2f EUR · Contado %2$.2f EUR</string>
     <string name="caja_cierre_titulo">Cierre de turno</string>
     <string name="caja_cierre_esperado">Efectivo esperado: %1$.2f EUR</string>
     <string name="caja_cierre_contado_hint">Efectivo contado (EUR)</string>
@@ -137,14 +173,49 @@
     <string name="informes_kpi_medio">Ticket medio</string>
     <string name="informes_grafica">Ventas por hora</string>
     <string name="informes_sin_datos">No hay ventas registradas hoy todavia.</string>
+    <string name="informes_cargando">Cargando informes...</string>
+    <string name="informes_error">No se pudieron cargar los informes: %1$s</string>
+    <string name="informes_fecha">Dia: %1$s</string>
+    <string name="informes_metodo_todas">Todas</string>
+    <string name="informes_turno_todos">Todos los turnos</string>
+    <string name="informes_turno_n">Turno %1$d</string>
+    <string name="informes_comparativa">Ventas por dia (ultimos 7)</string>
+    <string name="informes_desglose">Desglose fiscal</string>
+    <string name="informes_base">Base imponible</string>
+    <string name="informes_iva">IVA</string>
+    <string name="informes_top_productos">Productos mas vendidos</string>
+    <string name="informes_top_vacio">Sin ventas en el periodo.</string>
+    <string name="informes_top_item">%1$d uds · %2$.2f EUR</string>
+    <string name="informes_exportar">Exportar resumen</string>
+    <string name="informes_resumen_titulo">Resumen SOFTBAR</string>
+    <string name="informes_resumen">Resumen SOFTBAR\nDia: %1$s\nMetodo: %2$s\nVentas: %3$.2f EUR\nTickets: %4$d\nTicket medio: %5$.2f EUR\nBase: %6$.2f EUR\nIVA: %7$.2f EUR</string>
+    <string name="historial_title">Historial de tickets</string>
+    <string name="historial_subtitulo">Ultimas ventas</string>
+    <string name="historial_cargando">Cargando historial...</string>
+    <string name="historial_vacio">Aun no hay tickets registrados.</string>
+    <string name="historial_error">No se pudo cargar el historial: %1$s</string>
+    <string name="historial_sin_numero">Sin numero</string>
+    <string name="historial_detalle">%1$s · %2$s</string>
     <string name="stock_title">Stock</string>
+    <string name="stock_subtitulo">Productos con control de stock</string>
+    <string name="stock_cargando">Cargando stock...</string>
+    <string name="stock_vacio">No hay productos con control de stock. Activalo al crear o editar un producto.</string>
+    <string name="stock_error">No se pudo cargar el stock: %1$s</string>
+    <string name="stock_detalle">Stock: %1$d · minimo: %2$d</string>
+    <string name="stock_bajo">Stock bajo: %1$d (minimo %2$d)</string>
+    <string name="stock_quitar">Quitar una unidad</string>
+    <string name="stock_anadir">Anadir una unidad</string>
+    <string name="stock_dialog_titulo">Ajustar stock</string>
+    <string name="stock_dialog_hint">Unidades</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>
     <string name="config_catalogo_eyebrow">Catalogo</string>
     <string name="config_escanear">Escanear codigo de barras</string>
+    <string name="config_alta_manual">Anadir producto manualmente</string>
     <string name="config_lista_vacia">Aun no hay productos. Escanea uno para empezar.</string>
     <string name="config_guardado">Producto guardado</string>
     <string name="dialog_titulo">Nuevo producto</string>
+    <string name="dialog_titulo_editar">Editar producto</string>
     <string name="dialog_codigo_prefijo">Codigo: %1$s</string>
     <string name="dialog_nombre_hint">Nombre</string>
     <string name="dialog_precio_hint">Precio (EUR)</string>
@@ -152,4 +223,24 @@
     <string name="dialog_cancelar">Cancelar</string>
     <string name="dialog_error_vacio">Rellena nombre y precio</string>
     <string name="dialog_error_precio">Precio no valido</string>
+    <string name="dialog_iva_label">Tipo de IVA</string>
+    <string name="dialog_iva_10">10% general</string>
+    <string name="dialog_iva_21">21% alcohol</string>
+    <string name="dialog_iva_4">4% superreducido</string>
+    <string name="dialog_activo">Producto activo</string>
+    <string name="dialog_controlar_stock">Controlar stock</string>
+    <string name="dialog_stock_hint">Stock actual</string>
+    <string name="dialog_stock_minimo_hint">Stock minimo</string>
+    <string name="dialog_categoria_label">Categoria</string>
+    <string name="historial_todas_categorias">Todas</string>
+    <string-array name="categorias_producto">
+        <item>General</item>
+        <item>Cafes</item>
+        <item>Bebidas</item>
+        <item>Tapas</item>
+        <item>Bocadillos</item>
+    </string-array>
+    <string name="config_producto_inactivo">%1$s (inactivo)</string>
+    <string name="config_codigo_categoria">%1$s · %2$s</string>
+    <string name="config_precio_iva">%1$.2f EUR · IVA %2$d%%</string>
 </resources>

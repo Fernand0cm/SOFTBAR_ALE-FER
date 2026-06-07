@@ -1,6 +1,8 @@
 package com.SOFTBAR_F_A.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -32,5 +34,31 @@ public class ProductoTest {
         assertEquals("123", p.getCodigoBarras());
         assertEquals("Tortilla", p.getNombre());
         assertEquals(3.5, p.getPrecio(), 0.0001);
+    }
+
+    @Test
+    public void bajoStock_falsoSiNoSeControla() {
+        Producto p = new Producto("1", "Cafe", 1.2);
+        p.setStock(0);
+        p.setStockMinimo(5);
+        assertFalse(p.bajoStock());
+    }
+
+    @Test
+    public void bajoStock_ciertoCuandoStockEnOPorDebajoDelMinimo() {
+        Producto p = new Producto("1", "Botellin", 1.5);
+        p.setControlarStock(true);
+        p.setStock(3);
+        p.setStockMinimo(5);
+        assertTrue(p.bajoStock());
+    }
+
+    @Test
+    public void bajoStock_falsoCuandoStockPorEncimaDelMinimo() {
+        Producto p = new Producto("1", "Botellin", 1.5);
+        p.setControlarStock(true);
+        p.setStock(10);
+        p.setStockMinimo(5);
+        assertFalse(p.bajoStock());
     }
 }

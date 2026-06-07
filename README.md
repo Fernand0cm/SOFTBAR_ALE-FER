@@ -1,5 +1,7 @@
 # SOFTBAR
 
+[![CI](https://github.com/Fernand0cm/SOFTBAR_ALE-FER/actions/workflows/ci.yml/badge.svg)](https://github.com/Fernand0cm/SOFTBAR_ALE-FER/actions/workflows/ci.yml)
+
 SOFTBAR es una aplicacion Android nativa para un TPV de hosteleria orientado a bares y cafeterias. El objetivo del TFG es demostrar un flujo operativo completo: acceso de usuario, apertura de turno, sala y mesas, barra rapida, comanda, cobro, factura, ticket, caja, informes y configuracion del catalogo.
 
 La app esta conectada a Firebase y mantiene la mayor parte de los datos operativos en Cloud Firestore.
@@ -13,7 +15,8 @@ La app esta conectada a Firebase y mantiene la mayor parte de los datos operativ
 - Cloud Firestore como base de datos principal.
 - Persistencia offline de Firestore activada al arrancar la app.
 - Reglas e indices Firestore versionados en el repositorio.
-- Indicador online/offline en la pantalla principal.
+- Indicador de conexion y sincronizacion en Home (online / sincronizando / sin conexion).
+- Cobro y rectificacion bloqueados sin conexion para evitar numeracion duplicada.
 - Lector de codigos de barras con ML Kit / Google Code Scanner.
 - Generacion de QR con ZXing para el bloque Verifactu.
 - Graficas de informes con MPAndroidChart.
@@ -71,6 +74,7 @@ Home permite entrar a:
 - Caja.
 - Informes.
 - Stock.
+- Historial de tickets.
 - Configuracion.
 
 Tambien muestra el estado de conexion del dispositivo.
@@ -182,8 +186,10 @@ Tambien muestra el estado de conexion del dispositivo.
 
 ### Stock
 
-- Pantalla navegable.
-- Pendiente de implementar como modulo funcional completo.
+- Control de stock opcional por producto (solo lo contable).
+- Descuento automatico de stock al cobrar (nunca baja de 0).
+- Reposicion rapida con botones +/- o fijando una cantidad.
+- Alertas de productos bajo el minimo.
 
 ## Firebase
 
@@ -211,6 +217,7 @@ No se usan actualmente:
 - `contadores`: numeracion anual y ultimo hash.
 - `turnos`: apertura, cierre y arqueo.
 - `movimientos_caja`: entradas, retiradas y aperturas.
+- `usuarios`: perfil y rol de cada usuario (admin, camarero, caja, cocina).
 - `configuracion/fiscal`: NIF/CIF y serie de facturacion.
 - `splash_backgrounds`: imagenes opcionales del splash.
 
@@ -277,8 +284,8 @@ Las reglas actuales:
 - Bloquean datos de negocio a usuarios no autenticados.
 - Permiten lectura publica solo de `splash_backgrounds`.
 - Validan campos basicos por coleccion.
-- Bloquean borrados sensibles en mesas, comandas, ventas, facturas y turnos.
-- Permiten crear y actualizar productos a usuarios autenticados.
+- Bloquean borrados sensibles en mesas, comandas, ventas, facturas, turnos y productos.
+- Permiten crear y actualizar productos a usuarios autenticados (se desactivan, no se borran).
 
 Despliegue:
 
@@ -355,12 +362,14 @@ TFG_SOFTBAR/
 |  |- src/main/java/com/SOFTBAR_F_A/
 |  |  |- data/
 |  |  |- data/firebase/
+|  |  |- data/repository/
 |  |  |- data/verifactu/
 |  |  |- ui/
 |  |- src/main/res/
 |  |- src/test/
 |- docs/
 |  |- images/
+|- firestore-tests/
 |- firebase.json
 |- firestore.rules
 |- firestore.indexes.json
@@ -390,27 +399,33 @@ TFG_SOFTBAR/
 
 ### Funcionalidad Pendiente
 
-- Alta manual de producto sin escaner.
-- Edicion y desactivacion de productos.
-- Categorias de catalogo.
-- IVA por producto o categoria.
-- Notas y modificadores por linea.
-- Historial de tickets.
-- Consulta de cierres historicos.
-- Filtros de informes por fecha, turno y metodo de pago.
-- Ventas por producto.
-- Roles de usuario.
-- Stock real.
+- [x] Alta manual de producto sin escaner.
+- [x] Edicion de productos desde el catalogo.
+- [x] Desactivacion de productos sin borrarlos (no se borran del catalogo).
+- [x] Categorias de catalogo con filtro en comanda y barra.
+- [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
+- [x] Modificar cantidades, notas y modificadores por linea en la comanda.
+- [x] Historial de tickets (consulta y reapertura de ventas pasadas).
+- [x] Consulta de cierres historicos (turnos cerrados con su arqueo).
+- [x] Filtros de informes por fecha, turno y metodo de pago.
+- [x] Ventas por producto y productos mas vendidos.
+- [x] Comparativa de ventas por dia (ultimos 7 dias).
+- [x] Desglose base/IVA y exportacion del resumen en informes.
+- [x] Roles de usuario (administrador, camarero, caja, cocina) con permisos por modulo.
+- [x] Stock real opcional por producto, con descuento automatico al vender y alertas de bajo stock.
 - Impresion o exportacion de ticket.
-- Anulacion o rectificacion de factura.
+- [x] Anulacion o rectificacion de factura (factura rectificativa encadenada).
 
 ### Robustez Tecnica
 
-- Separar acceso a Firestore en repositorios.
+- [x] Separar el cobro en un repositorio (`data/repository/CobroRepository`).
+- [x] Pantalla de informes en MVVM (`InformesViewModel` + `InformesRepository`).
+- Extender el patron MVVM/repositorio al resto de pantallas (caja, comanda, mesas).
 - Introducir capa de dominio para reglas de negocio.
-- Mejorar estados de carga, vacio y error.
+- [x] Calculo monetario con `BigDecimal` y redondeo a centimos (`data/Dinero`).
+- [x] Estados de carga, vacio y error en informes (pendiente en el resto).
 - Crear pruebas instrumentadas de navegacion.
-- Probar Firebase Emulator Suite.
+- [x] Probar las reglas con Firebase Emulator Suite (`firestore-tests/`).
 - Revisar formato fiscal contra especificacion vigente antes de cualquier uso real.
 
 ## Roadmap Recomendado

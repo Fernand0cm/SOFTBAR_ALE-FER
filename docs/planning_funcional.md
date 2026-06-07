@@ -99,18 +99,18 @@ Prioridad media-alta.
 
 Tareas:
 
-- Permitir alta manual de producto sin escaner.
-- Editar productos existentes.
-- Desactivar productos sin borrarlos.
-- Crear categorias:
+- [x] Permitir alta manual de producto sin escaner.
+- [x] Editar productos existentes.
+- [x] Desactivar productos sin borrarlos.
+- [x] Crear categorias:
   - cafes
   - bebidas
   - tapas
   - bocadillos
-- Definir IVA por producto o categoria.
-- Modificar cantidades desde la comanda.
-- Anadir notas por linea.
-- Preparar modificadores:
+- [x] Definir IVA por producto (10%, 21%, 4%); la factura calcula la cuota por tipo.
+- [x] Modificar cantidades desde la comanda.
+- [x] Anadir notas por linea.
+- [x] Preparar modificadores:
   - sin hielo
   - extra queso
   - pan sin gluten
@@ -127,14 +127,14 @@ Prioridad media.
 
 Tareas:
 
-- Filtro por fecha.
-- Filtro por turno.
-- Filtro por metodo de pago.
-- Ventas por producto.
-- Productos mas vendidos.
-- Comparativa por dias.
-- Mostrar base imponible, IVA y total.
-- Exportar resumen en formato compartible.
+- [x] Filtro por fecha.
+- [x] Filtro por turno.
+- [x] Filtro por metodo de pago.
+- [x] Ventas por producto.
+- [x] Productos mas vendidos.
+- [x] Comparativa por dias.
+- [x] Mostrar base imponible, IVA y total.
+- [x] Exportar resumen en formato compartible.
 
 Resultado esperado:
 
@@ -146,15 +146,22 @@ Prioridad media.
 
 Tareas:
 
-- Crear modelo de usuario interno.
-- Asignar roles:
+- [x] Crear modelo de usuario interno (`usuarios/{uid}`).
+- [x] Asignar roles:
   - administrador
   - camarero
   - caja
   - cocina
-- Guardar usuario responsable en ventas, movimientos y cierres.
-- Limitar anulaciones y cambios sensibles a perfiles autorizados.
-- Refinar reglas Firestore por coleccion y rol.
+- [x] Guardar usuario responsable en ventas, movimientos y cierres.
+- [x] Limitar acciones sensibles a perfiles autorizados (gating de modulos por rol).
+- [x] Refinar reglas Firestore por rol (coleccion `usuarios`, anti-escalada, `esAdmin`).
+
+Notas de alcance:
+
+- El primer administrador se asigna manualmente en la consola de Firestore
+  (`usuarios/{uid}.rol = administrador`); a partir de ahi un admin puede crear
+  o reasignar usuarios. La UI de gestion de roles dentro de la app queda como
+  mejora futura.
 
 Resultado esperado:
 
@@ -166,12 +173,18 @@ Prioridad media-baja para el flujo principal, alta si se quiere destacar gestion
 
 Tareas:
 
-- Crear modelo de articulo de stock.
-- Registrar entradas y salidas.
-- Definir stock minimo.
-- Mostrar alertas.
-- Relacionar productos de venta con articulos de inventario.
-- Descontar stock por venta cuando aplique.
+- [x] Modelo de stock simple: control opcional por producto (no por ingrediente).
+- [x] Registrar entradas (reposicion +/- y ajuste) y salidas (automaticas por venta).
+- [x] Definir stock minimo.
+- [x] Mostrar alertas de bajo stock.
+- [x] El stock vive en el propio producto de venta (sin inventario aparte).
+- [x] Descontar stock por venta cuando aplique (solo productos controlados).
+
+Nota de enfoque:
+
+- En hosteleria muchos productos no son contables (cafe, cerveza de barril), asi
+  que el control de stock es **opcional por producto** y solo se vigila lo que
+  tiene sentido contar. El descuento al vender es automatico y nunca baja de 0.
 
 Resultado esperado:
 
@@ -186,8 +199,8 @@ Tareas:
 - [x] Separar configuracion fiscal del codigo.
 - [x] Guardar datos fiscales del negocio en Firestore.
 - [x] Gestionar series por anio.
-- Preparar anulacion o rectificacion.
-- Revisar formato de QR y hash contra especificacion oficial.
+- [x] Preparar anulacion o rectificacion (factura rectificativa encadenada).
+- [x] Revisar formato de QR y hash contra especificacion oficial (documentado en docs/verifactu.md).
 - [x] Documentar limitaciones del prototipo.
 
 Resultado esperado:
@@ -200,11 +213,26 @@ Prioridad media.
 
 Tareas:
 
-- Mostrar estado pendiente de sincronizar.
-- Definir operaciones permitidas sin conexion.
-- Evitar numeracion duplicada de facturas offline.
-- Avisar de errores de sincronizacion.
-- Probar corte de red en emulador o dispositivo.
+- [x] Mostrar estado pendiente de sincronizar (indicador en Home: en linea /
+  sincronizando / sin conexion, segun los metadatos de Firestore).
+- [x] Definir operaciones permitidas sin conexion (comandas, mesas, productos y
+  movimientos se encolan; cobro y rectificacion requieren conexion).
+- [x] Evitar numeracion duplicada de facturas offline (el cobro y la
+  rectificacion usan transaccion, que no se ejecuta sin red; ademas se bloquean
+  con aviso).
+- [x] Avisar de errores de sincronizacion (aviso claro al intentar cobrar o
+  rectificar sin conexion; indicador de pendientes en Home).
+- [x] Probar corte de red en emulador o dispositivo (procedimiento manual mas
+  abajo).
+
+Como probar el corte de red (manual):
+
+1. Activar modo avion en el dispositivo/emulador.
+2. Abrir una mesa y anadir productos: se guarda y el indicador pasa a
+   "Sincronizando...".
+3. Intentar cobrar: aparece el aviso de que no se puede cobrar sin conexion.
+4. Desactivar modo avion: los cambios pendientes se suben y el indicador vuelve
+   a "Online".
 
 Resultado esperado:
 
@@ -253,12 +281,12 @@ Resultado esperado:
 
 - Boton para crear productos manualmente.
 - Datos de demo precargados para la defensa.
-- Vista de historial de tickets.
+- [x] Vista de historial de tickets.
 - Compartir ticket como texto o PDF.
 - Pantalla de cierre de caja imprimible.
 - Vista de cocina con comandas pendientes.
-- Barra rapida por categorias.
-- Confirmaciones antes de acciones sensibles.
+- [x] Barra rapida por categorias.
+- [x] Confirmaciones antes de acciones sensibles (cierre de turno, cierre de sesion).
 - Exportacion de informes.
 
 ## Riesgos principales

@@ -14,6 +14,7 @@ public final class FirestoreSchema {
         public static final String PRODUCTOS = "productos";
         public static final String SPLASH_BACKGROUNDS = "splash_backgrounds";
         public static final String TURNOS = "turnos";
+        public static final String USUARIOS = "usuarios";
         public static final String VENTAS = "ventas";
 
         private Collections() { }
@@ -52,6 +53,10 @@ public final class FirestoreSchema {
         public static final String SPLASH_IMAGE_URL = "imageUrl";
         public static final String NIF_EMISOR = "nifEmisor";
         public static final String SERIE = "serie";
+        public static final String CONTROLAR_STOCK = "controlarStock";
+        public static final String STOCK = "stock";
+        public static final String STOCK_MINIMO = "stockMinimo";
+        public static final String FACTURA_RECTIFICADA_NUMERO = "facturaRectificadaNumero";
         public static final String TURNO_ID = "turnoId";
         public static final String ULTIMO = "ultimo";
         public static final String USUARIO_EMAIL = "usuarioEmail";

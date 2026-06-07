@@ -14,6 +14,7 @@ firebaseFirestore = "26.2.0"
 playServicesCodeScanner = "16.1.0"
 mpAndroidChart = "v3.1.0"
 zxingCore = "3.5.3"
+lifecycle = "2.8.7"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -29,6 +30,8 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 mp-android-chart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpAndroidChart" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

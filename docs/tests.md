@@ -40,6 +40,9 @@ POJO del catalogo de productos.
 | `constructorVacio_dejaCamposPorDefecto` | El constructor sin argumentos (necesario para Firestore) deja los campos a null o cero. |
 | `constructorConDatos_asignaTodo` | El constructor completo asigna codigo de barras, nombre y precio. |
 | `setters_actualizanCampos` | Los setters individuales modifican el estado. |
+| `bajoStock_falsoSiNoSeControla` | Sin control de stock no hay aviso de bajo stock. |
+| `bajoStock_ciertoCuandoStockEnOPorDebajoDelMinimo` | Con control, stock <= minimo marca bajo stock. |
+| `bajoStock_falsoCuandoStockPorEncimaDelMinimo` | Con stock por encima del minimo no hay aviso. |
 
 ### `data/VentaTest`
 
@@ -83,6 +86,10 @@ POJO de cada linea individual dentro de una comanda.
 | `constructorConDatos_asignaTodo` | Constructor completo asigna codigo, nombre, precio y cantidad. |
 | `subtotal_multiplicaPrecioPorCantidad` | El subtotal es precio x cantidad. |
 | `subtotal_conCantidadCero_devuelveCero` | Cantidad 0 da subtotal 0 sin lanzar excepcion. |
+| `tienePersonalizacion_falsoSinNotaNiModificadores` | Linea sin nota ni modificadores no esta personalizada. |
+| `tienePersonalizacion_ciertoConNota` | Una nota marca la linea como personalizada. |
+| `tienePersonalizacion_ciertoConModificadores` | Un modificador marca la linea como personalizada. |
+| `setModificadores_nulo_dejaListaVaciaEnVezDeNull` | Pasar null deja una lista vacia (defensa contra NPE). |
 
 ### `data/ComandaTest`
 
@@ -165,15 +172,73 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | `construirUrl_contieneEndpointYParametrosClave` | URL apunta al endpoint correcto e incluye nif, fecha e importe. |
 | `construirUrl_codificaCaracteresEspeciales` | El "/" del numero de serie se URL-encodea como `%2F`. |
 
+### `data/DineroTest`
+
+Calculo monetario con BigDecimal y redondeo a centimos.
+
+| Prueba | Que verifica |
+|---|---|
+| `redondear_aDosDecimalesHalfUp` | Redondeo HALF_UP a 2 decimales. |
+| `sumar_evitaErrorDeComaFlotante` | `0.1 + 0.2` da exactamente `0.30`. |
+| `sumar_variosImportes` | Suma de varios importes. |
+| `restar_redondeaAResultadoLimpio` | Resta sin deriva de coma flotante. |
+| `multiplicar_precioPorCantidad` | Precio por cantidad redondeado. |
+| `cuotaIvaIncluido_diez_porciento` | Cuota de IVA contenida en un total. |
+| `cuotaIvaIncluido_redondeaADosDecimales` | La cuota se redondea a 2 decimales. |
+
+### `data/CalculoIvaTest`
+
+Cuota de IVA de una venta con tipos mixtos por linea.
+
+| Prueba | Que verifica |
+|---|---|
+| `cuotaTotal_listaNula_devuelveCero` | Lista nula devuelve 0. |
+| `cuotaTotal_listaVacia_devuelveCero` | Lista vacia devuelve 0. |
+| `cuotaTotal_unaLineaAlDiezPorCiento` | Cuota de una linea al 10%. |
+| `cuotaTotal_tiposMixtos_sumaCadaCuota` | Suma cuotas de lineas al 10% y al 21%. |
+| `cuotaTotal_respetaCantidadDeLaLinea` | Usa el subtotal (precio x cantidad) de la linea. |
+
+### `data/VentasPorProductoTest`
+
+Agregacion de ventas por producto (ventas por producto / mas vendidos).
+
+| Prueba | Que verifica |
+|---|---|
+| `agregar_listaNula_devuelveListaVacia` | Lista nula devuelve lista vacia. |
+| `agregar_sumaCantidadesEImportesDelMismoProducto` | Suma unidades e importe del mismo producto. |
+| `agregar_ordenaDeMasAMenosVendido` | Ordena de mas a menos vendido. |
+
+### `data/ComparativaDiasTest`
+
+Totales por dia en la ventana de los ultimos N dias.
+
+| Prueba | Que verifica |
+|---|---|
+| `totales_listaNula_devuelveArrayDeCeros` | Lista nula devuelve un array de ceros. |
+| `totales_colocaCadaVentaEnSuDia` | Cada venta suma en el dia correcto (hoy en la ultima posicion). |
+| `totales_ignoraVentasFueraDeVentana` | Las ventas fuera de la ventana no cuentan. |
+
+### `data/PermisosTest`
+
+Matriz de permisos por rol.
+
+| Prueba | Que verifica |
+|---|---|
+| `administrador_puedeTodo` | El administrador accede a todos los modulos. |
+| `camarero_noAccedeAConfigNiCaja` | El camarero no entra en configuracion ni caja. |
+| `caja_accedeACajaEInformesPeroNoConfig` | Caja accede a caja e informes, no a configuracion. |
+| `cocina_soloMesasEHistorial` | Cocina solo ve mesas e historial. |
+| `rolNuloODesconocido_caeEnPermisosMinimos` | Un rol nulo o desconocido no obtiene permisos extra. |
+
 ## Resumen actual
 
 | Suite | Tests | Estado |
 |---|---|---|
-| ProductoTest | 3 | OK |
+| ProductoTest | 6 | OK |
 | VentaTest | 2 | OK |
 | MesaTest | 4 | OK |
 | EstadoMesaColorTest | 5 | OK |
-| LineaComandaTest | 4 | OK |
+| LineaComandaTest | 8 | OK |
 | ComandaTest | 4 | OK |
 | CalculoTotalComandaTest | 5 | OK |
 | MovimientoCajaTest | 3 | OK |
@@ -181,9 +246,12 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | IndicadoresVentasTest | 7 | OK |
 | HashVerifactuTest | 5 | OK |
 | GeneradorQrVerifactuTest | 2 | OK |
-| **Total** | **50** | **OK** |
-
-(El proyecto incluye ademas el `ExampleUnitTest` autogenerado que suma 1 test mas.)
+| DineroTest | 7 | OK |
+| CalculoIvaTest | 5 | OK |
+| VentasPorProductoTest | 3 | OK |
+| ComparativaDiasTest | 3 | OK |
+| PermisosTest | 5 | OK |
+| **Total** | **80** | **OK** |
 
 Validacion reciente:
 
@@ -191,10 +259,57 @@ Validacion reciente:
 - Las pruebas unitarias actuales pasan.
 - La primera ejecucion puede requerir acceso a la cache local de Gradle del usuario si el wrapper necesita bloquear o descargar la distribucion.
 
+## Pruebas de reglas Firestore (emulador)
+
+Ademas de las pruebas unitarias de Java, el proyecto incluye una suite que valida
+las reglas de seguridad de Firestore contra el emulador oficial. Vive en
+`firestore-tests/` y usa `@firebase/rules-unit-testing` con el runner nativo de
+Node.
+
+Como ejecutarlas:
+
+```bash
+cd firestore-tests
+npm install
+npm test
+```
+
+`npm test` arranca el emulador con `firebase emulators:exec --only firestore` y
+corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
+
+| Prueba | Que verifica |
+|---|---|
+| Lectura sin auth | Un usuario no autenticado no puede leer ventas. |
+| Escritura sin auth | Un usuario no autenticado no puede crear productos. |
+| Splash publico | `splash_backgrounds` es de lectura publica. |
+| Venta propia | Un usuario puede crear una venta con su propio uid. |
+| Venta ajena | Un usuario NO puede crear una venta atribuida a otro uid. |
+| Venta inmutable (update) | Una venta no se puede modificar tras crearse. |
+| Venta inmutable (delete) | Una venta no se puede borrar. |
+| Factura inmutable | Una factura no admite update tras crearse. |
+| Factura valida | Una factura con datos correctos se crea. |
+| Contador monotono | El contador de facturas solo puede avanzar. |
+| Movimiento inmutable | Un movimiento de caja no se puede modificar. |
+| Producto invalido | Un producto con precio negativo es rechazado. |
+| Producto con IVA valido | Un producto con `tipoIva` correcto se acepta. |
+| Producto con IVA invalido | Un `tipoIva` fuera de rango (0..1) es rechazado. |
+| Producto con activo | Un producto con el campo `activo` se acepta. |
+| Producto con categoria | Un producto con el campo `categoria` se acepta. |
+| Producto no borrable | Un producto no se puede borrar (solo se desactiva). |
+| Auto-registro camarero | Un usuario puede crearse a si mismo como camarero. |
+| Auto-registro admin denegado | Un usuario no puede crearse como administrador. |
+| Anti-escalada de rol | Un usuario no puede cambiarse su propio rol. |
+| Admin gestiona roles | Un administrador puede crear usuarios con cualquier rol. |
+| Producto con stock valido | Un producto con campos de stock correctos se acepta. |
+| Stock negativo denegado | Un producto con stock negativo es rechazado. |
+| Venta rectificativa negativa | Una venta rectificativa admite total negativo. |
+| Venta normal sin negativos | Una venta normal no admite total negativo. |
+
+Estado: **25 pruebas, todas OK** sobre el emulador de Firestore.
+
 ## Pendiente / fuera de alcance
 
 - Pruebas instrumentadas de navegacion entre Activities (Espresso).
-- Pruebas de integracion contra el emulador de Firestore.
 - Pruebas de UI del dashboard (verificar que pinta la grafica correctamente).
 - Generacion de bitmap del QR (requiere Android, no se prueba en JUnit puro).
 - Pruebas del flujo completo de TPV: login, mesa, comanda, cobro, ticket e informes.

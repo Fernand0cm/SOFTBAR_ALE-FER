@@ -27,4 +27,96 @@
         android:layout_marginTop="8dp"
         android:hint="@string/dialog_precio_hint"
         android:inputType="numberDecimal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/dialog_iva_label"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <RadioGroup
+        android:id="@+id/radio_iva_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_iva_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/dialog_iva_10" />
+
+        <RadioButton
+            android:id="@+id/radio_iva_21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_iva_21" />
+
+        <RadioButton
+            android:id="@+id/radio_iva_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_iva_4" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/dialog_categoria_label"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <Spinner
+        android:id="@+id/spinner_categoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:entries="@array/categorias_producto" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_activo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:checked="true"
+        android:text="@string/dialog_activo" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_stock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/dialog_controlar_stock" />
+
+    <LinearLayout
+        android:id="@+id/grupo_stock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/input_stock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:hint="@string/dialog_stock_hint"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/input_stock_minimo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:hint="@string/dialog_stock_minimo_hint"
+            android:inputType="number" />
+    </LinearLayout>
 </LinearLayout>

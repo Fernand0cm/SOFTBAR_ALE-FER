@@ -20,8 +20,11 @@ import com.SOFTBAR_F_A.data.Mesa;
 import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
+import com.SOFTBAR_F_A.ui.common.CatalogoCategorias;
 import com.SOFTBAR_F_A.ui.common.Header;
+import com.SOFTBAR_F_A.ui.common.PersonalizacionLinea;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -42,10 +45,13 @@ public class ComandaActivity extends AppCompatActivity {
     private List<LineaComanda> lineas = new ArrayList<>();
 
     private GridLayout gridCatalogo;
+    private ChipGroup chipsCategorias;
     private LinearLayout listaLineas;
     private TextView txtTotal;
     private TextView txtCatalogoVacio;
     private TextView txtLineasVacias;
+
+    private CatalogoCategorias catalogo;
 
     private ListenerRegistration suscripcionProductos;
     private ListenerRegistration suscripcionComanda;
@@ -64,10 +70,14 @@ public class ComandaActivity extends AppCompatActivity {
         Header.aplica(this, getString(R.string.comanda_title), subtitulo);
 
         gridCatalogo = findViewById(R.id.grid_catalogo);
+        chipsCategorias = findViewById(R.id.chips_categorias);
         listaLineas = findViewById(R.id.lista_lineas);
         txtTotal = findViewById(R.id.txt_total);
         txtCatalogoVacio = findViewById(R.id.txt_catalogo_vacio);
         txtLineasVacias = findViewById(R.id.txt_lineas_vacias);
+
+        catalogo = new CatalogoCategorias(
+                this, gridCatalogo, chipsCategorias, txtCatalogoVacio, this::anadirProducto);
 
         Button btnCobrar = findViewById(R.id.btn_cobrar);
         btnCobrar.setOnClickListener(v -> irACobro());
@@ -139,40 +149,11 @@ public class ComandaActivity extends AppCompatActivity {
                     if (error != null || snap == null) return;
                     List<Producto> productos = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snap) {
-                        productos.add(doc.toObject(Producto.class));
+                        Producto p = doc.toObject(Producto.class);
+                        if (p.isActivo()) productos.add(p);
                     }
-                    pintarCatalogo(productos);
+                    catalogo.setProductos(productos);
                 });
-    }
-
-    private void pintarCatalogo(List<Producto> productos) {
-        gridCatalogo.removeAllViews();
-        if (productos.isEmpty()) {
-            txtCatalogoVacio.setVisibility(View.VISIBLE);
-            return;
-        }
-        txtCatalogoVacio.setVisibility(View.GONE);
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        float density = getResources().getDisplayMetrics().density;
-        int margen = (int) (6 * density);
-
-        for (Producto p : productos) {
-            View item = inflater.inflate(R.layout.item_catalogo, gridCatalogo, false);
-            ((TextView) item.findViewById(R.id.txt_nombre_producto))
-                    .setText(p.getNombre());
-            ((TextView) item.findViewById(R.id.txt_precio_producto))
-                    .setText(String.format(Locale.getDefault(), "%.2f EUR", p.getPrecio()));
-            item.setOnClickListener(v -> anadirProducto(p));
-
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            params.setMargins(margen, margen, margen, margen);
-            item.setLayoutParams(params);
-
-            gridCatalogo.addView(item);
-        }
     }
 
     private void anadirProducto(Producto p) {
@@ -181,11 +162,12 @@ public class ComandaActivity extends AppCompatActivity {
             return;
         }
 
-        // Si ya hay una linea con ese producto, solo aumentamos cantidad
+        // Si ya hay una linea con ese producto sin personalizar, solo aumentamos cantidad
         boolean encontrado = false;
         for (LineaComanda l : lineas) {
             if (l.getCodigoBarras() != null
-                    && l.getCodigoBarras().equals(p.getCodigoBarras())) {
+                    && l.getCodigoBarras().equals(p.getCodigoBarras())
+                    && !l.tienePersonalizacion()) {
                 l.setCantidad(l.getCantidad() + 1);
                 encontrado = true;
                 break;
@@ -193,8 +175,13 @@ public class ComandaActivity extends AppCompatActivity {
         }
         if (!encontrado) {
             lineas.add(new LineaComanda(
-                    p.getCodigoBarras(), p.getNombre(), p.getPrecio(), 1));
+                    p.getCodigoBarras(), p.getNombre(), p.getPrecio(), 1, p.getTipoIva()));
         }
+        guardarLineas();
+    }
+
+    private void anadirUnidad(LineaComanda linea) {
+        linea.setCantidad(linea.getCantidad() + 1);
         guardarLineas();
     }
 
@@ -230,7 +217,20 @@ public class ComandaActivity extends AppCompatActivity {
                 ((TextView) item.findViewById(R.id.txt_nombre)).setText(l.getNombre());
                 ((TextView) item.findViewById(R.id.txt_subtotal))
                         .setText(String.format(Locale.getDefault(), "%.2f EUR", l.subtotal()));
+
+                TextView detalle = item.findViewById(R.id.txt_detalle);
+                String textoDetalle = PersonalizacionLinea.describir(l);
+                if (textoDetalle.isEmpty()) {
+                    detalle.setVisibility(View.GONE);
+                } else {
+                    detalle.setVisibility(View.VISIBLE);
+                    detalle.setText(textoDetalle);
+                }
+
                 item.findViewById(R.id.btn_quitar).setOnClickListener(v -> quitarLinea(l));
+                item.findViewById(R.id.btn_anadir).setOnClickListener(v -> anadirUnidad(l));
+                item.findViewById(R.id.linea_info).setOnClickListener(v ->
+                        PersonalizacionLinea.mostrarDialogo(this, l, this::guardarLineas));
                 listaLineas.addView(item);
             }
         }

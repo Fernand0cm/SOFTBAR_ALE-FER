@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -14,18 +15,37 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txt_nombre"
+    <LinearLayout
+        android:id="@+id/linea_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/text_primary"
-        android:textSize="15sp" />
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_nombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txt_detalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txt_subtotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:textColor="@color/text_primary"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -34,12 +54,23 @@
         android:id="@+id/btn_quitar"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="10dp"
         android:clickable="true"
         android:contentDescription="@string/comanda_quitar"
         android:focusable="true"
         android:padding="4dp"
         android:src="@drawable/ic_close"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         app:tint="@color/text_muted" />
+
+    <ImageView
+        android:id="@+id/btn_anadir"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="6dp"
+        android:clickable="true"
+        android:contentDescription="@string/comanda_anadir_unidad"
+        android:focusable="true"
+        android:padding="4dp"
+        android:src="@drawable/ic_plus"
+        app:tint="@color/brand_600" />
 </LinearLayout>

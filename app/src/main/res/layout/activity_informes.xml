@@ -19,6 +19,75 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <!-- Filtros -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_fecha"
+                style="@style/SoftbarButton.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_informes"
+                app:iconGravity="textStart"
+                app:iconTint="@color/brand_600" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="14dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chips_metodo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_metodo_todas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:text="@string/informes_metodo_todas" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_metodo_efectivo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/cobro_efectivo" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_metodo_tarjeta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/cobro_tarjeta" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_metodo_mixto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/cobro_mixto" />
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chips_turno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true" />
+            </HorizontalScrollView>
+
             <!-- KPIs en fila como cards -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,6 +180,69 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <!-- Desglose fiscal -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/SoftbarCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Eyebrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/informes_desglose" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/informes_base"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txt_base"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0,00 EUR"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/informes_iva"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txt_iva"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0,00 EUR"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Card de la grafica -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/SoftbarCard"
@@ -148,6 +280,83 @@
                         android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Comparativa por dias -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/SoftbarCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Eyebrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/informes_comparativa" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/grafica_dias"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="10dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Top de productos -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/SoftbarCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Eyebrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/informes_top_productos" />
+
+                    <LinearLayout
+                        android:id="@+id/lista_top_productos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/txt_top_vacio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/informes_top_vacio"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_exportar"
+                style="@style/SoftbarButton.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/informes_exportar"
+                app:icon="@drawable/ic_email"
+                app:iconGravity="textStart"
+                app:iconTint="@color/brand_600" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
