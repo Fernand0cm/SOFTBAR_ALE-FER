@@ -112,7 +112,7 @@ service cloud.firestore {
       return request.resource.data.keys().hasOnly([
           'fechaApertura', 'fechaCierre', 'estado', 'importeInicial',
           'efectivoContado', 'efectivoEsperado', 'diferenciaCaja',
-          'usuarioUid', 'usuarioEmail'
+          'usuarioUid', 'usuarioEmail', 'totalComensales'
         ])
         && request.resource.data.fechaApertura is timestamp
         && (!request.resource.data.keys().hasAny(['fechaCierre'])
@@ -128,7 +128,9 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['diferenciaCaja'])
           || request.resource.data.diferenciaCaja is number)
         && nonEmptyString(request.resource.data.usuarioUid)
-        && request.resource.data.usuarioEmail is string;
+        && request.resource.data.usuarioEmail is string
+        && (!request.resource.data.keys().hasAny(['totalComensales'])
+          || request.resource.data.totalComensales is int);
     }
 
     function validFactura() {
