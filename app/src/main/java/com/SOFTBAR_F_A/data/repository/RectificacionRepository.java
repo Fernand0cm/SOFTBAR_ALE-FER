@@ -10,6 +10,7 @@ import com.SOFTBAR_F_A.data.verifactu.ConfiguracionFiscal;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
 import com.SOFTBAR_F_A.data.verifactu.HashVerifactu;
+import com.SOFTBAR_F_A.data.verifactu.NumeroFactura;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -135,8 +136,7 @@ public class RectificacionRepository {
 
                     double total = -original.getTotal();
                     double cuotaIva = -original.getCuotaIva();
-                    String numero = String.format(Locale.ROOT, "%s-%04d/%s",
-                            config.getSerie(), siguiente,
+                    String numero = NumeroFactura.generar(config.getSerie(), siguiente,
                             new SimpleDateFormat("yyyy", Locale.ROOT).format(ahora));
                     String fechaIso = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(ahora);
                     String fechaQr = new SimpleDateFormat("dd-MM-yyyy", Locale.ROOT).format(ahora);
@@ -157,7 +157,7 @@ public class RectificacionRepository {
                     rect.setPagoEfectivo(-original.getPagoEfectivo());
                     rect.setPagoTarjeta(-original.getPagoTarjeta());
 
-                    String facturaId = numero.replace("/", "-");
+                    String facturaId = NumeroFactura.aIdDocumento(numero);
                     DocumentReference facturaRef = db
                             .collection(FirestoreSchema.Collections.FACTURAS).document(facturaId);
 
@@ -172,7 +172,8 @@ public class RectificacionRepository {
                     venta.setPagoEfectivo(-original.getPagoEfectivo());
                     venta.setPagoTarjeta(-original.getPagoTarjeta());
                     venta.setTipo(Venta.TIPO_RECTIFICATIVA);
-                    venta.setFacturaRectificadaId(original.getNumero().replace("/", "-"));
+                    venta.setFacturaRectificadaId(
+                            NumeroFactura.aIdDocumento(original.getNumero()));
 
                     Map<String, Object> contadorData = new HashMap<>();
                     contadorData.put(FirestoreSchema.Fields.ULTIMO, siguiente);

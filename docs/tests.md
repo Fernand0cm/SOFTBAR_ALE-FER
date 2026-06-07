@@ -172,6 +172,18 @@ Construccion de la URL del QR Verifactu de la AEAT.
 | `construirUrl_contieneEndpointYParametrosClave` | URL apunta al endpoint correcto e incluye nif, fecha e importe. |
 | `construirUrl_codificaCaracteresEspeciales` | El "/" del numero de serie se URL-encodea como `%2F`. |
 
+### `data/verifactu/NumeroFacturaTest`
+
+Formato del numero de factura y su id de documento.
+
+| Prueba | Que verifica |
+|---|---|
+| `generar_rellenaA4Digitos` | El correlativo se rellena a 4 digitos (`A-0001/2026`). |
+| `generar_mantieneNumerosLargos` | Numeros de mas de 4 digitos se respetan. |
+| `generar_respetaLaSerie` | Usa la serie y el anio indicados. |
+| `aIdDocumento_sustituyeBarraPorGuion` | `A-0001/2026` -> `A-0001-2026`. |
+| `aIdDocumento_nuloDevuelveNulo` | Entrada nula devuelve null sin fallar. |
+
 ### `data/DineroTest`
 
 Calculo monetario con BigDecimal y redondeo a centimos.
@@ -246,12 +258,13 @@ Matriz de permisos por rol.
 | IndicadoresVentasTest | 7 | OK |
 | HashVerifactuTest | 5 | OK |
 | GeneradorQrVerifactuTest | 2 | OK |
+| NumeroFacturaTest | 5 | OK |
 | DineroTest | 7 | OK |
 | CalculoIvaTest | 5 | OK |
 | VentasPorProductoTest | 3 | OK |
 | ComparativaDiasTest | 3 | OK |
 | PermisosTest | 5 | OK |
-| **Total** | **80** | **OK** |
+| **Total** | **85** | **OK** |
 
 Validacion reciente:
 
