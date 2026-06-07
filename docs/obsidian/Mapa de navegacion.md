@@ -62,7 +62,7 @@ Notas de la correccion:
   impiden el auto-ascenso de rol).
 - Las reglas endurecidas del repo se **desplegaron a produccion** (`tfg-softba`).
 
-## Capturas pendientes
+## Capturas
 
-- [[Login]]: requiere cerrar sesion (sin conexion no se puede volver a entrar);
-  se capturara en un arranque limpio.
+Todas las pantallas estan capturadas (incluida [[Login]]). Las evidencias de la
+demo completa estan en `docs/demo/` (ver `RESULTADO_DEMO.md`).
