@@ -225,6 +225,7 @@ Mas detalle en:
 
 - `docs/arquitectura.md`
 - `docs/guion_demo.md`
+- `docs/auditoria_vistas.md`
 - `docs/firebase.md`
 - `docs/verifactu.md`
 - `firestore.rules`
@@ -386,7 +387,8 @@ TFG_SOFTBAR/
 
 - [x] Crear guion de demo paso a paso (`docs/guion_demo.md`).
 - [x] Documentar la arquitectura (`docs/arquitectura.md`).
-- Preparar datos de prueba estables.
+- [x] Datos de prueba reproducibles (`tools/seed`) y auditoria de vistas
+  (`docs/auditoria_vistas.md`).
 - Probar flujo completo manualmente:
   - login
   - abrir turno

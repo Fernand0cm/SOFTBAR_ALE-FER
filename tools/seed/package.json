@@ -1,0 +1,13 @@
+{
+  "name": "softbar-seed",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Borra la actividad anterior y siembra datos de prueba reales en Firestore.",
+  "type": "commonjs",
+  "scripts": {
+    "seed": "node seed.js --yes"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}
