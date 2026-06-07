@@ -244,21 +244,13 @@ Prioridad alta antes de entregar.
 
 Tareas:
 
-- Crear guion de demo:
-  - login
-  - apertura de turno
-  - alta de productos
-  - mesa
-  - comanda
-  - cobro
-  - ticket
-  - caja
-  - informes
-- Anadir pruebas unitarias de pagos, caja y turnos.
-- Anadir pruebas de numeracion de factura.
-- Probar flujo completo manualmente.
+- [x] Crear guion de demo (`docs/guion_demo.md`).
+- [x] Anadir pruebas unitarias de pagos y caja (`ResumenCaja`, `Dinero`,
+  `CalculoIva`); turnos y numeracion quedan como pruebas pendientes.
+- Anadir pruebas de numeracion de factura (concurrencia).
+- Probar flujo completo manualmente (seguir el guion de demo).
 - Preparar capturas de pantalla finales.
-- Documentar arquitectura y colecciones Firebase.
+- [x] Documentar arquitectura y colecciones Firebase (`docs/arquitectura.md`).
 
 Resultado esperado:
 
