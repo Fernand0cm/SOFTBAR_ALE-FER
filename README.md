@@ -16,7 +16,7 @@ La app esta conectada a Firebase y mantiene la mayor parte de los datos operativ
 - Persistencia offline de Firestore activada al arrancar la app.
 - Reglas e indices Firestore versionados en el repositorio.
 - Indicador de conexion y sincronizacion en Home (online / sincronizando / sin conexion).
-- Cobro y rectificacion bloqueados sin conexion para evitar numeracion duplicada.
+- Cobro y rectificacion operativos sin conexion: las escrituras se encolan y sincronizan al recuperar red, y la numeracion correlativa se garantiza mediante transacciones y reglas de servidor.
 - Lector de codigos de barras con ML Kit / Google Code Scanner.
 - Generacion de QR con ZXing para el bloque Verifactu.
 - Graficas de informes con MPAndroidChart.
