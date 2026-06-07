@@ -108,9 +108,9 @@ Tareas:
   - tapas
   - bocadillos
 - [x] Definir IVA por producto (10%, 21%, 4%); la factura calcula la cuota por tipo.
-- Modificar cantidades desde la comanda.
-- Anadir notas por linea.
-- Preparar modificadores:
+- [x] Modificar cantidades desde la comanda.
+- [x] Anadir notas por linea.
+- [x] Preparar modificadores:
   - sin hielo
   - extra queso
   - pan sin gluten

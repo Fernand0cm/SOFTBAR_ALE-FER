@@ -1,6 +1,8 @@
 package com.SOFTBAR_F_A.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LineaComanda implements Serializable {
 
@@ -11,6 +13,8 @@ public class LineaComanda implements Serializable {
     private double precio;
     private int cantidad;
     private double tipoIva = Producto.IVA_POR_DEFECTO;
+    private String nota;
+    private List<String> modificadores = new ArrayList<>();
 
     public LineaComanda() {
         // Necesario para Firestore
@@ -50,6 +54,23 @@ public class LineaComanda implements Serializable {
     }
 
     public void setTipoIva(double tipoIva) { this.tipoIva = tipoIva; }
+
+    public String getNota() { return nota; }
+    public void setNota(String nota) { this.nota = nota; }
+
+    public List<String> getModificadores() {
+        return modificadores != null ? modificadores : new ArrayList<>();
+    }
+
+    public void setModificadores(List<String> modificadores) {
+        this.modificadores = modificadores != null ? modificadores : new ArrayList<>();
+    }
+
+    /** Indica si la linea lleva nota o algun modificador. */
+    public boolean tienePersonalizacion() {
+        return (nota != null && !nota.trim().isEmpty())
+                || (modificadores != null && !modificadores.isEmpty());
+    }
 
     public double subtotal() {
         return Dinero.multiplicar(precio, cantidad);

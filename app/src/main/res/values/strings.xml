@@ -61,6 +61,17 @@
     <string name="comanda_catalogo_vacio">Sin productos en el catalogo. Anadelos desde Configuracion.</string>
     <string name="comanda_lineas_vacias">Toca un producto del catalogo para anadirlo.</string>
     <string name="comanda_quitar">Quitar uno</string>
+    <string name="comanda_anadir_unidad">Anadir uno</string>
+    <string name="linea_dialog_titulo">Personalizar linea</string>
+    <string name="linea_modificadores_label">Modificadores</string>
+    <string name="linea_nota_label">Nota</string>
+    <string name="linea_nota_hint">Ej. poco hecho, para llevar...</string>
+    <string-array name="modificadores_linea">
+        <item>Sin hielo</item>
+        <item>Extra queso</item>
+        <item>Pan sin gluten</item>
+        <item>Punto de carne</item>
+    </string-array>
     <string name="comanda_no_lista">La comanda aun no esta lista, espera un instante</string>
     <string name="comanda_sin_lineas">Anade al menos un producto antes de cobrar</string>
     <string name="comanda_extras">Anadir extras</string>

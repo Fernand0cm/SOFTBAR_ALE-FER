@@ -83,6 +83,10 @@ POJO de cada linea individual dentro de una comanda.
 | `constructorConDatos_asignaTodo` | Constructor completo asigna codigo, nombre, precio y cantidad. |
 | `subtotal_multiplicaPrecioPorCantidad` | El subtotal es precio x cantidad. |
 | `subtotal_conCantidadCero_devuelveCero` | Cantidad 0 da subtotal 0 sin lanzar excepcion. |
+| `tienePersonalizacion_falsoSinNotaNiModificadores` | Linea sin nota ni modificadores no esta personalizada. |
+| `tienePersonalizacion_ciertoConNota` | Una nota marca la linea como personalizada. |
+| `tienePersonalizacion_ciertoConModificadores` | Un modificador marca la linea como personalizada. |
+| `setModificadores_nulo_dejaListaVaciaEnVezDeNull` | Pasar null deja una lista vacia (defensa contra NPE). |
 
 ### `data/ComandaTest`
 
@@ -199,7 +203,7 @@ Cuota de IVA de una venta con tipos mixtos por linea.
 | VentaTest | 2 | OK |
 | MesaTest | 4 | OK |
 | EstadoMesaColorTest | 5 | OK |
-| LineaComandaTest | 4 | OK |
+| LineaComandaTest | 8 | OK |
 | ComandaTest | 4 | OK |
 | CalculoTotalComandaTest | 5 | OK |
 | MovimientoCajaTest | 3 | OK |
@@ -209,7 +213,7 @@ Cuota de IVA de una venta con tipos mixtos por linea.
 | GeneradorQrVerifactuTest | 2 | OK |
 | DineroTest | 7 | OK |
 | CalculoIvaTest | 5 | OK |
-| **Total** | **62** | **OK** |
+| **Total** | **66** | **OK** |
 
 Validacion reciente:
 

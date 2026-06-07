@@ -17,6 +17,7 @@ import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
 import com.SOFTBAR_F_A.ui.common.Header;
+import com.SOFTBAR_F_A.ui.common.PersonalizacionLinea;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -219,11 +220,25 @@ public class TicketActivity extends AppCompatActivity {
             fila.addView(cantidad, new LinearLayout.LayoutParams(dp(32),
                     LinearLayout.LayoutParams.WRAP_CONTENT));
 
+            LinearLayout infoLinea = new LinearLayout(this);
+            infoLinea.setOrientation(LinearLayout.VERTICAL);
+
             TextView nombre = new TextView(this);
             nombre.setText(linea.getNombre());
             nombre.setTextColor(getColor(R.color.text_primary));
             nombre.setTextSize(13);
-            fila.addView(nombre, new LinearLayout.LayoutParams(0,
+            infoLinea.addView(nombre);
+
+            String detalle = PersonalizacionLinea.describir(linea);
+            if (!detalle.isEmpty()) {
+                TextView txtDetalle = new TextView(this);
+                txtDetalle.setText(detalle);
+                txtDetalle.setTextColor(getColor(R.color.text_muted));
+                txtDetalle.setTextSize(11);
+                infoLinea.addView(txtDetalle);
+            }
+
+            fila.addView(infoLinea, new LinearLayout.LayoutParams(0,
                     LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
             TextView subtotal = new TextView(this);

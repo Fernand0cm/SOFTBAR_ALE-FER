@@ -398,7 +398,7 @@ TFG_SOFTBAR/
 - [x] Desactivacion de productos sin borrarlos (no se borran del catalogo).
 - [x] Categorias de catalogo con filtro en comanda y barra.
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
-- Notas y modificadores por linea.
+- [x] Modificar cantidades, notas y modificadores por linea en la comanda.
 - [x] Historial de tickets (consulta y reapertura de ventas pasadas).
 - [x] Consulta de cierres historicos (turnos cerrados con su arqueo).
 - Filtros de informes por fecha, turno y metodo de pago.

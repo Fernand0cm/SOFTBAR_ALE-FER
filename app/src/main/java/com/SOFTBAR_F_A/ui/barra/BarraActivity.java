@@ -19,6 +19,7 @@ import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
+import com.SOFTBAR_F_A.ui.common.PersonalizacionLinea;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -161,7 +162,8 @@ public class BarraActivity extends AppCompatActivity {
         boolean encontrado = false;
         for (LineaComanda l : lineas) {
             if (l.getCodigoBarras() != null
-                    && l.getCodigoBarras().equals(p.getCodigoBarras())) {
+                    && l.getCodigoBarras().equals(p.getCodigoBarras())
+                    && !l.tienePersonalizacion()) {
                 l.setCantidad(l.getCantidad() + 1);
                 encontrado = true;
                 break;
@@ -171,6 +173,11 @@ public class BarraActivity extends AppCompatActivity {
             lineas.add(new LineaComanda(
                     p.getCodigoBarras(), p.getNombre(), p.getPrecio(), 1, p.getTipoIva()));
         }
+        pintarLineas();
+    }
+
+    private void anadirUnidad(LineaComanda linea) {
+        linea.setCantidad(linea.getCantidad() + 1);
         pintarLineas();
     }
 
@@ -198,7 +205,20 @@ public class BarraActivity extends AppCompatActivity {
                 ((TextView) item.findViewById(R.id.txt_nombre)).setText(l.getNombre());
                 ((TextView) item.findViewById(R.id.txt_subtotal))
                         .setText(String.format(Locale.getDefault(), "%.2f EUR", l.subtotal()));
+
+                TextView detalle = item.findViewById(R.id.txt_detalle);
+                String textoDetalle = PersonalizacionLinea.describir(l);
+                if (textoDetalle.isEmpty()) {
+                    detalle.setVisibility(View.GONE);
+                } else {
+                    detalle.setVisibility(View.VISIBLE);
+                    detalle.setText(textoDetalle);
+                }
+
                 item.findViewById(R.id.btn_quitar).setOnClickListener(v -> quitarLinea(l));
+                item.findViewById(R.id.btn_anadir).setOnClickListener(v -> anadirUnidad(l));
+                item.findViewById(R.id.linea_info).setOnClickListener(v ->
+                        PersonalizacionLinea.mostrarDialogo(this, l, this::pintarLineas));
                 listaLineas.addView(item);
             }
         }
