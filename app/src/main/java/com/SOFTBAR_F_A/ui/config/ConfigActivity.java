@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Permisos;
@@ -99,9 +99,9 @@ public class ConfigActivity extends AppCompatActivity {
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
         RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
-        MaterialSwitch switchActivo = vista.findViewById(R.id.switch_activo);
+        SwitchMaterial switchActivo = vista.findViewById(R.id.switch_activo);
         Spinner spinnerCategoria = vista.findViewById(R.id.spinner_categoria);
-        MaterialSwitch switchStock = vista.findViewById(R.id.switch_stock);
+        SwitchMaterial switchStock = vista.findViewById(R.id.switch_stock);
         View grupoStock = vista.findViewById(R.id.grupo_stock);
         EditText inputStock = vista.findViewById(R.id.input_stock);
         EditText inputStockMinimo = vista.findViewById(R.id.input_stock_minimo);
