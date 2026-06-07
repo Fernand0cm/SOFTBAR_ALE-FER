@@ -265,3 +265,61 @@ test("un producto no se puede borrar (solo se desactiva)", async () => {
   const db = testEnv.authenticatedContext(UID_A).firestore();
   await assertFails(deleteDoc(doc(db, "productos/p6")));
 });
+
+test("un usuario puede registrarse a si mismo como camarero", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "usuarios/" + UID_A), {
+      email: "a@softbar.com",
+      nombre: "A",
+      rol: "camarero",
+    })
+  );
+});
+
+test("un usuario NO puede registrarse a si mismo como administrador", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertFails(
+    setDoc(doc(db, "usuarios/" + UID_A), {
+      email: "a@softbar.com",
+      nombre: "A",
+      rol: "administrador",
+    })
+  );
+});
+
+test("un usuario NO puede ascenderse a si mismo (cambiar su rol)", async () => {
+  await testEnv.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), "usuarios/" + UID_A), {
+      email: "a@softbar.com",
+      nombre: "A",
+      rol: "camarero",
+    });
+  });
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertFails(
+    setDoc(doc(db, "usuarios/" + UID_A), {
+      email: "a@softbar.com",
+      nombre: "A",
+      rol: "administrador",
+    })
+  );
+});
+
+test("un administrador puede crear usuarios con cualquier rol", async () => {
+  await testEnv.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), "usuarios/jefe"), {
+      email: "jefe@softbar.com",
+      nombre: "Jefe",
+      rol: "administrador",
+    });
+  });
+  const db = testEnv.authenticatedContext("jefe").firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "usuarios/" + UID_B), {
+      email: "b@softbar.com",
+      nombre: "B",
+      rol: "caja",
+    })
+  );
+});

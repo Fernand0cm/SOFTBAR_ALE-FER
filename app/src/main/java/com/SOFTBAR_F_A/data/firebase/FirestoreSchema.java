@@ -14,6 +14,7 @@ public final class FirestoreSchema {
         public static final String PRODUCTOS = "productos";
         public static final String SPLASH_BACKGROUNDS = "splash_backgrounds";
         public static final String TURNOS = "turnos";
+        public static final String USUARIOS = "usuarios";
         public static final String VENTAS = "ventas";
 
         private Collections() { }

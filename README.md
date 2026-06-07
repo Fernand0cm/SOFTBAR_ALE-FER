@@ -212,6 +212,7 @@ No se usan actualmente:
 - `contadores`: numeracion anual y ultimo hash.
 - `turnos`: apertura, cierre y arqueo.
 - `movimientos_caja`: entradas, retiradas y aperturas.
+- `usuarios`: perfil y rol de cada usuario (admin, camarero, caja, cocina).
 - `configuracion/fiscal`: NIF/CIF y serie de facturacion.
 - `splash_backgrounds`: imagenes opcionales del splash.
 
@@ -405,7 +406,7 @@ TFG_SOFTBAR/
 - [x] Ventas por producto y productos mas vendidos.
 - [x] Comparativa de ventas por dia (ultimos 7 dias).
 - [x] Desglose base/IVA y exportacion del resumen en informes.
-- Roles de usuario.
+- [x] Roles de usuario (administrador, camarero, caja, cocina) con permisos por modulo.
 - Stock real.
 - Impresion o exportacion de ticket.
 - Anulacion o rectificacion de factura.

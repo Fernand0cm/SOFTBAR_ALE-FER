@@ -16,6 +16,8 @@
     <string name="conexion_online">Online</string>
     <string name="conexion_offline">Sin conexion</string>
     <string name="home_logout">Cerrar sesion</string>
+    <string name="home_usuario_rol">%1$s · %2$s</string>
+    <string name="permiso_denegado">No tienes permiso para acceder aqui</string>
     <string name="home_logout_confirmar_titulo">Cerrar sesion</string>
     <string name="home_logout_confirmar_mensaje">Vas a cerrar la sesion actual. Tendras que volver a iniciar sesion.</string>
     <string name="home_btn_turno">Apertura de turno</string>

@@ -6,6 +6,20 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function esAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol
+            == 'administrador';
+    }
+
+    function validUsuario() {
+      return request.resource.data.keys().hasOnly(['email', 'nombre', 'rol'])
+        && request.resource.data.email is string
+        && request.resource.data.nombre is string
+        && request.resource.data.rol in ['administrador', 'camarero', 'caja', 'cocina'];
+    }
+
     function nonEmptyString(value) {
       return value is string && value.size() > 0;
     }
@@ -230,6 +244,21 @@ service cloud.firestore {
       allow read: if signedIn();
       allow create, update: if signedIn() && validTurno();
       allow delete: if false;
+    }
+
+    match /usuarios/{uid} {
+      allow read: if signedIn();
+      // Un usuario puede registrarse a si mismo solo como camarero.
+      // Un administrador puede crear cualquier usuario con cualquier rol.
+      allow create: if signedIn() && validUsuario()
+        && ((uid == request.auth.uid && request.resource.data.rol == 'camarero')
+          || esAdmin());
+      // Cada uno edita su perfil pero NO puede cambiarse el rol; el admin si.
+      allow update: if signedIn() && validUsuario()
+        && ((uid == request.auth.uid
+              && request.resource.data.rol == resource.data.rol)
+          || esAdmin());
+      allow delete: if esAdmin();
     }
 
     match /contadores/{id} {

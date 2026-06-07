@@ -41,6 +41,14 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
+        if (com.SOFTBAR_F_A.data.SesionUsuario.cargada()
+                && !com.SOFTBAR_F_A.data.SesionUsuario.puede(
+                        com.SOFTBAR_F_A.data.Permisos.CONFIG)) {
+            Toast.makeText(this, R.string.permiso_denegado, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         Header.aplica(this, getString(R.string.config_title), getString(R.string.config_productos_subtitulo));
 
         listaProductos = findViewById(R.id.lista_productos);

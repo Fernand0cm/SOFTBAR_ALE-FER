@@ -215,6 +215,18 @@ Totales por dia en la ventana de los ultimos N dias.
 | `totales_colocaCadaVentaEnSuDia` | Cada venta suma en el dia correcto (hoy en la ultima posicion). |
 | `totales_ignoraVentasFueraDeVentana` | Las ventas fuera de la ventana no cuentan. |
 
+### `data/PermisosTest`
+
+Matriz de permisos por rol.
+
+| Prueba | Que verifica |
+|---|---|
+| `administrador_puedeTodo` | El administrador accede a todos los modulos. |
+| `camarero_noAccedeAConfigNiCaja` | El camarero no entra en configuracion ni caja. |
+| `caja_accedeACajaEInformesPeroNoConfig` | Caja accede a caja e informes, no a configuracion. |
+| `cocina_soloMesasEHistorial` | Cocina solo ve mesas e historial. |
+| `rolNuloODesconocido_caeEnPermisosMinimos` | Un rol nulo o desconocido no obtiene permisos extra. |
+
 ## Resumen actual
 
 | Suite | Tests | Estado |
@@ -235,7 +247,8 @@ Totales por dia en la ventana de los ultimos N dias.
 | CalculoIvaTest | 5 | OK |
 | VentasPorProductoTest | 3 | OK |
 | ComparativaDiasTest | 3 | OK |
-| **Total** | **72** | **OK** |
+| PermisosTest | 5 | OK |
+| **Total** | **77** | **OK** |
 
 Validacion reciente:
 
@@ -280,8 +293,12 @@ corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
 | Producto con activo | Un producto con el campo `activo` se acepta. |
 | Producto con categoria | Un producto con el campo `categoria` se acepta. |
 | Producto no borrable | Un producto no se puede borrar (solo se desactiva). |
+| Auto-registro camarero | Un usuario puede crearse a si mismo como camarero. |
+| Auto-registro admin denegado | Un usuario no puede crearse como administrador. |
+| Anti-escalada de rol | Un usuario no puede cambiarse su propio rol. |
+| Admin gestiona roles | Un administrador puede crear usuarios con cualquier rol. |
 
-Estado: **17 pruebas, todas OK** sobre el emulador de Firestore.
+Estado: **21 pruebas, todas OK** sobre el emulador de Firestore.
 
 ## Pendiente / fuera de alcance
 

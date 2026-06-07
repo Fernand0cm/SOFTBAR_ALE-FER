@@ -60,6 +60,14 @@ public class CajaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caja);
 
+        if (com.SOFTBAR_F_A.data.SesionUsuario.cargada()
+                && !com.SOFTBAR_F_A.data.SesionUsuario.puede(
+                        com.SOFTBAR_F_A.data.Permisos.CAJA)) {
+            Toast.makeText(this, R.string.permiso_denegado, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         Header.aplica(this, getString(R.string.caja_title), getString(R.string.caja_turno_ejemplo));
 
         txtApertura = findViewById(R.id.txt_caja_apertura);

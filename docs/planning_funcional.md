@@ -146,15 +146,22 @@ Prioridad media.
 
 Tareas:
 
-- Crear modelo de usuario interno.
-- Asignar roles:
+- [x] Crear modelo de usuario interno (`usuarios/{uid}`).
+- [x] Asignar roles:
   - administrador
   - camarero
   - caja
   - cocina
-- Guardar usuario responsable en ventas, movimientos y cierres.
-- Limitar anulaciones y cambios sensibles a perfiles autorizados.
-- Refinar reglas Firestore por coleccion y rol.
+- [x] Guardar usuario responsable en ventas, movimientos y cierres.
+- [x] Limitar acciones sensibles a perfiles autorizados (gating de modulos por rol).
+- [x] Refinar reglas Firestore por rol (coleccion `usuarios`, anti-escalada, `esAdmin`).
+
+Notas de alcance:
+
+- El primer administrador se asigna manualmente en la consola de Firestore
+  (`usuarios/{uid}.rol = administrador`); a partir de ahi un admin puede crear
+  o reasignar usuarios. La UI de gestion de roles dentro de la app queda como
+  mejora futura.
 
 Resultado esperado:
 
