@@ -101,7 +101,7 @@ Tareas:
 
 - [x] Permitir alta manual de producto sin escaner.
 - [x] Editar productos existentes.
-- Desactivar productos sin borrarlos.
+- [x] Desactivar productos sin borrarlos.
 - Crear categorias:
   - cafes
   - bebidas

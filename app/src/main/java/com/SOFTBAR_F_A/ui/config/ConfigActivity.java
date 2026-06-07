@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.materialswitch.MaterialSwitch;
+
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Producto;
 import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
@@ -84,12 +86,14 @@ public class ConfigActivity extends AppCompatActivity {
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
         RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
+        MaterialSwitch switchActivo = vista.findViewById(R.id.switch_activo);
         txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
 
         if (existente != null) {
             inputNombre.setText(existente.getNombre());
             inputPrecio.setText(String.format(Locale.ROOT, "%.2f", existente.getPrecio()));
             grupoIva.check(radioParaTipoIva(existente.getTipoIva()));
+            switchActivo.setChecked(existente.isActivo());
         }
 
         new AlertDialog.Builder(this)
@@ -117,7 +121,8 @@ public class ConfigActivity extends AppCompatActivity {
                     }
 
                     double tipoIva = tipoIvaSeleccionado(grupoIva.getCheckedRadioButtonId());
-                    guardarProducto(new Producto(codigo, nombre, precio, tipoIva));
+                    guardarProducto(new Producto(
+                            codigo, nombre, precio, tipoIva, switchActivo.isChecked()));
                 })
                 .setNegativeButton(R.string.dialog_cancelar, null)
                 .show();
@@ -166,8 +171,11 @@ public class ConfigActivity extends AppCompatActivity {
                     for (Producto p : snap.toObjects(Producto.class)) {
                         View item = inflater.inflate(R.layout.item_producto,
                                 listaProductos, false);
-                        ((TextView) item.findViewById(R.id.txt_nombre))
-                                .setText(p.getNombre());
+                        String nombre = p.isActivo()
+                                ? p.getNombre()
+                                : getString(R.string.config_producto_inactivo, p.getNombre());
+                        ((TextView) item.findViewById(R.id.txt_nombre)).setText(nombre);
+                        item.setAlpha(p.isActivo() ? 1f : 0.45f);
                         ((TextView) item.findViewById(R.id.txt_codigo))
                                 .setText(p.getCodigoBarras());
                         ((TextView) item.findViewById(R.id.txt_precio))

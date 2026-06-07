@@ -226,3 +226,28 @@ test("un producto con tipoIva fuera de rango es rechazado", async () => {
     })
   );
 });
+
+test("un producto con campo activo se acepta", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "productos/p5"), {
+      codigoBarras: "555",
+      nombre: "Tostada",
+      precio: 1.8,
+      tipoIva: 0.1,
+      activo: false,
+    })
+  );
+});
+
+test("un producto no se puede borrar (solo se desactiva)", async () => {
+  await testEnv.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), "productos/p6"), {
+      codigoBarras: "666",
+      nombre: "Cafe con leche",
+      precio: 1.5,
+    });
+  });
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertFails(deleteDoc(doc(db, "productos/p6")));
+});

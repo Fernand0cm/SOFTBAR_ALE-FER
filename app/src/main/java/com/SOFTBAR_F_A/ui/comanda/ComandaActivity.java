@@ -139,7 +139,8 @@ public class ComandaActivity extends AppCompatActivity {
                     if (error != null || snap == null) return;
                     List<Producto> productos = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snap) {
-                        productos.add(doc.toObject(Producto.class));
+                        Producto p = doc.toObject(Producto.class);
+                        if (p.isActivo()) productos.add(p);
                     }
                     pintarCatalogo(productos);
                 });

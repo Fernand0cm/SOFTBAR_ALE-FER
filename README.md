@@ -277,8 +277,8 @@ Las reglas actuales:
 - Bloquean datos de negocio a usuarios no autenticados.
 - Permiten lectura publica solo de `splash_backgrounds`.
 - Validan campos basicos por coleccion.
-- Bloquean borrados sensibles en mesas, comandas, ventas, facturas y turnos.
-- Permiten crear y actualizar productos a usuarios autenticados.
+- Bloquean borrados sensibles en mesas, comandas, ventas, facturas, turnos y productos.
+- Permiten crear y actualizar productos a usuarios autenticados (se desactivan, no se borran).
 
 Despliegue:
 
@@ -394,7 +394,7 @@ TFG_SOFTBAR/
 
 - [x] Alta manual de producto sin escaner.
 - [x] Edicion de productos desde el catalogo.
-- Desactivacion de productos sin borrarlos.
+- [x] Desactivacion de productos sin borrarlos (no se borran del catalogo).
 - Categorias de catalogo.
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
 - Notas y modificadores por linea.

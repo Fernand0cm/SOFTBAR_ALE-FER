@@ -62,4 +62,12 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_iva_4" />
     </RadioGroup>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_activo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:checked="true"
+        android:text="@string/dialog_activo" />
 </LinearLayout>

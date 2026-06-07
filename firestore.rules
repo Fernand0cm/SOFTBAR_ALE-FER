@@ -26,7 +26,7 @@ service cloud.firestore {
 
     function validProducto() {
       return request.resource.data.keys().hasOnly([
-          'codigoBarras', 'nombre', 'precio', 'tipoIva'
+          'codigoBarras', 'nombre', 'precio', 'tipoIva', 'activo'
         ])
         && nonEmptyString(request.resource.data.codigoBarras)
         && nonEmptyString(request.resource.data.nombre)
@@ -35,7 +35,9 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['tipoIva'])
           || (request.resource.data.tipoIva is number
             && request.resource.data.tipoIva >= 0
-            && request.resource.data.tipoIva <= 1));
+            && request.resource.data.tipoIva <= 1))
+        && (!request.resource.data.keys().hasAny(['activo'])
+          || request.resource.data.activo is bool);
     }
 
     function validConfigFiscal() {
@@ -195,7 +197,7 @@ service cloud.firestore {
     match /productos/{id} {
       allow read: if signedIn();
       allow create, update: if signedIn() && validProducto();
-      allow delete: if signedIn();
+      allow delete: if false;
     }
 
     match /comandas/{id} {
