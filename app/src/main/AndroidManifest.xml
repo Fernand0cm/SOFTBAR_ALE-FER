@@ -41,6 +41,7 @@
         <activity android:name=".ui.caja.CajaActivity" />
         <activity android:name=".ui.informes.InformesActivity" />
         <activity android:name=".ui.stock.StockActivity" />
+        <activity android:name=".ui.historial.HistorialActivity" />
         <activity android:name=".ui.config.ConfigActivity" />
     </application>
 

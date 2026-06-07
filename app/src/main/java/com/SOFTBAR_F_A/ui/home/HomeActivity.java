@@ -18,6 +18,7 @@ import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.ui.barra.BarraActivity;
 import com.SOFTBAR_F_A.ui.caja.CajaActivity;
 import com.SOFTBAR_F_A.ui.config.ConfigActivity;
+import com.SOFTBAR_F_A.ui.historial.HistorialActivity;
 import com.SOFTBAR_F_A.ui.informes.InformesActivity;
 import com.SOFTBAR_F_A.ui.login.LoginActivity;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
@@ -58,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, InformesActivity.class)));
         findViewById(R.id.btn_stock).setOnClickListener(v ->
                 startActivity(new Intent(this, StockActivity.class)));
+        findViewById(R.id.btn_historial).setOnClickListener(v ->
+                startActivity(new Intent(this, HistorialActivity.class)));
         findViewById(R.id.btn_config).setOnClickListener(v ->
                 startActivity(new Intent(this, ConfigActivity.class)));
 

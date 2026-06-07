@@ -71,6 +71,7 @@ Home permite entrar a:
 - Caja.
 - Informes.
 - Stock.
+- Historial de tickets.
 - Configuracion.
 
 Tambien muestra el estado de conexion del dispositivo.
@@ -398,7 +399,7 @@ TFG_SOFTBAR/
 - Categorias de catalogo.
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
 - Notas y modificadores por linea.
-- Historial de tickets.
+- [x] Historial de tickets (consulta y reapertura de ventas pasadas).
 - Consulta de cierres historicos.
 - Filtros de informes por fecha, turno y metodo de pago.
 - Ventas por producto.

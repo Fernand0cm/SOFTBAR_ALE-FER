@@ -22,6 +22,7 @@
     <string name="home_btn_caja">Caja</string>
     <string name="home_btn_informes">Informes</string>
     <string name="home_btn_stock">Stock</string>
+    <string name="home_btn_historial">Historial</string>
     <string name="home_btn_config">Configuracion</string>
 
     <string name="pantalla_pendiente">Pantalla pendiente de implementar.</string>
@@ -141,6 +142,13 @@
     <string name="informes_sin_datos">No hay ventas registradas hoy todavia.</string>
     <string name="informes_cargando">Cargando informes...</string>
     <string name="informes_error">No se pudieron cargar los informes: %1$s</string>
+    <string name="historial_title">Historial de tickets</string>
+    <string name="historial_subtitulo">Ultimas ventas</string>
+    <string name="historial_cargando">Cargando historial...</string>
+    <string name="historial_vacio">Aun no hay tickets registrados.</string>
+    <string name="historial_error">No se pudo cargar el historial: %1$s</string>
+    <string name="historial_sin_numero">Sin numero</string>
+    <string name="historial_detalle">%1$s · %2$s</string>
     <string name="stock_title">Stock</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>

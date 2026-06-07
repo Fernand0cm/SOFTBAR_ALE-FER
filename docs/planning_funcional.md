@@ -253,7 +253,7 @@ Resultado esperado:
 
 - Boton para crear productos manualmente.
 - Datos de demo precargados para la defensa.
-- Vista de historial de tickets.
+- [x] Vista de historial de tickets.
 - Compartir ticket como texto o PDF.
 - Pantalla de cierre de caja imprimible.
 - Vista de cocina con comandas pendientes.
