@@ -252,6 +252,7 @@ public class CobroActivity extends AppCompatActivity {
                     }
 
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
+                    int comensales = comanda != null ? comanda.getComensales() : 0;
 
                     Factura factura = construirFactura(
                             ts, ahora, siguiente, hashAnterior, config);
@@ -269,6 +270,7 @@ public class CobroActivity extends AppCompatActivity {
 
                     Venta venta = new Venta(ts, total, metodoSeleccionado);
                     venta.setFacturaId(facturaId);
+                    venta.setComensales(comensales);
                     venta.setComandaId(comandaId);
                     venta.setMesaId(mesaId);
                     venta.setMesaNumero(mesaNumero);

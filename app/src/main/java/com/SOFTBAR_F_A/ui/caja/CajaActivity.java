@@ -40,6 +40,7 @@ import java.util.Locale;
 public class CajaActivity extends AppCompatActivity {
 
     private TextView txtApertura, txtEfectivo, txtTarjeta, txtRetiradas, txtTotalEsperado;
+    private TextView txtComensales;
     private TextView txtContado, txtDiferencia;
     private LinearLayout listaMovimientos;
     private TextView txtMovimientosVacios;
@@ -65,6 +66,7 @@ public class CajaActivity extends AppCompatActivity {
         txtApertura = findViewById(R.id.txt_caja_apertura);
         txtEfectivo = findViewById(R.id.txt_caja_efectivo);
         txtTarjeta = findViewById(R.id.txt_caja_tarjeta);
+        txtComensales = findViewById(R.id.txt_caja_comensales);
         txtRetiradas = findViewById(R.id.txt_caja_retiradas);
         txtTotalEsperado = findViewById(R.id.txt_caja_total);
         txtContado = findViewById(R.id.txt_caja_contado);
@@ -147,6 +149,7 @@ public class CajaActivity extends AppCompatActivity {
         txtApertura.setText(formato(resumenActual.getApertura()));
         txtEfectivo.setText(formato(resumenActual.getVentasEfectivo()));
         txtTarjeta.setText(formato(resumenActual.getVentasTarjeta()));
+        txtComensales.setText(String.valueOf(totalComensalesTurno()));
         txtRetiradas.setText("-" + formato(resumenActual.getRetiradas()));
         txtTotalEsperado.setText(formato(resumenActual.efectivoEsperado()));
         txtContado.setText("--");
@@ -333,6 +336,8 @@ public class CajaActivity extends AppCompatActivity {
 
     private void guardarCierre(double contado, double esperado, AlertDialog dialog) {
         double diferencia = contado - esperado;
+        int totalComensales = totalComensalesTurno();
+
         FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.TURNOS)
                 .document(turnoActivoId)
@@ -341,7 +346,8 @@ public class CajaActivity extends AppCompatActivity {
                         FirestoreSchema.Fields.FECHA_CIERRE, Timestamp.now(),
                         FirestoreSchema.Fields.EFECTIVO_CONTADO, contado,
                         FirestoreSchema.Fields.EFECTIVO_ESPERADO, esperado,
-                        FirestoreSchema.Fields.DIFERENCIA_CAJA, diferencia)
+                        FirestoreSchema.Fields.DIFERENCIA_CAJA, diferencia,
+                        "totalComensales", totalComensales)
                 .addOnSuccessListener(unused -> {
                     dialog.dismiss();
                     txtContado.setText(formato(contado));
@@ -359,6 +365,7 @@ public class CajaActivity extends AppCompatActivity {
     }
 
     private void pintarTurnoCerrado(double contado, double diferencia) {
+        txtComensales.setText("0");
         turnoActivoId = null;
         ventasDelTurno.clear();
         movimientosDelTurno.clear();
@@ -374,6 +381,7 @@ public class CajaActivity extends AppCompatActivity {
     }
 
     private void pintarSinTurno() {
+        txtComensales.setText("0");
         turnoActivoId = null;
         ventasDelTurno.clear();
         movimientosDelTurno.clear();
@@ -402,7 +410,15 @@ public class CajaActivity extends AppCompatActivity {
             suscripcionMovimientos = null;
         }
     }
+    private int totalComensalesTurno() {
+        int total = 0;
 
+        for (Venta venta : ventasDelTurno) {
+            total += venta.getComensales();
+        }
+
+        return total;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

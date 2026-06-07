@@ -208,7 +208,9 @@
     <string name="catalogo_stock_disponible">Stock: %1$d</string>
     <string name="catalogo_sin_stock">Sin stock</string>
     <string name="catalogo_stock_bajo">Stock bajo</string>zxm
-
+    <string name="comanda_comensales_titulo">Número de comensales</string>
+    <string name="comanda_comensales_hint">Comensales</string>
+    <string name="caja_comensales">Comensales</string>
     <string-array name="categorias_productos">
         <item>Todas</item>
         <item>Bebidas</item>

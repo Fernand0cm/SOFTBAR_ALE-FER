@@ -15,7 +15,7 @@ public class Comanda {
     private String estado;
     private Timestamp fechaApertura;
     private List<LineaComanda> lineas = new ArrayList<>();
-
+    private int comensales;
     public Comanda() {
         // Necesario para Firestore
     }
@@ -25,6 +25,7 @@ public class Comanda {
         this.mesaNumero = mesaNumero;
         this.estado = ABIERTA;
         this.fechaApertura = Timestamp.now();
+        this.comensales = 1;
     }
 
     public String getMesaId() { return mesaId; }
@@ -38,6 +39,14 @@ public class Comanda {
 
     public Timestamp getFechaApertura() { return fechaApertura; }
     public void setFechaApertura(Timestamp fechaApertura) { this.fechaApertura = fechaApertura; }
+
+    public int getComensales() {
+        return comensales;
+    }
+
+    public void setComensales(int comensales) {
+        this.comensales = comensales;
+    }
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

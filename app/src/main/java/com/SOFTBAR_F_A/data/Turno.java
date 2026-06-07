@@ -16,7 +16,7 @@ public class Turno {
     private double diferenciaCaja;
     private String usuarioUid;
     private String usuarioEmail;
-
+    private int totalComensales;
     public Turno() {
         // Necesario para Firestore
     }
@@ -56,4 +56,7 @@ public class Turno {
 
     public String getUsuarioEmail() { return usuarioEmail; }
     public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
+    public int getTotalComensales() {return totalComensales;}
+
+    public void setTotalComensales(int totalComensales) {this.totalComensales = totalComensales;}
 }

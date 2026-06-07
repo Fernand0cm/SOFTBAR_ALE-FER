@@ -56,7 +56,7 @@ service cloud.firestore {
           'fecha', 'total', 'metodo', 'facturaId', 'comandaId',
           'mesaId', 'mesaNumero', 'lineas', 'turnoId',
           'usuarioUid', 'usuarioEmail', 'pagoEfectivo', 'pagoTarjeta',
-          'importeRecibido', 'cambio'
+          'importeRecibido', 'cambio', 'comensales'
         ])
         && request.resource.data.fecha is timestamp
         && request.resource.data.total is number
@@ -85,7 +85,9 @@ service cloud.firestore {
         && (!request.resource.data.keys().hasAny(['importeRecibido'])
           || request.resource.data.importeRecibido is number)
         && (!request.resource.data.keys().hasAny(['cambio'])
-          || request.resource.data.cambio is number);
+          || request.resource.data.cambio is number)
+        && (!request.resource.data.keys().hasAny(['comensales'])
+          || request.resource.data.comensales is int);
     }
 
     function validMovimientoCaja() {
@@ -166,13 +168,15 @@ service cloud.firestore {
 
     function validComanda() {
       return request.resource.data.keys().hasOnly([
-          'mesaId', 'mesaNumero', 'estado', 'fechaApertura', 'lineas'
+          'mesaId', 'mesaNumero', 'estado', 'fechaApertura', 'lineas', 'comensales'
         ])
         && nullableString(request.resource.data.mesaId)
         && request.resource.data.mesaNumero is int
         && request.resource.data.estado in ['abierta', 'pagada']
         && request.resource.data.fechaApertura is timestamp
-        && request.resource.data.lineas is list;
+        && request.resource.data.lineas is list
+        && (!request.resource.data.keys().hasAny(['comensales'])
+          || request.resource.data.comensales is int);
     }
 
     match /splash_backgrounds/{id} {

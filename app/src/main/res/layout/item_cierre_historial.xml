@@ -30,6 +30,13 @@
             android:layout_marginTop="3dp"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
+        <TextView
+            android:id="@+id/txt_comensales_cierre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
 
         <View
             android:layout_width="match_parent"

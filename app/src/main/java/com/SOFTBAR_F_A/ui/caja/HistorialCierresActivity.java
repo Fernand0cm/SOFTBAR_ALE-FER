@@ -86,19 +86,30 @@ public class HistorialCierresActivity extends AppCompatActivity {
 
         ((TextView) item.findViewById(R.id.txt_usuario))
                 .setText("Usuario: " +
-                        (turno.getUsuarioEmail() != null ? turno.getUsuarioEmail() : "-"));
+                        (turno.getUsuarioEmail() != null
+                                ? turno.getUsuarioEmail()
+                                : "-"));
+
+        ((TextView) item.findViewById(R.id.txt_comensales))
+                .setText("Comensales: " + turno.getTotalComensales());
 
         ((TextView) item.findViewById(R.id.txt_esperado))
-                .setText(String.format(Locale.getDefault(),
-                        "Esperado\n%.2f EUR", turno.getEfectivoEsperado()));
+                .setText(String.format(
+                        Locale.getDefault(),
+                        "Esperado\n%.2f EUR",
+                        turno.getEfectivoEsperado()));
 
         ((TextView) item.findViewById(R.id.txt_contado))
-                .setText(String.format(Locale.getDefault(),
-                        "Contado\n%.2f EUR", turno.getEfectivoContado()));
+                .setText(String.format(
+                        Locale.getDefault(),
+                        "Contado\n%.2f EUR",
+                        turno.getEfectivoContado()));
 
         ((TextView) item.findViewById(R.id.txt_diferencia))
-                .setText(String.format(Locale.getDefault(),
-                        "Dif.\n%.2f EUR", turno.getDiferenciaCaja()));
+                .setText(String.format(
+                        Locale.getDefault(),
+                        "Dif.\n%.2f EUR",
+                        turno.getDiferenciaCaja()));
 
         listaHistorialCierres.addView(item);
     }

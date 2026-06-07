@@ -26,6 +26,7 @@ public class Venta {
     public Venta() {
         // Necesario para Firestore
     }
+    private int comensales;
 
     public Venta(Timestamp fecha, double total, String metodo) {
         this.fecha = fecha;
@@ -74,6 +75,10 @@ public class Venta {
 
     public double getCambio() { return cambio; }
     public void setCambio(double cambio) { this.cambio = cambio; }
+
+    public int getComensales() { return comensales; }
+
+    public void setComensales(int comensales) { this.comensales = comensales;}
 
     public List<LineaComanda> getLineas() { return lineas; }
     public void setLineas(List<LineaComanda> lineas) {

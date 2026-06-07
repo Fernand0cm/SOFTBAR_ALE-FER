@@ -9,6 +9,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -98,7 +99,37 @@ public class ComandaActivity extends AppCompatActivity {
     }
 
     private void crearComandaNueva() {
+        final EditText input = new EditText(this);
+        input.setHint(R.string.comanda_comensales_hint);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setText("1");
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(R.string.comanda_comensales_titulo)
+                .setView(input)
+                .setPositiveButton(R.string.dialog_guardar, (dialog, which) -> {
+                    String texto = input.getText().toString().trim();
+
+                    int comensales = 1;
+                    try {
+                        comensales = Integer.parseInt(texto);
+                    } catch (NumberFormatException e) {
+                        comensales = 1;
+                    }
+
+                    if (comensales <= 0) {
+                        comensales = 1;
+                    }
+
+                    guardarComandaNueva(comensales);
+                })
+                .setNegativeButton(R.string.dialog_cancelar, (dialog, which) -> finish())
+                .show();
+    }
+    private void guardarComandaNueva(int comensales) {
         Comanda nueva = new Comanda(mesaId, mesaNumero);
+        nueva.setComensales(comensales);
+
         FirebaseFirestore.getInstance()
                 .collection(FirestoreSchema.Collections.COMANDAS)
                 .add(nueva)
@@ -108,7 +139,6 @@ public class ComandaActivity extends AppCompatActivity {
                     suscribirseAComanda();
                 });
     }
-
     private void enlazarMesaConComanda() {
         if (mesaId == null || comandaId == null) return;
         FirebaseFirestore.getInstance()
