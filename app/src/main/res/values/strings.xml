@@ -123,6 +123,13 @@
     <string name="caja_cierre_confirmar_titulo">Confirmar cierre</string>
     <string name="caja_cierre_confirmar_mensaje">Vas a cerrar el turno con el efectivo contado. Esta accion no se puede deshacer.</string>
     <string name="caja_cierre_confirmar_ok">Si, cerrar turno</string>
+    <string name="caja_ver_cierres">Ver cierres anteriores</string>
+    <string name="cierres_title">Cierres de caja</string>
+    <string name="cierres_subtitulo">Turnos cerrados</string>
+    <string name="cierres_cargando">Cargando cierres...</string>
+    <string name="cierres_vacio">Aun no hay turnos cerrados.</string>
+    <string name="cierres_error">No se pudieron cargar los cierres: %1$s</string>
+    <string name="cierres_detalle">Esperado %1$.2f EUR · Contado %2$.2f EUR</string>
     <string name="caja_cierre_titulo">Cierre de turno</string>
     <string name="caja_cierre_esperado">Efectivo esperado: %1$.2f EUR</string>
     <string name="caja_cierre_contado_hint">Efectivo contado (EUR)</string>

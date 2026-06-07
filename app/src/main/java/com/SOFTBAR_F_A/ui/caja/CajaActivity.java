@@ -78,6 +78,10 @@ public class CajaActivity extends AppCompatActivity {
         btnCierre = findViewById(R.id.btn_cierre);
         btnCierre.setOnClickListener(v -> cerrarTurno());
 
+        findViewById(R.id.btn_ver_cierres).setOnClickListener(v ->
+                startActivity(new android.content.Intent(this,
+                        com.SOFTBAR_F_A.ui.cierres.CierresActivity.class)));
+
         cargarTurnoActivo();
     }
 

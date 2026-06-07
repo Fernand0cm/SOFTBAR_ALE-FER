@@ -400,7 +400,7 @@ TFG_SOFTBAR/
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
 - Notas y modificadores por linea.
 - [x] Historial de tickets (consulta y reapertura de ventas pasadas).
-- Consulta de cierres historicos.
+- [x] Consulta de cierres historicos (turnos cerrados con su arqueo).
 - Filtros de informes por fecha, turno y metodo de pago.
 - Ventas por producto.
 - Roles de usuario.
