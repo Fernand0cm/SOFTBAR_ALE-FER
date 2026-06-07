@@ -13,7 +13,8 @@ La app esta conectada a Firebase y mantiene la mayor parte de los datos operativ
 - Cloud Firestore como base de datos principal.
 - Persistencia offline de Firestore activada al arrancar la app.
 - Reglas e indices Firestore versionados en el repositorio.
-- Indicador online/offline en la pantalla principal.
+- Indicador de conexion y sincronizacion en Home (online / sincronizando / sin conexion).
+- Cobro y rectificacion bloqueados sin conexion para evitar numeracion duplicada.
 - Lector de codigos de barras con ML Kit / Google Code Scanner.
 - Generacion de QR con ZXing para el bloque Verifactu.
 - Graficas de informes con MPAndroidChart.

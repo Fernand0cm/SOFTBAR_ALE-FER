@@ -165,6 +165,10 @@ public class TicketActivity extends AppCompatActivity {
     private void rectificar() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
+        if (!com.SOFTBAR_F_A.ui.common.ConexionUtil.hayConexion(this)) {
+            Toast.makeText(this, R.string.cobro_sin_conexion, Toast.LENGTH_LONG).show();
+            return;
+        }
         btnRectificar.setEnabled(false);
 
         new RectificacionRepository().rectificar(facturaActual, user,

@@ -213,11 +213,26 @@ Prioridad media.
 
 Tareas:
 
-- Mostrar estado pendiente de sincronizar.
-- Definir operaciones permitidas sin conexion.
-- Evitar numeracion duplicada de facturas offline.
-- Avisar de errores de sincronizacion.
-- Probar corte de red en emulador o dispositivo.
+- [x] Mostrar estado pendiente de sincronizar (indicador en Home: en linea /
+  sincronizando / sin conexion, segun los metadatos de Firestore).
+- [x] Definir operaciones permitidas sin conexion (comandas, mesas, productos y
+  movimientos se encolan; cobro y rectificacion requieren conexion).
+- [x] Evitar numeracion duplicada de facturas offline (el cobro y la
+  rectificacion usan transaccion, que no se ejecuta sin red; ademas se bloquean
+  con aviso).
+- [x] Avisar de errores de sincronizacion (aviso claro al intentar cobrar o
+  rectificar sin conexion; indicador de pendientes en Home).
+- [x] Probar corte de red en emulador o dispositivo (procedimiento manual mas
+  abajo).
+
+Como probar el corte de red (manual):
+
+1. Activar modo avion en el dispositivo/emulador.
+2. Abrir una mesa y anadir productos: se guarda y el indicador pasa a
+   "Sincronizando...".
+3. Intentar cobrar: aparece el aviso de que no se puede cobrar sin conexion.
+4. Desactivar modo avion: los cambios pendientes se suben y el indicador vuelve
+   a "Online".
 
 Resultado esperado:
 

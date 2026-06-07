@@ -106,6 +106,10 @@ public class CobroActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.cobro_error_importe, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!com.SOFTBAR_F_A.ui.common.ConexionUtil.hayConexion(this)) {
+            Toast.makeText(this, R.string.cobro_sin_conexion, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {

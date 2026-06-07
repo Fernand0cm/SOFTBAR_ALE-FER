@@ -36,6 +36,9 @@ public class HomeActivity extends AppCompatActivity {
     private ConnectivityManager.NetworkCallback networkCallback;
     private View dotConexion;
     private TextView txtConexion;
+    private com.google.firebase.firestore.ListenerRegistration suscripcionSync;
+    private boolean online = true;
+    private boolean pendienteSync = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,22 @@ public class HomeActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(v -> confirmarLogout());
 
         registrarObservadorRed();
+        suscribirseEstadoSync();
+    }
+
+    private void suscribirseEstadoSync() {
+        // Escucha los metadatos de Firestore: si hay escrituras pendientes de
+        // subir (cambios hechos sin conexion), lo refleja el indicador.
+        suscripcionSync = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection(com.SOFTBAR_F_A.data.firebase.FirestoreSchema.Collections.COMANDAS)
+                .limit(1)
+                .addSnapshotListener(
+                        com.google.firebase.firestore.MetadataChanges.INCLUDE,
+                        (snap, error) -> {
+                            if (error != null || snap == null) return;
+                            pendienteSync = snap.getMetadata().hasPendingWrites();
+                            pintarConexion();
+                        });
     }
 
     private void cargarUsuario(FirebaseUser user, TextView txtEmail) {
@@ -161,9 +180,24 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void actualizarEstadoConexion(boolean online) {
+        this.online = online;
+        pintarConexion();
+    }
+
+    private void pintarConexion() {
         if (dotConexion == null || txtConexion == null) return;
-        int color = online ? R.color.mesa_libre : R.color.mesa_cerrada;
-        int texto = online ? R.string.conexion_online : R.string.conexion_offline;
+        int color;
+        int texto;
+        if (!online) {
+            color = R.color.mesa_cerrada;
+            texto = R.string.conexion_offline;
+        } else if (pendienteSync) {
+            color = R.color.warning;
+            texto = R.string.conexion_sincronizando;
+        } else {
+            color = R.color.mesa_libre;
+            texto = R.string.conexion_online;
+        }
         dotConexion.setBackgroundColor(ContextCompat.getColor(this, color));
         txtConexion.setText(texto);
     }
@@ -171,6 +205,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (suscripcionSync != null) suscripcionSync.remove();
         if (networkCallback != null) {
             ConnectivityManager cm = (ConnectivityManager)
                     getSystemService(Context.CONNECTIVITY_SERVICE);
