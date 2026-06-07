@@ -490,3 +490,35 @@ tickets y consulta de cierres.
 - Guion y resultado de la demo: `docs/guion_demo.md`, `docs/demo/RESULTADO_DEMO.md`.
 - Cambios por version: `CHANGELOG.md`.
 - Guia de contribucion: `CONTRIBUTING.md`.
+
+## Bibliografia Complementaria
+
+Lecturas y proyectos de referencia que han influido en las decisiones de diseno,
+arquitectura, seguridad y calidad de SOFTBAR.
+
+### Diseno de software y carga cognitiva
+
+- [zakirullin/cognitive-load](https://github.com/zakirullin/cognitive-load) — principios de carga cognitiva aplicados en el codigo (modulos profundos, soluciones simples).
+- John K. Ousterhout, *A Philosophy of Software Design* (2018) — origen del concepto de modulos profundos con interfaces simples.
+- Robert C. Martin, *Clean Code* (2008) — nombres expresivos, funciones pequenas y legibilidad.
+- Martin Fowler, *Refactoring* (2.a ed., 2018) — mejora continua del codigo sin cambiar su comportamiento.
+- Andrew Hunt y David Thomas, *The Pragmatic Programmer* — ortogonalidad y uso del principio DRY con criterio.
+
+### Java y tratamiento de datos
+
+- Joshua Bloch, *Effective Java* (3.a ed.) — buenas practicas, incluido el uso de `BigDecimal` para importes monetarios.
+
+### Arquitectura y buenas practicas en Android
+
+- [android/architecture-samples](https://github.com/android/architecture-samples) — patrones oficiales MVVM y repositorio.
+- [android/nowinandroid](https://github.com/android/nowinandroid) — aplicacion de referencia moderna de Android (Google).
+- Guia oficial de arquitectura de apps: <https://developer.android.com/topic/architecture>.
+
+### Firebase y seguridad
+
+- [firebase/quickstart-android](https://github.com/firebase/quickstart-android) — ejemplos oficiales de Authentication y Cloud Firestore.
+- [OWASP/owasp-masvs](https://github.com/OWASP/owasp-masvs) — estandar de verificacion de seguridad de aplicaciones moviles.
+
+### Cumplimiento fiscal
+
+- Agencia Estatal de Administracion Tributaria (AEAT) — sistema Verifactu y Real Decreto 1007/2023, base del bloque fiscal del ticket.
