@@ -100,7 +100,7 @@ Prioridad media-alta.
 Tareas:
 
 - [x] Permitir alta manual de producto sin escaner.
-- Editar productos existentes.
+- [x] Editar productos existentes.
 - Desactivar productos sin borrarlos.
 - Crear categorias:
   - cafes

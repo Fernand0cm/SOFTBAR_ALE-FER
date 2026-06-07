@@ -75,6 +75,10 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     private void mostrarDialogProducto(String codigo) {
+        mostrarDialogProducto(codigo, null);
+    }
+
+    private void mostrarDialogProducto(String codigo, Producto existente) {
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_producto, null);
         TextView txtCodigo = vista.findViewById(R.id.txt_codigo_dialog);
         EditText inputNombre = vista.findViewById(R.id.input_nombre);
@@ -82,8 +86,16 @@ public class ConfigActivity extends AppCompatActivity {
         RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
         txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
 
+        if (existente != null) {
+            inputNombre.setText(existente.getNombre());
+            inputPrecio.setText(String.format(Locale.ROOT, "%.2f", existente.getPrecio()));
+            grupoIva.check(radioParaTipoIva(existente.getTipoIva()));
+        }
+
         new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_titulo)
+                .setTitle(existente != null
+                        ? R.string.dialog_titulo_editar
+                        : R.string.dialog_titulo)
                 .setView(vista)
                 .setPositiveButton(R.string.dialog_guardar, (d, w) -> {
                     String nombre = inputNombre.getText().toString().trim();
@@ -115,6 +127,12 @@ public class ConfigActivity extends AppCompatActivity {
         if (idRadio == R.id.radio_iva_21) return 0.21;
         if (idRadio == R.id.radio_iva_4) return 0.04;
         return Producto.IVA_POR_DEFECTO;
+    }
+
+    private int radioParaTipoIva(double tipoIva) {
+        if (tipoIva == 0.21) return R.id.radio_iva_21;
+        if (tipoIva == 0.04) return R.id.radio_iva_4;
+        return R.id.radio_iva_10;
     }
 
     private void guardarProducto(Producto producto) {
@@ -156,6 +174,8 @@ public class ConfigActivity extends AppCompatActivity {
                                 .setText(getString(R.string.config_precio_iva,
                                         p.getPrecio(),
                                         (int) Math.round(p.getTipoIva() * 100)));
+                        item.setOnClickListener(v ->
+                                mostrarDialogProducto(p.getCodigoBarras(), p));
                         listaProductos.addView(item);
                     }
                 });
