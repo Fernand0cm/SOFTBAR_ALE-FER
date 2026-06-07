@@ -78,7 +78,7 @@
         android:layout_marginTop="4dp"
         android:entries="@array/categorias_producto" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_activo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         android:checked="true"
         android:text="@string/dialog_activo" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_stock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
