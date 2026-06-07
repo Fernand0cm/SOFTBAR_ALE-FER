@@ -52,7 +52,8 @@ public class RectificacionRepository {
                            RectificacionCallback callback) {
         // 1. Evitar rectificar dos veces la misma factura.
         db.collection(FirestoreSchema.Collections.FACTURAS)
-                .whereEqualTo("facturaRectificadaNumero", original.getNumero())
+                .whereEqualTo(FirestoreSchema.Fields.FACTURA_RECTIFICADA_NUMERO,
+                        original.getNumero())
                 .limit(1)
                 .get()
                 .addOnSuccessListener(snap -> {
