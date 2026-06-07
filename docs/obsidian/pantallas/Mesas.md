@@ -15,4 +15,4 @@ mesa se abre o recupera su comanda.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Media | Datos antiguos: falta la mesa 2 y varias salen ocupadas sin comanda real (ver E2) | Abierto | Ejecutar `tools/seed` |
+| 2026-06-07 | Media | Datos antiguos: faltaba la mesa 2 y varias ocupadas (E2) | Resuelto | Sembrado en vivo: 10 mesas a "libre" |

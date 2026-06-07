@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.zxing.core)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -14,5 +14,4 @@ Total a cobrar, metodo de pago (efectivo/tarjeta/mixto), desglose y cambio.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Alta | "Confirmar pago" no avanza: bloqueado por el falso negativo de conexion (ver E1) pese a haber internet | Abierto | Revisar deteccion de conexion / no bloquear de forma dura |
-| 2026-06-07 | - | Layout, metodos y calculo de cambio: OK | OK | - |
+| 2026-06-07 | Alta | "Confirmar pago" no avanzaba por el falso negativo de conexion (E1) | Resuelto | Quitado el bloqueo duro; venta completada -> ticket |

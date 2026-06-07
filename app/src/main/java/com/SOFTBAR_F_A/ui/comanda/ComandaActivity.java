@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +44,7 @@ public class ComandaActivity extends AppCompatActivity {
     private String comandaId;
     private List<LineaComanda> lineas = new ArrayList<>();
 
-    private GridLayout gridCatalogo;
+    private RecyclerView gridCatalogo;
     private ChipGroup chipsCategorias;
     private LinearLayout listaLineas;
     private TextView txtTotal;

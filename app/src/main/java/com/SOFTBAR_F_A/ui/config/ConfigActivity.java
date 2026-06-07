@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,8 +33,9 @@ import java.util.Locale;
 
 public class ConfigActivity extends AppCompatActivity {
 
-    private LinearLayout listaProductos;
+    private androidx.recyclerview.widget.RecyclerView listaProductos;
     private TextView txtListaVacia;
+    private ProductoConfigAdapter adapter;
     private ListenerRegistration suscripcion;
 
     @Override
@@ -52,6 +52,10 @@ public class ConfigActivity extends AppCompatActivity {
         Header.aplica(this, getString(R.string.config_title), getString(R.string.config_productos_subtitulo));
 
         listaProductos = findViewById(R.id.lista_productos);
+        listaProductos.setLayoutManager(
+                new androidx.recyclerview.widget.LinearLayoutManager(this));
+        adapter = new ProductoConfigAdapter(p -> mostrarDialogProducto(p.getCodigoBarras(), p));
+        listaProductos.setAdapter(adapter);
         txtListaVacia = findViewById(R.id.txt_lista_vacia);
 
         Button btnEscanear = findViewById(R.id.btn_escanear);
@@ -206,34 +210,9 @@ public class ConfigActivity extends AppCompatActivity {
                 .orderBy(FirestoreSchema.Fields.NOMBRE, Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, error) -> {
                     if (error != null || snap == null) return;
-
-                    listaProductos.removeAllViews();
-                    if (snap.isEmpty()) {
-                        txtListaVacia.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                    txtListaVacia.setVisibility(View.GONE);
-
-                    LayoutInflater inflater = LayoutInflater.from(this);
-                    for (Producto p : snap.toObjects(Producto.class)) {
-                        View item = inflater.inflate(R.layout.item_producto,
-                                listaProductos, false);
-                        String nombre = p.isActivo()
-                                ? p.getNombre()
-                                : getString(R.string.config_producto_inactivo, p.getNombre());
-                        ((TextView) item.findViewById(R.id.txt_nombre)).setText(nombre);
-                        item.setAlpha(p.isActivo() ? 1f : 0.45f);
-                        ((TextView) item.findViewById(R.id.txt_codigo))
-                                .setText(getString(R.string.config_codigo_categoria,
-                                        p.getCodigoBarras(), p.getCategoria()));
-                        ((TextView) item.findViewById(R.id.txt_precio))
-                                .setText(getString(R.string.config_precio_iva,
-                                        p.getPrecio(),
-                                        (int) Math.round(p.getTipoIva() * 100)));
-                        item.setOnClickListener(v ->
-                                mostrarDialogProducto(p.getCodigoBarras(), p));
-                        listaProductos.addView(item);
-                    }
+                    java.util.List<Producto> productos = snap.toObjects(Producto.class);
+                    adapter.setItems(productos);
+                    txtListaVacia.setVisibility(productos.isEmpty() ? View.VISIBLE : View.GONE);
                 });
     }
 

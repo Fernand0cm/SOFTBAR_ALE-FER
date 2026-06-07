@@ -3,8 +3,7 @@ tags: [pantalla]
 ---
 # Ticket
 
-> Captura pendiente: depende de completar un cobro, hoy bloqueado por **E1**
-> (falso negativo de conexion). Se capturara al corregir E1.
+![[ticket.png]]
 
 Muestra numero de factura, base imponible, IVA, desglose de pago, QR Verifactu y
 hash. Boton de rectificar (admin/caja) que genera la factura rectificativa.
@@ -15,4 +14,4 @@ hash. Boton de rectificar (admin/caja) que genera la factura rectificativa.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Info | Sin captura (bloqueada por E1) | Pendiente | Capturar tras corregir E1 |
+| 2026-06-07 | Alta | No se alcanzaba por el falso negativo de conexion (E1) | Resuelto | Corregido E1; venta completada y ticket A-0013/2026 capturado |

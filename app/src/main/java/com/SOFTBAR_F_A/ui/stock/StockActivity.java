@@ -2,7 +2,6 @@ package com.SOFTBAR_F_A.ui.stock;
 
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -11,7 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Permisos;
@@ -30,8 +30,9 @@ import java.util.List;
  */
 public class StockActivity extends AppCompatActivity {
 
-    private LinearLayout lista;
+    private RecyclerView lista;
     private TextView txtMensaje;
+    private StockAdapter adapter;
     private final StockRepository repositorio = new StockRepository();
     private ListenerRegistration suscripcion;
 
@@ -50,6 +51,19 @@ public class StockActivity extends AppCompatActivity {
                 getString(R.string.stock_subtitulo));
 
         lista = findViewById(R.id.lista_stock);
+        lista.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new StockAdapter(new StockAdapter.Acciones() {
+            @Override public void onMas(Producto p) {
+                repositorio.fijarStock(p.getCodigoBarras(), p.getStock() + 1);
+            }
+            @Override public void onMenos(Producto p) {
+                repositorio.fijarStock(p.getCodigoBarras(), p.getStock() - 1);
+            }
+            @Override public void onAjustar(Producto p) {
+                mostrarDialogAjuste(p);
+            }
+        });
+        lista.setAdapter(adapter);
         txtMensaje = findViewById(R.id.txt_stock_mensaje);
 
         mostrarMensaje(getString(R.string.stock_cargando));
@@ -70,38 +84,13 @@ public class StockActivity extends AppCompatActivity {
     }
 
     private void pintar(List<Producto> productos) {
-        lista.removeAllViews();
         if (productos.isEmpty()) {
             mostrarMensaje(getString(R.string.stock_vacio));
             return;
         }
         txtMensaje.setVisibility(View.GONE);
         lista.setVisibility(View.VISIBLE);
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for (Producto p : productos) {
-            View item = inflater.inflate(R.layout.item_stock, lista, false);
-
-            ((TextView) item.findViewById(R.id.txt_stock_nombre)).setText(p.getNombre());
-
-            TextView detalle = item.findViewById(R.id.txt_stock_detalle);
-            if (p.bajoStock()) {
-                detalle.setText(getString(R.string.stock_bajo, p.getStock(), p.getStockMinimo()));
-                detalle.setTextColor(ContextCompat.getColor(this, R.color.warning));
-            } else {
-                detalle.setText(getString(R.string.stock_detalle,
-                        p.getStock(), p.getStockMinimo()));
-                detalle.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-            }
-
-            item.findViewById(R.id.btn_stock_mas).setOnClickListener(v ->
-                    repositorio.fijarStock(p.getCodigoBarras(), p.getStock() + 1));
-            item.findViewById(R.id.btn_stock_menos).setOnClickListener(v ->
-                    repositorio.fijarStock(p.getCodigoBarras(), p.getStock() - 1));
-            item.findViewById(R.id.stock_info).setOnClickListener(v -> mostrarDialogAjuste(p));
-
-            lista.addView(item);
-        }
+        adapter.setItems(productos);
     }
 
     private void mostrarDialogAjuste(Producto producto) {

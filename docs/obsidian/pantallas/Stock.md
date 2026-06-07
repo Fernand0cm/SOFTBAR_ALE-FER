@@ -14,5 +14,5 @@ rapida (+/-) o fijando cantidad.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Baja | Lista sin `RecyclerView` (ver E4) | Documentado | Mejora futura |
-| 2026-06-07 | Info | Pocos productos con stock hasta ejecutar `tools/seed` | Abierto | Ejecutar `tools/seed` |
+| 2026-06-07 | Baja | Lista sin `RecyclerView` (E4) | Resuelto | Migrada a `RecyclerView` (`StockAdapter`) |
+| 2026-06-07 | Info | Pocos productos con stock | Resuelto | ~110 productos con control de stock tras el sembrado |

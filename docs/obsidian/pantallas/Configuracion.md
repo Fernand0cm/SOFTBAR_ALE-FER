@@ -14,5 +14,5 @@ control de stock y desactivacion.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Media | Catalogo con datos antiguos (ver E3) | Abierto | Ejecutar `tools/seed` |
-| 2026-06-07 | Baja | Lista sin `RecyclerView` (ver E4) | Documentado | Mejora futura |
+| 2026-06-07 | Media | Catalogo con datos antiguos (E3) | Resuelto | 285 productos; los viejos quedan "(inactivo)" |
+| 2026-06-07 | Baja | Lista sin `RecyclerView` (E4) | Resuelto | Migrada a `RecyclerView` (`ProductoConfigAdapter`) |

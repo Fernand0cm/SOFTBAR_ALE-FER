@@ -15,5 +15,5 @@ de conexion y los modulos segun permisos.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Alta | Indicador "Sin conexion" con internet real (ver E1 del [[Mapa de navegacion]]) | Abierto | Revisar deteccion de conexion |
-| 2026-06-07 | Info | No muestra el rol junto al email al estar el perfil sin cargar (offline) | Abierto | Cargar `usuarios/{uid}` o mostrar rol por defecto |
+| 2026-06-07 | Alta | Indicador "Sin conexion" con internet real (E1) | Resuelto | `registerDefaultNetworkCallback`; ahora muestra "Online" |
+| 2026-06-07 | Info | Rol no visible junto al email | Resuelto | Con conexion carga `usuarios/{uid}`; muestra "administrador" |

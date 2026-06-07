@@ -15,4 +15,5 @@ memoria y paso directo a cobro.
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Media | Mismo catalogo antiguo que [[Comanda]] (ver E3) | Abierto | Ejecutar `tools/seed` |
+| 2026-06-07 | Media | Mismo catalogo antiguo que [[Comanda]] (E3) | Resuelto | 285 productos sembrados |
+| 2026-06-07 | Baja | Catalogo sin reciclar (E4) | Resuelto | Catalogo en `RecyclerView` + barra inferior fija |

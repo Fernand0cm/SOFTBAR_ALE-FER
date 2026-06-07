@@ -97,7 +97,6 @@
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
     <string name="cobro_error_sin_turno">Abre un turno antes de cobrar</string>
-    <string name="cobro_sin_conexion">Sin conexion: no se puede cobrar ahora. Se evita asi duplicar la numeracion de facturas.</string>
     <string name="cobro_error_importe">El pago no cubre el total</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
