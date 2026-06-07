@@ -14,6 +14,9 @@ public class Producto {
     private double tipoIva = IVA_POR_DEFECTO;
     private boolean activo = true;
     private String categoria = CATEGORIA_POR_DEFECTO;
+    private boolean controlarStock = false;
+    private int stock = 0;
+    private int stockMinimo = 0;
 
     public Producto() {
         // Necesario para Firestore
@@ -77,4 +80,22 @@ public class Producto {
     }
 
     public void setCategoria(String categoria) { this.categoria = categoria; }
+
+    /** Si esta activo, el stock se descuenta al vender y se vigila el minimo. */
+    public boolean isControlarStock() { return controlarStock; }
+
+    public void setControlarStock(boolean controlarStock) {
+        this.controlarStock = controlarStock;
+    }
+
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+
+    public int getStockMinimo() { return stockMinimo; }
+    public void setStockMinimo(int stockMinimo) { this.stockMinimo = stockMinimo; }
+
+    /** True si se controla el stock y esta en o por debajo del minimo. */
+    public boolean bajoStock() {
+        return controlarStock && stock <= stockMinimo;
+    }
 }

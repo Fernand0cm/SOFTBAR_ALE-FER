@@ -28,7 +28,7 @@ public final class Permisos {
 
     static {
         MATRIZ.put(Usuario.CAJA, new HashSet<>(Arrays.asList(
-                TURNO, MESAS, BARRA, CAJA, INFORMES, HISTORIAL)));
+                TURNO, MESAS, BARRA, CAJA, INFORMES, HISTORIAL, STOCK)));
         MATRIZ.put(Usuario.CAMARERO, new HashSet<>(Arrays.asList(
                 MESAS, BARRA, HISTORIAL)));
         MATRIZ.put(Usuario.COCINA, new HashSet<>(Arrays.asList(

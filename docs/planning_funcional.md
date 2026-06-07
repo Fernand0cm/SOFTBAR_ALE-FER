@@ -173,12 +173,18 @@ Prioridad media-baja para el flujo principal, alta si se quiere destacar gestion
 
 Tareas:
 
-- Crear modelo de articulo de stock.
-- Registrar entradas y salidas.
-- Definir stock minimo.
-- Mostrar alertas.
-- Relacionar productos de venta con articulos de inventario.
-- Descontar stock por venta cuando aplique.
+- [x] Modelo de stock simple: control opcional por producto (no por ingrediente).
+- [x] Registrar entradas (reposicion +/- y ajuste) y salidas (automaticas por venta).
+- [x] Definir stock minimo.
+- [x] Mostrar alertas de bajo stock.
+- [x] El stock vive en el propio producto de venta (sin inventario aparte).
+- [x] Descontar stock por venta cuando aplique (solo productos controlados).
+
+Nota de enfoque:
+
+- En hosteleria muchos productos no son contables (cafe, cerveza de barril), asi
+  que el control de stock es **opcional por producto** y solo se vigila lo que
+  tiene sentido contar. El descuento al vender es automatico y nunca baja de 0.
 
 Resultado esperado:
 

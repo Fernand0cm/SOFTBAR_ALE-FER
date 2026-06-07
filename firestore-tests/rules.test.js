@@ -254,6 +254,34 @@ test("un producto con categoria se acepta", async () => {
   );
 });
 
+test("un producto con campos de stock validos se acepta", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "productos/p8"), {
+      codigoBarras: "888",
+      nombre: "Botellin",
+      precio: 1.5,
+      controlarStock: true,
+      stock: 24,
+      stockMinimo: 6,
+    })
+  );
+});
+
+test("un producto con stock negativo es rechazado", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertFails(
+    setDoc(doc(db, "productos/p9"), {
+      codigoBarras: "999",
+      nombre: "Botellin",
+      precio: 1.5,
+      controlarStock: true,
+      stock: -3,
+      stockMinimo: 6,
+    })
+  );
+});
+
 test("un producto no se puede borrar (solo se desactiva)", async () => {
   await testEnv.withSecurityRulesDisabled(async (ctx) => {
     await setDoc(doc(ctx.firestore(), "productos/p6"), {

@@ -183,8 +183,10 @@ Tambien muestra el estado de conexion del dispositivo.
 
 ### Stock
 
-- Pantalla navegable.
-- Pendiente de implementar como modulo funcional completo.
+- Control de stock opcional por producto (solo lo contable).
+- Descuento automatico de stock al cobrar (nunca baja de 0).
+- Reposicion rapida con botones +/- o fijando una cantidad.
+- Alertas de productos bajo el minimo.
 
 ## Firebase
 
@@ -407,7 +409,7 @@ TFG_SOFTBAR/
 - [x] Comparativa de ventas por dia (ultimos 7 dias).
 - [x] Desglose base/IVA y exportacion del resumen en informes.
 - [x] Roles de usuario (administrador, camarero, caja, cocina) con permisos por modulo.
-- Stock real.
+- [x] Stock real opcional por producto, con descuento automatico al vender y alertas de bajo stock.
 - Impresion o exportacion de ticket.
 - Anulacion o rectificacion de factura.
 

@@ -40,6 +40,9 @@ POJO del catalogo de productos.
 | `constructorVacio_dejaCamposPorDefecto` | El constructor sin argumentos (necesario para Firestore) deja los campos a null o cero. |
 | `constructorConDatos_asignaTodo` | El constructor completo asigna codigo de barras, nombre y precio. |
 | `setters_actualizanCampos` | Los setters individuales modifican el estado. |
+| `bajoStock_falsoSiNoSeControla` | Sin control de stock no hay aviso de bajo stock. |
+| `bajoStock_ciertoCuandoStockEnOPorDebajoDelMinimo` | Con control, stock <= minimo marca bajo stock. |
+| `bajoStock_falsoCuandoStockPorEncimaDelMinimo` | Con stock por encima del minimo no hay aviso. |
 
 ### `data/VentaTest`
 
@@ -231,7 +234,7 @@ Matriz de permisos por rol.
 
 | Suite | Tests | Estado |
 |---|---|---|
-| ProductoTest | 3 | OK |
+| ProductoTest | 6 | OK |
 | VentaTest | 2 | OK |
 | MesaTest | 4 | OK |
 | EstadoMesaColorTest | 5 | OK |
@@ -248,7 +251,7 @@ Matriz de permisos por rol.
 | VentasPorProductoTest | 3 | OK |
 | ComparativaDiasTest | 3 | OK |
 | PermisosTest | 5 | OK |
-| **Total** | **77** | **OK** |
+| **Total** | **80** | **OK** |
 
 Validacion reciente:
 
@@ -297,8 +300,10 @@ corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
 | Auto-registro admin denegado | Un usuario no puede crearse como administrador. |
 | Anti-escalada de rol | Un usuario no puede cambiarse su propio rol. |
 | Admin gestiona roles | Un administrador puede crear usuarios con cualquier rol. |
+| Producto con stock valido | Un producto con campos de stock correctos se acepta. |
+| Stock negativo denegado | Un producto con stock negativo es rechazado. |
 
-Estado: **21 pruebas, todas OK** sobre el emulador de Firestore.
+Estado: **23 pruebas, todas OK** sobre el emulador de Firestore.
 
 ## Pendiente / fuera de alcance
 

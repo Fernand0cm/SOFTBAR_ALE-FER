@@ -135,6 +135,26 @@ public class CobroRepository {
                             ? comanda.getLineas() : solicitud.lineasBarra;
                     int mesaNumero = comanda != null ? comanda.getMesaNumero() : 0;
 
+                    // Fase de lectura: stock de los productos que se controlan.
+                    Map<DocumentReference, Long> nuevoStock = new HashMap<>();
+                    if (lineas != null) {
+                        for (LineaComanda l : lineas) {
+                            if (l.getCodigoBarras() == null) continue;
+                            DocumentReference pRef = db
+                                    .collection(FirestoreSchema.Collections.PRODUCTOS)
+                                    .document(l.getCodigoBarras());
+                            if (nuevoStock.containsKey(pRef)) continue;
+                            DocumentSnapshot pDoc = transaction.get(pRef);
+                            if (pDoc.exists()
+                                    && Boolean.TRUE.equals(pDoc.getBoolean(
+                                        FirestoreSchema.Fields.CONTROLAR_STOCK))) {
+                                Long actual = pDoc.getLong(FirestoreSchema.Fields.STOCK);
+                                long base = actual != null ? actual : 0L;
+                                nuevoStock.put(pRef, Math.max(0L, base - l.getCantidad()));
+                            }
+                        }
+                    }
+
                     Factura factura = construirFactura(
                             ts, ahora, siguiente, hashAnterior, config,
                             solicitud.total, lineas);
@@ -183,6 +203,12 @@ public class CobroRepository {
                                         .document(solicitud.mesaId),
                                 FirestoreSchema.Fields.ESTADO, Mesa.LIBRE,
                                 FirestoreSchema.Fields.COMANDA_ACTIVA_ID, null);
+                    }
+
+                    // Fase de escritura: descontar el stock leido.
+                    for (Map.Entry<DocumentReference, Long> e : nuevoStock.entrySet()) {
+                        transaction.update(e.getKey(),
+                                FirestoreSchema.Fields.STOCK, e.getValue());
                     }
 
                     return new ResultadoCobro(ventaRef.getId(), facturaId);

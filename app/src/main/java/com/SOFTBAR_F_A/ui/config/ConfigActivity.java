@@ -97,7 +97,14 @@ public class ConfigActivity extends AppCompatActivity {
         RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
         MaterialSwitch switchActivo = vista.findViewById(R.id.switch_activo);
         Spinner spinnerCategoria = vista.findViewById(R.id.spinner_categoria);
+        MaterialSwitch switchStock = vista.findViewById(R.id.switch_stock);
+        View grupoStock = vista.findViewById(R.id.grupo_stock);
+        EditText inputStock = vista.findViewById(R.id.input_stock);
+        EditText inputStockMinimo = vista.findViewById(R.id.input_stock_minimo);
         txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
+
+        switchStock.setOnCheckedChangeListener((b, checked) ->
+                grupoStock.setVisibility(checked ? View.VISIBLE : View.GONE));
 
         if (existente != null) {
             inputNombre.setText(existente.getNombre());
@@ -105,6 +112,10 @@ public class ConfigActivity extends AppCompatActivity {
             grupoIva.check(radioParaTipoIva(existente.getTipoIva()));
             switchActivo.setChecked(existente.isActivo());
             seleccionarCategoria(spinnerCategoria, existente.getCategoria());
+            switchStock.setChecked(existente.isControlarStock());
+            grupoStock.setVisibility(existente.isControlarStock() ? View.VISIBLE : View.GONE);
+            inputStock.setText(String.valueOf(existente.getStock()));
+            inputStockMinimo.setText(String.valueOf(existente.getStockMinimo()));
         }
 
         new AlertDialog.Builder(this)
@@ -133,8 +144,12 @@ public class ConfigActivity extends AppCompatActivity {
 
                     double tipoIva = tipoIvaSeleccionado(grupoIva.getCheckedRadioButtonId());
                     String categoria = spinnerCategoria.getSelectedItem().toString();
-                    guardarProducto(new Producto(codigo, nombre, precio, tipoIva,
-                            switchActivo.isChecked(), categoria));
+                    Producto producto = new Producto(codigo, nombre, precio, tipoIva,
+                            switchActivo.isChecked(), categoria);
+                    producto.setControlarStock(switchStock.isChecked());
+                    producto.setStock(leerEntero(inputStock));
+                    producto.setStockMinimo(leerEntero(inputStockMinimo));
+                    guardarProducto(producto);
                 })
                 .setNegativeButton(R.string.dialog_cancelar, null)
                 .show();
@@ -150,6 +165,16 @@ public class ConfigActivity extends AppCompatActivity {
         if (tipoIva == 0.21) return R.id.radio_iva_21;
         if (tipoIva == 0.04) return R.id.radio_iva_4;
         return R.id.radio_iva_10;
+    }
+
+    private int leerEntero(EditText input) {
+        String txt = input.getText().toString().trim();
+        if (txt.isEmpty()) return 0;
+        try {
+            return Math.max(0, Integer.parseInt(txt));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     private void seleccionarCategoria(Spinner spinner, String categoria) {

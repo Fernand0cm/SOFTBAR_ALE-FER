@@ -189,6 +189,16 @@
     <string name="historial_sin_numero">Sin numero</string>
     <string name="historial_detalle">%1$s · %2$s</string>
     <string name="stock_title">Stock</string>
+    <string name="stock_subtitulo">Productos con control de stock</string>
+    <string name="stock_cargando">Cargando stock...</string>
+    <string name="stock_vacio">No hay productos con control de stock. Activalo al crear o editar un producto.</string>
+    <string name="stock_error">No se pudo cargar el stock: %1$s</string>
+    <string name="stock_detalle">Stock: %1$d · minimo: %2$d</string>
+    <string name="stock_bajo">Stock bajo: %1$d (minimo %2$d)</string>
+    <string name="stock_quitar">Quitar una unidad</string>
+    <string name="stock_anadir">Anadir una unidad</string>
+    <string name="stock_dialog_titulo">Ajustar stock</string>
+    <string name="stock_dialog_hint">Unidades</string>
     <string name="config_title">Configuracion</string>
     <string name="config_productos_subtitulo">Catalogo de productos</string>
     <string name="config_catalogo_eyebrow">Catalogo</string>
@@ -210,6 +220,9 @@
     <string name="dialog_iva_21">21% alcohol</string>
     <string name="dialog_iva_4">4% superreducido</string>
     <string name="dialog_activo">Producto activo</string>
+    <string name="dialog_controlar_stock">Controlar stock</string>
+    <string name="dialog_stock_hint">Stock actual</string>
+    <string name="dialog_stock_minimo_hint">Stock minimo</string>
     <string name="dialog_categoria_label">Categoria</string>
     <string name="historial_todas_categorias">Todas</string>
     <string-array name="categorias_producto">
