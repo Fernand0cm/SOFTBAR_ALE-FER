@@ -1,0 +1,83 @@
+{
+  "nodes": [
+    {"id":"c","type":"text","x":-130,"y":-50,"width":260,"height":100,"color":"6","text":"# SOFTBAR TPV\nTPV para hostelería\n(Android + Firebase)"},
+
+    {"id":"op","type":"text","x":-780,"y":-330,"width":210,"height":70,"color":"4","text":"## Operativa\nServicio en sala"},
+    {"id":"op1","type":"text","x":-1150,"y":-440,"width":310,"height":62,"text":"Sala y mesas · estado en vivo"},
+    {"id":"op2","type":"text","x":-1150,"y":-360,"width":310,"height":62,"text":"Comanda · categorías, cantidades, notas"},
+    {"id":"op3","type":"text","x":-1150,"y":-280,"width":310,"height":62,"text":"Cobro · efectivo / tarjeta / mixto + cambio"},
+    {"id":"op4","type":"text","x":-1150,"y":-200,"width":310,"height":62,"text":"Ticket · base/IVA + QR Verifactu"},
+
+    {"id":"ge","type":"text","x":-780,"y":120,"width":210,"height":70,"color":"4","text":"## Gestión\nBack-office"},
+    {"id":"ge1","type":"text","x":-1150,"y":40,"width":310,"height":62,"text":"Turnos + caja + arqueo"},
+    {"id":"ge2","type":"text","x":-1150,"y":120,"width":310,"height":62,"text":"Stock opcional · descuento al vender + alertas"},
+    {"id":"ge3","type":"text","x":-1150,"y":200,"width":310,"height":62,"text":"Catálogo · IVA por producto, categorías"},
+    {"id":"ge4","type":"text","x":-1150,"y":280,"width":310,"height":62,"text":"Informes · filtros, top productos, comparativa"},
+
+    {"id":"ar","type":"text","x":-115,"y":-350,"width":230,"height":70,"color":"5","text":"## Arquitectura"},
+    {"id":"ar1","type":"text","x":-460,"y":-480,"width":270,"height":60,"text":"Capas + Repositorios"},
+    {"id":"ar2","type":"text","x":-150,"y":-480,"width":230,"height":60,"text":"MVVM (Informes)"},
+    {"id":"ar3","type":"text","x":120,"y":-480,"width":290,"height":60,"text":"Lógica pura testeable · offline"},
+
+    {"id":"se","type":"text","x":580,"y":-330,"width":210,"height":70,"color":"1","text":"## Seguridad"},
+    {"id":"se1","type":"text","x":920,"y":-440,"width":280,"height":60,"text":"Security Rules en servidor"},
+    {"id":"se2","type":"text","x":920,"y":-360,"width":280,"height":60,"text":"Inmutabilidad de ventas/facturas"},
+    {"id":"se3","type":"text","x":920,"y":-280,"width":280,"height":60,"text":"Anti-escalada de rol"},
+
+    {"id":"vf","type":"text","x":580,"y":120,"width":210,"height":70,"color":"2","text":"## Verifactu"},
+    {"id":"vf1","type":"text","x":920,"y":40,"width":280,"height":60,"text":"Hash SHA-256 encadenado"},
+    {"id":"vf2","type":"text","x":920,"y":120,"width":280,"height":60,"text":"QR de validación"},
+    {"id":"vf3","type":"text","x":920,"y":200,"width":280,"height":60,"text":"Factura rectificativa (negativos)"},
+
+    {"id":"ca","type":"text","x":-115,"y":350,"width":230,"height":70,"color":"3","text":"## Calidad / CI"},
+    {"id":"ca1","type":"text","x":-460,"y":470,"width":250,"height":60,"text":"85 pruebas unitarias"},
+    {"id":"ca2","type":"text","x":-150,"y":470,"width":230,"height":60,"text":"25 reglas (emulador)"},
+    {"id":"ca3","type":"text","x":120,"y":470,"width":250,"height":60,"text":"GitHub Actions CI"},
+
+    {"id":"fu","type":"text","x":-115,"y":610,"width":230,"height":70,"color":"6","text":"## Futuro"},
+    {"id":"fu1","type":"text","x":-460,"y":720,"width":230,"height":60,"text":"App Check"},
+    {"id":"fu2","type":"text","x":-180,"y":720,"width":230,"height":60,"text":"KMP / Flutter"},
+    {"id":"fu3","type":"text","x":100,"y":720,"width":270,"height":60,"text":"Cloud Functions → AEAT"},
+    {"id":"fu4","type":"text","x":400,"y":720,"width":270,"height":60,"text":"Datáfono + ESC/POS"}
+  ],
+  "edges": [
+    {"id":"e_op","fromNode":"c","toNode":"op","fromSide":"left","toSide":"right"},
+    {"id":"e_ge","fromNode":"c","toNode":"ge","fromSide":"left","toSide":"right"},
+    {"id":"e_ar","fromNode":"c","toNode":"ar","fromSide":"top","toSide":"bottom"},
+    {"id":"e_se","fromNode":"c","toNode":"se","fromSide":"right","toSide":"left"},
+    {"id":"e_vf","fromNode":"c","toNode":"vf","fromSide":"right","toSide":"left"},
+    {"id":"e_ca","fromNode":"c","toNode":"ca","fromSide":"bottom","toSide":"top"},
+    {"id":"e_fu","fromNode":"ca","toNode":"fu","fromSide":"bottom","toSide":"top"},
+
+    {"id":"e_op1","fromNode":"op","toNode":"op1","fromSide":"left","toSide":"right"},
+    {"id":"e_op2","fromNode":"op","toNode":"op2","fromSide":"left","toSide":"right"},
+    {"id":"e_op3","fromNode":"op","toNode":"op3","fromSide":"left","toSide":"right"},
+    {"id":"e_op4","fromNode":"op","toNode":"op4","fromSide":"left","toSide":"right"},
+
+    {"id":"e_ge1","fromNode":"ge","toNode":"ge1","fromSide":"left","toSide":"right"},
+    {"id":"e_ge2","fromNode":"ge","toNode":"ge2","fromSide":"left","toSide":"right"},
+    {"id":"e_ge3","fromNode":"ge","toNode":"ge3","fromSide":"left","toSide":"right"},
+    {"id":"e_ge4","fromNode":"ge","toNode":"ge4","fromSide":"left","toSide":"right"},
+
+    {"id":"e_ar1","fromNode":"ar","toNode":"ar1","fromSide":"top","toSide":"bottom"},
+    {"id":"e_ar2","fromNode":"ar","toNode":"ar2","fromSide":"top","toSide":"bottom"},
+    {"id":"e_ar3","fromNode":"ar","toNode":"ar3","fromSide":"top","toSide":"bottom"},
+
+    {"id":"e_se1","fromNode":"se","toNode":"se1","fromSide":"right","toSide":"left"},
+    {"id":"e_se2","fromNode":"se","toNode":"se2","fromSide":"right","toSide":"left"},
+    {"id":"e_se3","fromNode":"se","toNode":"se3","fromSide":"right","toSide":"left"},
+
+    {"id":"e_vf1","fromNode":"vf","toNode":"vf1","fromSide":"right","toSide":"left"},
+    {"id":"e_vf2","fromNode":"vf","toNode":"vf2","fromSide":"right","toSide":"left"},
+    {"id":"e_vf3","fromNode":"vf","toNode":"vf3","fromSide":"right","toSide":"left"},
+
+    {"id":"e_ca1","fromNode":"ca","toNode":"ca1","fromSide":"bottom","toSide":"top"},
+    {"id":"e_ca2","fromNode":"ca","toNode":"ca2","fromSide":"bottom","toSide":"top"},
+    {"id":"e_ca3","fromNode":"ca","toNode":"ca3","fromSide":"bottom","toSide":"top"},
+
+    {"id":"e_fu1","fromNode":"fu","toNode":"fu1","fromSide":"bottom","toSide":"top"},
+    {"id":"e_fu2","fromNode":"fu","toNode":"fu2","fromSide":"bottom","toSide":"top"},
+    {"id":"e_fu3","fromNode":"fu","toNode":"fu3","fromSide":"bottom","toSide":"top"},
+    {"id":"e_fu4","fromNode":"fu","toNode":"fu4","fromSide":"bottom","toSide":"top"}
+  ]
+}
