@@ -13,6 +13,7 @@ import com.SOFTBAR_F_A.data.verifactu.ConfiguracionFiscal;
 import com.SOFTBAR_F_A.data.verifactu.Factura;
 import com.SOFTBAR_F_A.data.verifactu.GeneradorQrVerifactu;
 import com.SOFTBAR_F_A.data.verifactu.HashVerifactu;
+import com.SOFTBAR_F_A.data.verifactu.NumeroFactura;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -166,7 +167,7 @@ public class CobroRepository {
                     factura.setPagoTarjeta(solicitud.pagoTarjeta);
                     factura.setImporteRecibido(solicitud.importeRecibido);
                     factura.setCambio(solicitud.cambio);
-                    String facturaId = factura.getNumero().replace("/", "-");
+                    String facturaId = NumeroFactura.aIdDocumento(factura.getNumero());
                     DocumentReference facturaRef = db
                             .collection(FirestoreSchema.Collections.FACTURAS)
                             .document(facturaId);
@@ -225,7 +226,7 @@ public class CobroRepository {
         SimpleDateFormat fechaIso = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
         SimpleDateFormat fechaQr = new SimpleDateFormat("dd-MM-yyyy", Locale.ROOT);
 
-        String numero = String.format(Locale.ROOT, "%s-%04d/%s",
+        String numero = NumeroFactura.generar(
                 config.getSerie(), siguiente, anyoFmt.format(ahora));
         double cuotaIva = CalculoIva.cuotaTotal(lineas);
 
