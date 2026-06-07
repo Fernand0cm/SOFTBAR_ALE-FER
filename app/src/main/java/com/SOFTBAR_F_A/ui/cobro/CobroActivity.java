@@ -16,7 +16,6 @@ import com.SOFTBAR_F_A.data.Dinero;
 import com.SOFTBAR_F_A.data.LineaComanda;
 import com.SOFTBAR_F_A.data.repository.CobroRepository;
 import com.SOFTBAR_F_A.ui.comanda.ComandaActivity;
-import com.SOFTBAR_F_A.ui.common.ConexionUtil;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
 import com.SOFTBAR_F_A.ui.ticket.TicketActivity;
@@ -105,10 +104,6 @@ public class CobroActivity extends AppCompatActivity {
         if (cobroEnCurso) return;
         if (!validarPago()) {
             Toast.makeText(this, R.string.cobro_error_importe, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!ConexionUtil.hayConexion(this)) {
-            Toast.makeText(this, R.string.cobro_sin_conexion, Toast.LENGTH_LONG).show();
             return;
         }
 

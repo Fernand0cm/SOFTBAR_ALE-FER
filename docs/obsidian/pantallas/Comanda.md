@@ -19,5 +19,5 @@ Con lineas anadidas:
 
 | Fecha | Severidad | Error | Estado | Correccion |
 |---|---|---|---|---|
-| 2026-06-07 | Media | Catalogo con pocos productos antiguos (ver E3) | Abierto | Ejecutar `tools/seed` |
-| 2026-06-07 | - | Filtro de categorias y suma de total: OK | OK | - |
+| 2026-06-07 | Media | Catalogo con pocos productos antiguos (E3) | Resuelto | 285 productos sembrados |
+| 2026-06-07 | Baja | Catalogo sin reciclar y "Cobrar" enterrado (E4) | Resuelto | Catalogo en `RecyclerView` + barra inferior fija |

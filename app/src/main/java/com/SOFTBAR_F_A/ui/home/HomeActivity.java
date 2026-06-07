@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -154,13 +152,12 @@ public class HomeActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return;
 
-        // Estado inicial
-        actualizarEstadoConexion(hayInternet(cm));
+        // Estado inicial: hay red por defecto disponible.
+        actualizarEstadoConexion(cm.getActiveNetwork() != null);
 
-        NetworkRequest request = new NetworkRequest.Builder()
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .build();
-
+        // Callback de la red por defecto: refleja la conexion real sin exigir
+        // que el transporte anuncie NET_CAPABILITY_INTERNET (algunos
+        // dispositivos/emuladores no lo reportan aunque haya internet).
         networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
@@ -172,14 +169,7 @@ public class HomeActivity extends AppCompatActivity {
                 runOnUiThread(() -> actualizarEstadoConexion(false));
             }
         };
-        cm.registerNetworkCallback(request, networkCallback);
-    }
-
-    private boolean hayInternet(ConnectivityManager cm) {
-        Network red = cm.getActiveNetwork();
-        if (red == null) return false;
-        NetworkCapabilities caps = cm.getNetworkCapabilities(red);
-        return caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+        cm.registerDefaultNetworkCallback(networkCallback);
     }
 
     private void actualizarEstadoConexion(boolean online) {

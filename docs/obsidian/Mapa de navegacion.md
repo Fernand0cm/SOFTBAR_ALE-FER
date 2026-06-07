@@ -48,15 +48,21 @@ flowchart TD
 
 ## Registro global de errores y correcciones
 
-| # | Severidad | Pantallas | Error | Estado | Correccion propuesta |
+| # | Severidad | Pantallas | Error | Estado | Correccion aplicada |
 |---|---|---|---|---|---|
-| E1 | Alta | [[Home]], [[Cobro]], [[Ticket]] | La deteccion de conexion da **falso negativo**: con internet real (ping OK a Firestore) la app marca "Sin conexion" y **bloquea el cobro/rectificacion** | Abierto | No bloquear de forma dura por `ConnectivityManager`; comprobar tambien `NET_CAPABILITY_VALIDATED` o intentar la transaccion y gestionar el fallo de Firestore |
-| E2 | Media | [[Mesas]] | Datos de prueba antiguos: falta la mesa 2 y varias salen ocupadas sin comanda real | Abierto | Ejecutar `tools/seed` (reinicia mesas y limpia actividad) |
-| E3 | Media | [[Comanda]], [[Configuracion]] | Catalogo con ~6 productos antiguos en vez del catalogo real | Abierto | Ejecutar `tools/seed` (~285 productos) |
-| E4 | Baja | [[Comanda]], [[Barra]], [[Configuracion]], [[Stock]] | Listas sin `RecyclerView`: posible tiron con cientos de productos | Documentado | Migrar a `RecyclerView` (mejora futura; mitigado filtrando por categoria) |
+| E1 | Alta | [[Home]], [[Cobro]], [[Ticket]] | La deteccion de conexion daba **falso negativo**: con internet real la app marcaba "Sin conexion" y bloqueaba el cobro/rectificacion | **Resuelto** | Home usa `registerDefaultNetworkCallback`; se quito el bloqueo duro del cobro/rectificacion (la transaccion ya impide numeracion duplicada offline). Verificado: Home "Online" y venta completada (ticket A-0013/2026) |
+| E2 | Media | [[Mesas]] | Datos antiguos: faltaba la mesa 2 y varias ocupadas | **Resuelto** | Sembrado en vivo (`firestore-tests/seed-cliente.js`): 10 mesas a "libre". Verificado |
+| E3 | Media | [[Comanda]], [[Configuracion]] | Catalogo con ~6 productos antiguos | **Resuelto** | Catalogo antiguo desactivado + 285 productos creados (`seed-cliente.js`). Verificado en comanda/config |
+| E4 | Baja | [[Comanda]], [[Barra]], [[Configuracion]], [[Stock]] | Listas sin `RecyclerView`: tiron con cientos de productos y "Cobrar" enterrado bajo el catalogo | **Resuelto** | Catalogo (comanda/barra), Config y Stock migrados a `RecyclerView`; comanda/barra rediseñadas con catalogo que recicla y barra inferior fija. Verificado |
+
+Notas de la correccion:
+
+- Para asignar el primer administrador se desplegaron temporalmente unas reglas
+  de bootstrap y luego se restauraron las estrictas (las reglas, correctamente,
+  impiden el auto-ascenso de rol).
+- Las reglas endurecidas del repo se **desplegaron a produccion** (`tfg-softba`).
 
 ## Capturas pendientes
 
-- [[Login]]: requiere cerrar sesion (offline no se puede volver a entrar).
-- [[Ticket]]: bloqueado por **E1** (el cobro no se completa). Se capturara al
-  corregir E1 o en un equipo donde la conexion se detecte bien.
+- [[Login]]: requiere cerrar sesion (sin conexion no se puede volver a entrar);
+  se capturara en un arranque limpio.
