@@ -46,6 +46,9 @@ public class ConfigActivity extends AppCompatActivity {
         Button btnEscanear = findViewById(R.id.btn_escanear);
         btnEscanear.setOnClickListener(v -> escanear());
 
+        Button btnAltaManual = findViewById(R.id.btn_alta_manual);
+        btnAltaManual.setOnClickListener(v -> mostrarDialogProducto(generarCodigoManual()));
+
         suscribirseAProductos();
     }
 
@@ -65,6 +68,10 @@ public class ConfigActivity extends AppCompatActivity {
                         Toast.makeText(this, e.getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show())
                 .addOnCanceledListener(() -> { /* el usuario cancelo, sin accion */ });
+    }
+
+    private String generarCodigoManual() {
+        return "MAN-" + System.currentTimeMillis();
     }
 
     private void mostrarDialogProducto(String codigo) {

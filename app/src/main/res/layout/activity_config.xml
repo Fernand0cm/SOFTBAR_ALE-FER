@@ -25,6 +25,17 @@
             app:iconGravity="textStart"
             app:iconTint="@color/white" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_alta_manual"
+            style="@style/SoftbarButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/config_alta_manual"
+            app:icon="@drawable/ic_plus"
+            app:iconGravity="textStart"
+            app:iconTint="@color/brand_600" />
+
         <TextView
             style="@style/Text.Eyebrow"
             android:layout_width="wrap_content"

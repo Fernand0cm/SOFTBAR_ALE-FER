@@ -146,6 +146,7 @@
     <string name="config_productos_subtitulo">Catalogo de productos</string>
     <string name="config_catalogo_eyebrow">Catalogo</string>
     <string name="config_escanear">Escanear codigo de barras</string>
+    <string name="config_alta_manual">Anadir producto manualmente</string>
     <string name="config_lista_vacia">Aun no hay productos. Escanea uno para empezar.</string>
     <string name="config_guardado">Producto guardado</string>
     <string name="dialog_titulo">Nuevo producto</string>

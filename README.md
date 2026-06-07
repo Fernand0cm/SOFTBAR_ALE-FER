@@ -392,7 +392,7 @@ TFG_SOFTBAR/
 
 ### Funcionalidad Pendiente
 
-- Alta manual de producto sin escaner.
+- [x] Alta manual de producto sin escaner.
 - Edicion y desactivacion de productos.
 - Categorias de catalogo.
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
