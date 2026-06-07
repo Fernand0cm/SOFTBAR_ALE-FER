@@ -8,19 +8,30 @@ La app esta conectada a Firebase y mantiene la mayor parte de los datos operativ
 
 ## Estado Actual
 
+Version estable **v1.0.0**, con integracion continua en verde y el flujo
+operativo completo funcionando de extremo a extremo.
+
 - Proyecto Android nativo con modulo `app`.
 - Java 11, `minSdk 28`, `targetSdk 36` y `compileSdk 36`.
-- Interfaz basada en AppCompat y Material Components.
+- Interfaz basada en AppCompat y Material Components, con icono de la app propio (logo de SOFTBAR).
 - Firebase Authentication para acceso con email y contrasena.
-- Cloud Firestore como base de datos principal.
+- Cloud Firestore como base de datos principal, con reglas de seguridad endurecidas.
 - Persistencia offline de Firestore activada al arrancar la app.
 - Reglas e indices Firestore versionados en el repositorio.
 - Indicador de conexion y sincronizacion en Home (online / sincronizando / sin conexion).
 - Cobro y rectificacion operativos sin conexion: las escrituras se encolan y sincronizan al recuperar red, y la numeracion correlativa se garantiza mediante transacciones y reglas de servidor.
+- Roles de usuario (administrador, caja, camarero, cocina) con permisos por modulo en cliente y servidor.
+- Catalogo con alta manual o por escaner, IVA por producto, categorias y activacion/desactivacion.
+- Comanda avanzada con cantidades, notas y modificadores por linea.
+- Stock opcional por producto con descuento automatico al vender y alertas de bajo minimo.
+- Facturacion Verifactu: numeracion correlativa, hash SHA-256 encadenado, QR y facturas rectificativas.
+- Informes con filtros (fecha, turno, metodo), productos mas vendidos y comparativa por dia.
 - Lector de codigos de barras con ML Kit / Google Code Scanner.
 - Generacion de QR con ZXing para el bloque Verifactu.
 - Graficas de informes con MPAndroidChart.
-- Pruebas unitarias para modelos, calculos, caja, comandas, ventas, turnos y utilidades fiscales.
+- Calculo monetario con `BigDecimal` para evitar errores de redondeo.
+- 90 pruebas unitarias (JUnit) y 25 pruebas de reglas sobre el emulador de Firestore.
+- Integracion continua con GitHub Actions (pruebas unitarias y de reglas en cada cambio).
 
 ## Navegacion
 
@@ -179,9 +190,10 @@ Tambien muestra el estado de conexion del dispositivo.
 ### Configuracion Y Catalogo
 
 - Catalogo de productos en Firestore.
-- Escaneo de codigo de barras.
-- Dialogo de alta de producto con nombre y precio.
-- Guardado usando el codigo de barras como identificador.
+- Alta de producto por escaneo de codigo de barras o de forma manual.
+- Dialogo de alta y edicion con nombre, precio, tipo de IVA (10%, 21%, 4%), categoria y control de stock.
+- Activacion y desactivacion de productos sin borrarlos del catalogo.
+- Guardado usando el codigo de barras (o un codigo manual) como identificador.
 - Listado en tiempo real ordenado por nombre.
 
 ### Stock
@@ -286,9 +298,13 @@ Las reglas actuales:
 
 - Bloquean datos de negocio a usuarios no autenticados.
 - Permiten lectura publica solo de `splash_backgrounds`.
-- Validan campos basicos por coleccion.
-- Bloquean borrados sensibles en mesas, comandas, ventas, facturas, turnos y productos.
-- Permiten crear y actualizar productos a usuarios autenticados (se desactivan, no se borran).
+- Validan la forma de cada documento por coleccion.
+- Hacen inmutables las ventas y las facturas (no admiten update ni delete).
+- Bloquean borrados sensibles en mesas, comandas, turnos y productos (se desactivan, no se borran).
+- Evitan la escalada de privilegios: un usuario no puede atribuirse otro uid ni cambiarse el rol; la gestion de roles queda reservada al administrador.
+- Solo admiten importes en negativo cuando la factura es de tipo rectificativa.
+
+Estas reglas se validan con 25 pruebas sobre el emulador (`firestore-tests/`).
 
 Despliegue:
 
@@ -310,7 +326,7 @@ En Windows:
 .\gradlew.bat testDebugUnitTest
 ```
 
-Cobertura actual:
+Cobertura actual (**90 pruebas unitarias**):
 
 - Modelos de datos.
 - Estados y colores de mesa.
@@ -318,9 +334,22 @@ Cobertura actual:
 - Resumen de caja.
 - Desglose de pagos.
 - Indicadores de ventas.
+- Permisos por rol.
+- Tratamiento monetario (`Dinero`).
 - Hash Verifactu.
 - URL de QR Verifactu.
+- Numeracion de factura.
 - Configuracion fiscal.
+
+Pruebas de reglas de seguridad (**25 pruebas** sobre el emulador de Firestore):
+
+```bash
+cd firestore-tests
+npm install
+npm test
+```
+
+Ambas suites se ejecutan automaticamente en cada cambio mediante GitHub Actions.
 
 Documentacion detallada:
 
@@ -381,66 +410,35 @@ TFG_SOFTBAR/
 |- README.md
 ```
 
-## Pendiente Prioritario
+## Estado Del Proyecto
 
-### Antes De La Defensa
+El proyecto esta completo en su version **v1.0.0**: el flujo operativo funciona
+de extremo a extremo, las funcionalidades previstas estan implementadas, las
+pruebas pasan y la integracion continua esta en verde. El conjunto se ha
+verificado con una demo completa (`docs/demo/RESULTADO_DEMO.md`).
 
-- [x] Crear guion de demo paso a paso (`docs/guion_demo.md`).
-- [x] Documentar la arquitectura (`docs/arquitectura.md`).
-- [x] Datos de prueba reproducibles (`tools/seed`) y auditoria de vistas
-  (`docs/auditoria_vistas.md`).
-- Probar flujo completo manualmente:
-  - login
-  - abrir turno
-  - crear productos
-  - abrir mesa
-  - anadir productos
-  - cobrar
-  - revisar ticket
-  - revisar caja
-  - cerrar turno
-  - revisar informes
-- Preparar capturas finales de pantallas reales.
+Funcionalidades implementadas: acceso por roles, turnos y arqueo de caja, sala y
+mesas, barra rapida, comanda con notas y modificadores, cobro (efectivo, tarjeta
+y mixto), ticket y factura Verifactu con QR, facturas rectificativas, catalogo
+con IVA y categorias, stock opcional, e informes con filtros, historial de
+tickets y consulta de cierres.
 
-### Funcionalidad Pendiente
+## Trabajo Futuro
 
-- [x] Alta manual de producto sin escaner.
-- [x] Edicion de productos desde el catalogo.
-- [x] Desactivacion de productos sin borrarlos (no se borran del catalogo).
-- [x] Categorias de catalogo con filtro en comanda y barra.
-- [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
-- [x] Modificar cantidades, notas y modificadores por linea en la comanda.
-- [x] Historial de tickets (consulta y reapertura de ventas pasadas).
-- [x] Consulta de cierres historicos (turnos cerrados con su arqueo).
-- [x] Filtros de informes por fecha, turno y metodo de pago.
-- [x] Ventas por producto y productos mas vendidos.
-- [x] Comparativa de ventas por dia (ultimos 7 dias).
-- [x] Desglose base/IVA y exportacion del resumen en informes.
-- [x] Roles de usuario (administrador, camarero, caja, cocina) con permisos por modulo.
-- [x] Stock real opcional por producto, con descuento automatico al vender y alertas de bajo stock.
-- Impresion o exportacion de ticket.
-- [x] Anulacion o rectificacion de factura (factura rectificativa encadenada).
-
-### Robustez Tecnica
-
-- [x] Separar el cobro en un repositorio (`data/repository/CobroRepository`).
-- [x] Pantalla de informes en MVVM (`InformesViewModel` + `InformesRepository`).
+- Impresion o exportacion real del ticket (impresora termica o PDF).
+- Conexion real con el servicio web de la AEAT mediante certificado de empresa.
 - Extender el patron MVVM/repositorio al resto de pantallas (caja, comanda, mesas).
-- Introducir capa de dominio para reglas de negocio.
-- [x] Calculo monetario con `BigDecimal` y redondeo a centimos (`data/Dinero`).
-- [x] Estados de carga, vacio y error en informes (pendiente en el resto).
-- Crear pruebas instrumentadas de navegacion.
-- [x] Probar las reglas con Firebase Emulator Suite (`firestore-tests/`).
-- Revisar formato fiscal contra especificacion vigente antes de cualquier uso real.
+- Introducir una capa de dominio para las reglas de negocio.
+- Pruebas instrumentadas de navegacion (Espresso).
+- Operacion multi-terminal sincronizada.
 
-## Roadmap Recomendado
+## Documentacion
 
-1. Catalogo editable completo.
-2. Comanda avanzada con notas, cantidades y modificadores.
-3. Informes por fecha, turno, metodo y producto.
-4. Historial de tickets y cierres.
-5. Roles basicos.
-6. Stock.
-7. Exportacion/impresion.
-8. Pruebas instrumentadas.
-9. Guion y capturas finales de defensa.
+- Memoria y esquemas en Obsidian: `docs/obsidian/` (abrir la carpeta como vault).
+- Arquitectura: `docs/arquitectura.md`.
+- Facturacion Verifactu: `docs/verifactu.md`.
+- Firebase y colecciones: `docs/firebase.md`.
+- Pruebas: `docs/tests.md`.
+- Guion y resultado de la demo: `docs/guion_demo.md`, `docs/demo/RESULTADO_DEMO.md`.
+- Cambios por version: `CHANGELOG.md`.
+- Guia de contribucion: `CONTRIBUTING.md`.
