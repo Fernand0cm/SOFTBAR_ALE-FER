@@ -195,7 +195,7 @@ service cloud.firestore {
     match /mesas/{id} {
       allow read: if signedIn();
       allow create, update: if signedIn() && validMesa();
-      allow delete: if false;
+      allow delete: if signedIn() && resource.data.estado == 'libre';
     }
 
     match /productos/{id} {

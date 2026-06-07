@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -33,7 +38,10 @@ public class MesasActivity extends AppCompatActivity {
 
     private GridLayout grid;
     private ListenerRegistration suscripcion;
-
+    private Button btnModoEdicion;
+    private Button btnAnadirMesa;
+    private TextView txtModoEdicion;
+    private boolean modoEdicion = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +50,51 @@ public class MesasActivity extends AppCompatActivity {
         Header.aplica(this, getString(R.string.mesas_title), getString(R.string.mesas_subtitulo));
 
         grid = findViewById(R.id.grid_mesas);
+        btnModoEdicion = findViewById(R.id.btn_modo_edicion);
+        btnAnadirMesa = findViewById(R.id.btn_anadir_mesa);
+        txtModoEdicion = findViewById(R.id.txt_modo_edicion);
 
+        btnModoEdicion.setOnClickListener(v -> cambiarModoEdicion());
+        btnAnadirMesa.setOnClickListener(v -> anadirMesa());
         sembrarSiVacio();
         suscribirseAMesas();
     }
+    private void cambiarModoEdicion() {
+        modoEdicion = !modoEdicion;
 
+        btnModoEdicion.setText(modoEdicion
+                ? R.string.mesas_modo_normal
+                : R.string.mesas_modo_edicion);
+
+        txtModoEdicion.setVisibility(modoEdicion ? View.VISIBLE : View.GONE);
+    }
+    private void anadirMesa() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(FirestoreSchema.Collections.MESAS)
+                .orderBy(FirestoreSchema.Fields.NUMERO, Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    int siguienteNumero = 1;
+
+                    if (snap != null && !snap.isEmpty()) {
+                        Mesa ultima = snap.getDocuments().get(0).toObject(Mesa.class);
+                        if (ultima != null) {
+                            siguienteNumero = ultima.getNumero() + 1;
+                        }
+                    }
+
+                    Mesa nueva = new Mesa(siguienteNumero, Mesa.LIBRE);
+
+                    db.collection(FirestoreSchema.Collections.MESAS)
+                            .document(String.valueOf(siguienteNumero))
+                            .set(nueva)
+                            .addOnSuccessListener(unused ->
+                                    Toast.makeText(this, R.string.mesas_creada,
+                                            Toast.LENGTH_SHORT).show());
+                });
+    }
     private void sembrarSiVacio() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirestoreSchema.Collections.MESAS).limit(1).get().addOnSuccessListener(snap -> {
@@ -99,8 +147,23 @@ public class MesasActivity extends AppCompatActivity {
             vista.setElevation(4 * density);
             vista.setClickable(true);
             vista.setFocusable(true);
-            vista.setOnClickListener(v -> abrirMesa(dm));
+            vista.setOnClickListener(v -> {
+                if (modoEdicion) {
+                    confirmarEliminarMesa(dm);
+                } else {
+                    abrirMesa(dm);
+                }
+            });
 
+            vista.setOnLongClickListener(v -> {
+
+                if (modoEdicion) {
+                    mostrarDialogCambiarNumero(dm);
+                    return true;
+                }
+
+                return false;
+            });
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = alto;
@@ -111,7 +174,25 @@ public class MesasActivity extends AppCompatActivity {
             grid.addView(vista);
         }
     }
+    private void confirmarEliminarMesa(DocMesa dm) {
+        if (!Mesa.LIBRE.equals(dm.mesa.getEstado())) {
+            Toast.makeText(this, R.string.mesas_no_eliminar,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.mesas_eliminar_titulo)
+                .setMessage(getString(R.string.mesas_eliminar_msg, dm.mesa.getNumero()))
+                .setPositiveButton(R.string.mesas_eliminar, (dialog, which) -> {
+                    FirebaseFirestore.getInstance()
+                            .collection(FirestoreSchema.Collections.MESAS)
+                            .document(dm.id)
+                            .delete();
+                })
+                .setNegativeButton(R.string.dialog_cancelar, null)
+                .show();
+    }
     private void abrirMesa(DocMesa dm) {
         if (Mesa.LIBRE.equals(dm.mesa.getEstado())) {
             FirebaseFirestore.getInstance()
@@ -125,13 +206,41 @@ public class MesasActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESA_NUMERO, dm.mesa.getNumero());
         startActivity(intent);
     }
+    private void mostrarDialogCambiarNumero(DocMesa dm) {
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (suscripcion != null) suscripcion.remove();
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setText(String.valueOf(dm.mesa.getNumero()));
+        input.setHint(R.string.mesas_cambiar_numero_hint);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.mesas_cambiar_numero_titulo)
+                .setView(input)
+                .setPositiveButton(R.string.mesas_cambiar_numero_guardar, (dialog, which) -> {
+
+                    String txt = input.getText().toString().trim();
+
+                    if (txt.isEmpty()) return;
+
+                    int nuevoNumero;
+
+                    try {
+                        nuevoNumero = Integer.parseInt(txt);
+                    } catch (NumberFormatException e) {
+                        return;
+                    }
+
+                    FirebaseFirestore.getInstance()
+                            .collection(FirestoreSchema.Collections.MESAS)
+                            .document(dm.id)
+                            .update(
+                                    FirestoreSchema.Fields.NUMERO,
+                                    nuevoNumero
+                            );
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
-
     private static class DocMesa {
         final String id;
         final Mesa mesa;
@@ -140,5 +249,10 @@ public class MesasActivity extends AppCompatActivity {
             this.id = id;
             this.mesa = mesa;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (suscripcion != null) suscripcion.remove();
     }
 }
