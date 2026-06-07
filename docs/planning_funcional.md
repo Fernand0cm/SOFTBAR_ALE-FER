@@ -102,7 +102,7 @@ Tareas:
 - [x] Permitir alta manual de producto sin escaner.
 - [x] Editar productos existentes.
 - [x] Desactivar productos sin borrarlos.
-- Crear categorias:
+- [x] Crear categorias:
   - cafes
   - bebidas
   - tapas
@@ -257,7 +257,7 @@ Resultado esperado:
 - Compartir ticket como texto o PDF.
 - Pantalla de cierre de caja imprimible.
 - Vista de cocina con comandas pendientes.
-- Barra rapida por categorias.
+- [x] Barra rapida por categorias.
 - [x] Confirmaciones antes de acciones sensibles (cierre de turno, cierre de sesion).
 - Exportacion de informes.
 

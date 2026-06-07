@@ -240,6 +240,20 @@ test("un producto con campo activo se acepta", async () => {
   );
 });
 
+test("un producto con categoria se acepta", async () => {
+  const db = testEnv.authenticatedContext(UID_A).firestore();
+  await assertSucceeds(
+    setDoc(doc(db, "productos/p7"), {
+      codigoBarras: "777",
+      nombre: "Cortado",
+      precio: 1.3,
+      tipoIva: 0.1,
+      activo: true,
+      categoria: "Cafes",
+    })
+  );
+});
+
 test("un producto no se puede borrar (solo se desactiva)", async () => {
   await testEnv.withSecurityRulesDisabled(async (ctx) => {
     await setDoc(doc(ctx.firestore(), "productos/p6"), {

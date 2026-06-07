@@ -22,12 +22,15 @@ import com.SOFTBAR_F_A.data.firebase.FirestoreSchema;
 import com.SOFTBAR_F_A.ui.cobro.CobroActivity;
 import com.SOFTBAR_F_A.ui.common.Header;
 import com.SOFTBAR_F_A.ui.mesas.MesasActivity;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,10 +45,14 @@ public class ComandaActivity extends AppCompatActivity {
     private List<LineaComanda> lineas = new ArrayList<>();
 
     private GridLayout gridCatalogo;
+    private ChipGroup chipsCategorias;
     private LinearLayout listaLineas;
     private TextView txtTotal;
     private TextView txtCatalogoVacio;
     private TextView txtLineasVacias;
+
+    private List<Producto> catalogoCompleto = new ArrayList<>();
+    private String categoriaSeleccionada;
 
     private ListenerRegistration suscripcionProductos;
     private ListenerRegistration suscripcionComanda;
@@ -64,6 +71,7 @@ public class ComandaActivity extends AppCompatActivity {
         Header.aplica(this, getString(R.string.comanda_title), subtitulo);
 
         gridCatalogo = findViewById(R.id.grid_catalogo);
+        chipsCategorias = findViewById(R.id.chips_categorias);
         listaLineas = findViewById(R.id.lista_lineas);
         txtTotal = findViewById(R.id.txt_total);
         txtCatalogoVacio = findViewById(R.id.txt_catalogo_vacio);
@@ -142,8 +150,47 @@ public class ComandaActivity extends AppCompatActivity {
                         Producto p = doc.toObject(Producto.class);
                         if (p.isActivo()) productos.add(p);
                     }
-                    pintarCatalogo(productos);
+                    catalogoCompleto = productos;
+                    construirChipsCategorias();
+                    pintarCatalogo(filtrarPorCategoria());
                 });
+    }
+
+    private void construirChipsCategorias() {
+        if (chipsCategorias == null) return;
+        chipsCategorias.removeAllViews();
+
+        LinkedHashSet<String> categorias = new LinkedHashSet<>();
+        for (Producto p : catalogoCompleto) categorias.add(p.getCategoria());
+
+        chipsCategorias.addView(
+                crearChip(getString(R.string.historial_todas_categorias), null));
+        for (String categoria : categorias) {
+            chipsCategorias.addView(crearChip(categoria, categoria));
+        }
+    }
+
+    private Chip crearChip(String texto, String valorCategoria) {
+        Chip chip = new Chip(this);
+        chip.setText(texto);
+        chip.setCheckable(true);
+        boolean seleccionado = (valorCategoria == null && categoriaSeleccionada == null)
+                || (valorCategoria != null && valorCategoria.equals(categoriaSeleccionada));
+        chip.setChecked(seleccionado);
+        chip.setOnClickListener(v -> {
+            categoriaSeleccionada = valorCategoria;
+            pintarCatalogo(filtrarPorCategoria());
+        });
+        return chip;
+    }
+
+    private List<Producto> filtrarPorCategoria() {
+        if (categoriaSeleccionada == null) return catalogoCompleto;
+        List<Producto> filtrados = new ArrayList<>();
+        for (Producto p : catalogoCompleto) {
+            if (categoriaSeleccionada.equals(p.getCategoria())) filtrados.add(p);
+        }
+        return filtrados;
     }
 
     private void pintarCatalogo(List<Producto> productos) {

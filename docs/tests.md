@@ -252,9 +252,10 @@ corre `rules.test.js`. Cubre las garantias criticas del modelo fiscal:
 | Producto con IVA valido | Un producto con `tipoIva` correcto se acepta. |
 | Producto con IVA invalido | Un `tipoIva` fuera de rango (0..1) es rechazado. |
 | Producto con activo | Un producto con el campo `activo` se acepta. |
+| Producto con categoria | Un producto con el campo `categoria` se acepta. |
 | Producto no borrable | Un producto no se puede borrar (solo se desactiva). |
 
-Estado: **16 pruebas, todas OK** sobre el emulador de Firestore.
+Estado: **17 pruebas, todas OK** sobre el emulador de Firestore.
 
 ## Pendiente / fuera de alcance
 

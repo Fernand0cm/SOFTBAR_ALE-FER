@@ -396,7 +396,7 @@ TFG_SOFTBAR/
 - [x] Alta manual de producto sin escaner.
 - [x] Edicion de productos desde el catalogo.
 - [x] Desactivacion de productos sin borrarlos (no se borran del catalogo).
-- Categorias de catalogo.
+- [x] Categorias de catalogo con filtro en comanda y barra.
 - [x] IVA por producto (10%, 21%, 4%) con cuota por tipo en la factura.
 - Notas y modificadores por linea.
 - [x] Historial de tickets (consulta y reapertura de ventas pasadas).

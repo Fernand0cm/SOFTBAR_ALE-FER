@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +88,7 @@ public class ConfigActivity extends AppCompatActivity {
         EditText inputPrecio = vista.findViewById(R.id.input_precio);
         RadioGroup grupoIva = vista.findViewById(R.id.radio_iva_group);
         MaterialSwitch switchActivo = vista.findViewById(R.id.switch_activo);
+        Spinner spinnerCategoria = vista.findViewById(R.id.spinner_categoria);
         txtCodigo.setText(getString(R.string.dialog_codigo_prefijo, codigo));
 
         if (existente != null) {
@@ -94,6 +96,7 @@ public class ConfigActivity extends AppCompatActivity {
             inputPrecio.setText(String.format(Locale.ROOT, "%.2f", existente.getPrecio()));
             grupoIva.check(radioParaTipoIva(existente.getTipoIva()));
             switchActivo.setChecked(existente.isActivo());
+            seleccionarCategoria(spinnerCategoria, existente.getCategoria());
         }
 
         new AlertDialog.Builder(this)
@@ -121,8 +124,9 @@ public class ConfigActivity extends AppCompatActivity {
                     }
 
                     double tipoIva = tipoIvaSeleccionado(grupoIva.getCheckedRadioButtonId());
-                    guardarProducto(new Producto(
-                            codigo, nombre, precio, tipoIva, switchActivo.isChecked()));
+                    String categoria = spinnerCategoria.getSelectedItem().toString();
+                    guardarProducto(new Producto(codigo, nombre, precio, tipoIva,
+                            switchActivo.isChecked(), categoria));
                 })
                 .setNegativeButton(R.string.dialog_cancelar, null)
                 .show();
@@ -138,6 +142,16 @@ public class ConfigActivity extends AppCompatActivity {
         if (tipoIva == 0.21) return R.id.radio_iva_21;
         if (tipoIva == 0.04) return R.id.radio_iva_4;
         return R.id.radio_iva_10;
+    }
+
+    private void seleccionarCategoria(Spinner spinner, String categoria) {
+        String[] categorias = getResources().getStringArray(R.array.categorias_producto);
+        for (int i = 0; i < categorias.length; i++) {
+            if (categorias[i].equalsIgnoreCase(categoria)) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
     }
 
     private void guardarProducto(Producto producto) {
@@ -177,7 +191,8 @@ public class ConfigActivity extends AppCompatActivity {
                         ((TextView) item.findViewById(R.id.txt_nombre)).setText(nombre);
                         item.setAlpha(p.isActivo() ? 1f : 0.45f);
                         ((TextView) item.findViewById(R.id.txt_codigo))
-                                .setText(p.getCodigoBarras());
+                                .setText(getString(R.string.config_codigo_categoria,
+                                        p.getCodigoBarras(), p.getCategoria()));
                         ((TextView) item.findViewById(R.id.txt_precio))
                                 .setText(getString(R.string.config_precio_iva,
                                         p.getPrecio(),

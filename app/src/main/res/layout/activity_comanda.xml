@@ -38,6 +38,20 @@
                 android:textSize="13sp"
                 android:visibility="gone" />
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chips_categorias"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true" />
+            </HorizontalScrollView>
+
             <GridLayout
                 android:id="@+id/grid_catalogo"
                 android:layout_width="match_parent"

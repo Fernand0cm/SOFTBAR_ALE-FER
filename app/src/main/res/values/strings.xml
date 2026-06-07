@@ -183,6 +183,16 @@
     <string name="dialog_iva_21">21% alcohol</string>
     <string name="dialog_iva_4">4% superreducido</string>
     <string name="dialog_activo">Producto activo</string>
+    <string name="dialog_categoria_label">Categoria</string>
+    <string name="historial_todas_categorias">Todas</string>
+    <string-array name="categorias_producto">
+        <item>General</item>
+        <item>Cafes</item>
+        <item>Bebidas</item>
+        <item>Tapas</item>
+        <item>Bocadillos</item>
+    </string-array>
     <string name="config_producto_inactivo">%1$s (inactivo)</string>
+    <string name="config_codigo_categoria">%1$s · %2$s</string>
     <string name="config_precio_iva">%1$.2f EUR · IVA %2$d%%</string>
 </resources>
