@@ -253,6 +253,28 @@ public class ComandaActivity extends AppCompatActivity {
     }
 
     @Override
+    public void finish() {
+        liberarMesaSiVacia();
+        super.finish();
+    }
+
+    /**
+     * Al cerrar la comanda, si no se ha pedido nada, la mesa vuelve a quedar
+     * libre. Solo aplica a mesas (la barra no tiene mesa asociada) y cuando la
+     * comanda no tiene lineas.
+     */
+    private void liberarMesaSiVacia() {
+        if (mesaId == null) return;
+        if (lineas != null && !lineas.isEmpty()) return;
+        FirebaseFirestore.getInstance()
+                .collection(FirestoreSchema.Collections.MESAS)
+                .document(mesaId)
+                .update(
+                        FirestoreSchema.Fields.ESTADO, Mesa.LIBRE,
+                        FirestoreSchema.Fields.COMANDA_ACTIVA_ID, "");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (suscripcionProductos != null) suscripcionProductos.remove();
