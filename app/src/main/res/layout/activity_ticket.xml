@@ -14,8 +14,10 @@
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/contenido_ticket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/surface_50"
             android:orientation="vertical"
             android:padding="20dp">
 

@@ -19,7 +19,7 @@ operativo completo funcionando de extremo a extremo.
 - Persistencia offline de Firestore activada al arrancar la app.
 - Reglas e indices Firestore versionados en el repositorio.
 - Indicador de conexion y sincronizacion en Home (online / sincronizando / sin conexion).
-- Cobro y rectificacion operativos sin conexion: las escrituras se encolan y sincronizan al recuperar red, y la numeracion correlativa se garantiza mediante transacciones y reglas de servidor.
+- La consulta y la toma de comandas funcionan sin conexion (cache local de Firestore). El cobro y la rectificacion requieren conexion: se ejecutan como transaccion atomica para garantizar la numeracion fiscal correlativa y evitar duplicados; sin red, la app lo indica con un aviso claro.
 - Roles de usuario (administrador, caja, camarero, cocina) con permisos por modulo en cliente y servidor.
 - Catalogo con alta manual o por escaner, IVA por producto, categorias y activacion/desactivacion.
 - Comanda avanzada con cantidades, notas y modificadores por linea.

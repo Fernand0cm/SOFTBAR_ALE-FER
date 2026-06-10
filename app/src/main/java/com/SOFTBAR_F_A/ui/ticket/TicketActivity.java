@@ -1,6 +1,9 @@
 package com.SOFTBAR_F_A.ui.ticket;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.print.PrintHelper;
 
 import com.SOFTBAR_F_A.R;
 import com.SOFTBAR_F_A.data.Dinero;
@@ -62,12 +66,10 @@ public class TicketActivity extends AppCompatActivity {
         btnRectificar.setOnClickListener(v -> confirmarRectificacion());
 
         Button btnImprimir = findViewById(R.id.btn_imprimir);
-        btnImprimir.setOnClickListener(v ->
-                Toast.makeText(this, R.string.ticket_pendiente, Toast.LENGTH_SHORT).show());
+        btnImprimir.setOnClickListener(v -> imprimirTicket());
 
         Button btnEmail = findViewById(R.id.btn_email);
-        btnEmail.setOnClickListener(v ->
-                Toast.makeText(this, R.string.ticket_pendiente, Toast.LENGTH_SHORT).show());
+        btnEmail.setOnClickListener(v -> compartirTicket());
 
         Button btnCerrar = findViewById(R.id.btn_cerrar);
         btnCerrar.setOnClickListener(v -> finish());
@@ -193,6 +195,14 @@ public class TicketActivity extends AppCompatActivity {
                         btnRectificar.setEnabled(true);
                         Toast.makeText(TicketActivity.this,
                                 R.string.cobro_error_sin_turno, Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onSinConexion() {
+                        if (isFinishing() || isDestroyed()) return;
+                        btnRectificar.setEnabled(true);
+                        Toast.makeText(TicketActivity.this,
+                                R.string.cobro_sin_conexion, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -336,6 +346,58 @@ public class TicketActivity extends AppCompatActivity {
 
     private int dp(int value) {
         return (int) (value * getResources().getDisplayMetrics().density);
+    }
+
+    /** Captura el contenido del ticket como imagen para imprimir o compartir. */
+    private Bitmap capturarTicket() {
+        View contenido = findViewById(R.id.contenido_ticket);
+        if (contenido == null || contenido.getWidth() == 0 || contenido.getHeight() == 0) {
+            return null;
+        }
+        Bitmap bmp = Bitmap.createBitmap(
+                contenido.getWidth(), contenido.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE);
+        contenido.draw(canvas);
+        return bmp;
+    }
+
+    /** Imprime el ticket (a una impresora o "Guardar como PDF") con el marco de impresion del sistema. */
+    private void imprimirTicket() {
+        Bitmap bmp = capturarTicket();
+        if (bmp == null) {
+            Toast.makeText(this, R.string.ticket_no_listo, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String nombre = "Ticket SOFTBAR"
+                + (facturaActual != null ? " " + facturaActual.getNumero() : "");
+        PrintHelper helper = new PrintHelper(this);
+        helper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        helper.printBitmap(nombre, bmp);
+    }
+
+    /** Comparte el ticket por email u otras apps con sus datos y la URL de validacion. */
+    private void compartirTicket() {
+        if (facturaActual == null) {
+            Toast.makeText(this, R.string.ticket_no_listo, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("SOFTBAR\n");
+        sb.append("Factura: ").append(facturaActual.getNumero()).append('\n');
+        sb.append("Total: ").append(formatoImporte(facturaActual.getTotal())).append('\n');
+        if (facturaActual.getMetodo() != null) {
+            sb.append("Metodo de pago: ").append(facturaActual.getMetodo()).append('\n');
+        }
+        sb.append("Cuota de IVA: ").append(formatoImporte(facturaActual.getCuotaIva())).append('\n');
+        if (facturaActual.getUrlValidacion() != null) {
+            sb.append("Validacion Veri*factu: ").append(facturaActual.getUrlValidacion());
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Ticket SOFTBAR " + facturaActual.getNumero());
+        intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+        startActivity(Intent.createChooser(intent, getString(R.string.ticket_email)));
     }
 
     private void pintarVerifactu(Factura factura) {

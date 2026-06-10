@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +44,16 @@ public class CobroRepository {
     public interface CobroCallback {
         void onExito(String ventaId, String facturaId);
         void onSinTurno();
+        /** El cobro necesita conexion: la transaccion no puede ejecutarse sin red. */
+        void onSinConexion();
         void onError(@Nullable String mensaje);
+    }
+
+    /** El cobro se ejecuta en una transaccion, que Firestore no puede completar sin conexion. */
+    static boolean esSinConexion(Exception e) {
+        return e instanceof FirebaseFirestoreException
+                && ((FirebaseFirestoreException) e).getCode()
+                    == FirebaseFirestoreException.Code.UNAVAILABLE;
     }
 
     /** Datos de entrada del cobro recogidos en la UI. */
@@ -88,7 +98,10 @@ public class CobroRepository {
                     ejecutarTransaccion(
                             solicitud, user, snap.getDocuments().get(0).getId(), callback);
                 })
-                .addOnFailureListener(e -> callback.onError(e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    if (esSinConexion(e)) callback.onSinConexion();
+                    else callback.onError(e.getLocalizedMessage());
+                });
     }
 
     private void ejecutarTransaccion(SolicitudCobro solicitud, FirebaseUser user,
@@ -216,7 +229,10 @@ public class CobroRepository {
                 })
                 .addOnSuccessListener(resultado ->
                         callback.onExito(resultado.ventaId, resultado.facturaId))
-                .addOnFailureListener(e -> callback.onError(e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    if (esSinConexion(e)) callback.onSinConexion();
+                    else callback.onError(e.getLocalizedMessage());
+                });
     }
 
     private Factura construirFactura(Timestamp ts, Date ahora, int siguiente,

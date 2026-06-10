@@ -36,6 +36,8 @@ public class RectificacionRepository {
         void onExito(String ventaId, String facturaId);
         void onYaRectificada();
         void onSinTurno();
+        /** La rectificacion necesita conexion: la transaccion no se ejecuta sin red. */
+        void onSinConexion();
         void onError(@Nullable String mensaje);
     }
 
@@ -64,7 +66,10 @@ public class RectificacionRepository {
                     }
                     buscarTurnoYRectificar(original, user, callback);
                 })
-                .addOnFailureListener(e -> callback.onError(e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    if (CobroRepository.esSinConexion(e)) callback.onSinConexion();
+                    else callback.onError(e.getLocalizedMessage());
+                });
     }
 
     private void buscarTurnoYRectificar(Factura original, FirebaseUser user,
@@ -81,7 +86,10 @@ public class RectificacionRepository {
                     }
                     ejecutar(original, user, snap.getDocuments().get(0).getId(), callback);
                 })
-                .addOnFailureListener(e -> callback.onError(e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    if (CobroRepository.esSinConexion(e)) callback.onSinConexion();
+                    else callback.onError(e.getLocalizedMessage());
+                });
     }
 
     private void ejecutar(Factura original, FirebaseUser user, String turnoId,
@@ -190,6 +198,9 @@ public class RectificacionRepository {
                     return new String[]{ventaRef.getId(), facturaId};
                 })
                 .addOnSuccessListener(ids -> callback.onExito(ids[0], ids[1]))
-                .addOnFailureListener(e -> callback.onError(e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    if (CobroRepository.esSinConexion(e)) callback.onSinConexion();
+                    else callback.onError(e.getLocalizedMessage());
+                });
     }
 }
