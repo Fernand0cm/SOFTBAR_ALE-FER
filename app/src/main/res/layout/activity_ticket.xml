@@ -354,53 +354,62 @@
                         android:textSize="9sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_imprimir"
-                style="@style/SoftbarButton.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/ticket_imprimir"
-                app:icon="@drawable/ic_print"
-                app:iconGravity="textStart"
-                app:iconTint="@color/brand_600" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_email"
-                style="@style/SoftbarButton.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/ticket_email"
-                app:icon="@drawable/ic_email"
-                app:iconGravity="textStart"
-                app:iconTint="@color/brand_600" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_rectificar"
-                style="@style/SoftbarButton.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/ticket_rectificar"
-                android:textColor="@color/danger"
-                app:icon="@drawable/ic_split"
-                app:iconGravity="textStart"
-                app:iconTint="@color/danger"
-                android:visibility="gone" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cerrar"
-                style="@style/SoftbarButton.Primary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/ticket_cerrar"
-                app:icon="@drawable/ic_close"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white" />
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/surface_50"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_imprimir"
+            style="@style/SoftbarButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ticket_imprimir"
+            app:icon="@drawable/ic_print"
+            app:iconGravity="textStart"
+            app:iconTint="@color/brand_600" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_email"
+            style="@style/SoftbarButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/ticket_email"
+            app:icon="@drawable/ic_email"
+            app:iconGravity="textStart"
+            app:iconTint="@color/brand_600" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_rectificar"
+            style="@style/SoftbarButton.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/ticket_rectificar"
+            android:textColor="@color/danger"
+            app:icon="@drawable/ic_split"
+            app:iconGravity="textStart"
+            app:iconTint="@color/danger"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cerrar"
+            style="@style/SoftbarButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/ticket_cerrar"
+            app:icon="@drawable/ic_close"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white" />
+    </LinearLayout>
 </LinearLayout>

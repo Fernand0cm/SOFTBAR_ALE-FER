@@ -33,6 +33,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -376,28 +378,97 @@ public class TicketActivity extends AppCompatActivity {
         helper.printBitmap(nombre, bmp);
     }
 
-    /** Comparte el ticket por email u otras apps con sus datos y la URL de validacion. */
+    /** Comparte el ticket por email u otras apps como un ticket de texto con separadores. */
     private void compartirTicket() {
         if (facturaActual == null) {
             Toast.makeText(this, R.string.ticket_no_listo, Toast.LENGTH_SHORT).show();
             return;
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("SOFTBAR\n");
-        sb.append("Factura: ").append(facturaActual.getNumero()).append('\n');
-        sb.append("Total: ").append(formatoImporte(facturaActual.getTotal())).append('\n');
-        if (facturaActual.getMetodo() != null) {
-            sb.append("Metodo de pago: ").append(facturaActual.getMetodo()).append('\n');
-        }
-        sb.append("Cuota de IVA: ").append(formatoImporte(facturaActual.getCuotaIva())).append('\n');
-        if (facturaActual.getUrlValidacion() != null) {
-            sb.append("Validacion Veri*factu: ").append(facturaActual.getUrlValidacion());
-        }
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Ticket SOFTBAR " + facturaActual.getNumero());
-        intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+        intent.putExtra(Intent.EXTRA_TEXT, construirTicketTexto());
         startActivity(Intent.createChooser(intent, getString(R.string.ticket_email)));
+    }
+
+    /** Compone el ticket como texto con cabecera, separadores y columnas alineadas. */
+    private String construirTicketTexto() {
+        Factura f = facturaActual;
+        final int W = 32;
+        String dobles = repetir('=', W);
+        String simples = repetir('-', W);
+        StringBuilder t = new StringBuilder();
+        t.append(dobles).append('\n');
+        t.append(centrar("SOFTBAR", W)).append('\n');
+        t.append(centrar("Ticket simplificado", W)).append('\n');
+        t.append(dobles).append('\n');
+        t.append(filaLR("Factura", f.getNumero(), W)).append('\n');
+        if (f.getFecha() != null) {
+            t.append(filaLR("Fecha", new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    .format(f.getFecha().toDate()), W)).append('\n');
+        }
+        if (f.getMesaNumero() > 0) {
+            t.append(filaLR("Mesa", String.valueOf(f.getMesaNumero()), W)).append('\n');
+        }
+        if (f.esRectificativa()) {
+            t.append(filaLR("Rectifica", f.getFacturaRectificadaNumero(), W)).append('\n');
+        }
+        t.append(simples).append('\n');
+        if (f.getLineas() != null) {
+            for (LineaComanda l : f.getLineas()) {
+                t.append(filaLR(l.getCantidad() + "x " + l.getNombre(),
+                        importe(l.subtotal()), W)).append('\n');
+            }
+        }
+        t.append(simples).append('\n');
+        double base = Dinero.restar(f.getTotal(), f.getCuotaIva());
+        t.append(filaLR("Base imponible", importe(base), W)).append('\n');
+        t.append(filaLR("IVA", importe(f.getCuotaIva()), W)).append('\n');
+        t.append(filaLR("TOTAL", importe(f.getTotal()) + " EUR", W)).append('\n');
+        t.append(simples).append('\n');
+        if (f.getMetodo() != null) {
+            t.append(filaLR("Forma de pago", f.getMetodo(), W)).append('\n');
+        }
+        t.append(filaLR("Efectivo", importe(f.getPagoEfectivo()), W)).append('\n');
+        t.append(filaLR("Tarjeta", importe(f.getPagoTarjeta()), W)).append('\n');
+        if (f.getCambio() > 0) {
+            t.append(filaLR("Cambio", importe(f.getCambio()), W)).append('\n');
+        }
+        t.append(dobles).append('\n');
+        t.append(centrar("Veri*factu", W)).append('\n');
+        if (f.getUrlValidacion() != null) {
+            t.append("Validacion del ticket:\n").append(f.getUrlValidacion()).append('\n');
+        }
+        t.append(dobles).append('\n');
+        t.append(centrar("Gracias por su visita", W));
+        return t.toString();
+    }
+
+    private String repetir(char c, int n) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < n; i++) b.append(c);
+        return b.toString();
+    }
+
+    private String centrar(String s, int ancho) {
+        if (s == null) s = "";
+        if (s.length() >= ancho) return s;
+        int total = ancho - s.length();
+        return repetir(' ', total / 2) + s;
+    }
+
+    private String filaLR(String izq, String der, int ancho) {
+        if (izq == null) izq = "";
+        if (der == null) der = "";
+        int max = ancho - der.length() - 1;
+        if (max > 0 && izq.length() > max) izq = izq.substring(0, max);
+        int relleno = ancho - izq.length() - der.length();
+        if (relleno < 1) relleno = 1;
+        return izq + repetir(' ', relleno) + der;
+    }
+
+    private String importe(double valor) {
+        return String.format(Locale.getDefault(), "%.2f", valor);
     }
 
     private void pintarVerifactu(Factura factura) {
