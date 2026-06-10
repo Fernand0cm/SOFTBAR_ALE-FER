@@ -142,6 +142,14 @@ public class CobroActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onSinConexion() {
+                if (isFinishing() || isDestroyed()) return;
+                restaurarBotonCobro();
+                Toast.makeText(CobroActivity.this, R.string.cobro_sin_conexion,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
             public void onError(String mensaje) {
                 if (isFinishing() || isDestroyed()) return;
                 restaurarBotonCobro();

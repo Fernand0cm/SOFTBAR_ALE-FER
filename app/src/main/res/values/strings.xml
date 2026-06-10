@@ -97,6 +97,7 @@
     <string name="cobro_confirmar">Confirmar pago</string>
     <string name="cobro_error_guardar">No se ha podido guardar el cobro</string>
     <string name="cobro_error_sin_turno">Abre un turno antes de cobrar</string>
+    <string name="cobro_sin_conexion">Sin conexión. El cobro necesita red para garantizar la numeración fiscal correlativa.</string>
     <string name="cobro_error_importe">El pago no cubre el total</string>
     <string name="ticket_title">Ticket</string>
     <string name="ticket_ok">Cobro completado</string>
@@ -114,6 +115,7 @@
     <string name="ticket_imprimir">Imprimir</string>
     <string name="ticket_email">Enviar por email</string>
     <string name="ticket_pendiente">Pendiente de implementar</string>
+    <string name="ticket_no_listo">El ticket aún se está cargando</string>
     <string name="verifactu_titulo">QR Verifactu</string>
     <string name="verifactu_factura">Factura %1$s</string>
     <string name="verifactu_hash">Hash %1$s</string>
